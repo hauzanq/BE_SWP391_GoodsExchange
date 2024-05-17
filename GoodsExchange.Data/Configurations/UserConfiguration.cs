@@ -31,7 +31,6 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(u => u.Status).IsRequired();
 
-            builder.HasMany(u=>u.Roles).WithOne(r=>r.User).HasForeignKey(u=>u.RoleId);
         }
     }
 }

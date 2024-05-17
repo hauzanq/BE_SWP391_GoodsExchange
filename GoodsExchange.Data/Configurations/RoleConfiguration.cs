@@ -18,8 +18,6 @@ namespace GoodsExchange.Data.Configurations
             builder.HasKey(r=>r.RoleId);
 
             builder.Property(p => p.RoleName).HasMaxLength(100).IsRequired();
-
-            builder.HasOne(r=>r.User).WithMany(u=>u.Roles).HasForeignKey(u=>u.RoleId);
         }
     }
 }

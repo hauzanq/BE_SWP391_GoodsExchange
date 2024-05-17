@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.Data.Models
 {
-    public class Role
+    public class UserRole
     {
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public Guid RoleId { get; set; }
-        public string RoleName { get; set; }
-        public List<UserRole> Users { get; set; }
+        public Role Role { get; set; }
     }
 }

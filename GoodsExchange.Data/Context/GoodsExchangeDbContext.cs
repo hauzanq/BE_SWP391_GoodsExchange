@@ -17,6 +17,7 @@ namespace GoodsExchange.Data.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -38,6 +39,7 @@ namespace GoodsExchange.Data.Context
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
             modelBuilder.ApplyConfiguration(new ReportConfiguration());
             modelBuilder.ApplyConfiguration(new RatingConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
