@@ -21,9 +21,9 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(r => r.Reason).IsRequired().HasMaxLength(255);
 
-            builder.HasOne(u => u.ReportMade).WithMany(r => r.ReportsMade).HasForeignKey(u => u.ReportingUserId);
+            builder.HasOne(u => u.ReportMade).WithMany(r => r.ReportsMade).HasForeignKey(u => u.ReportingUserId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(u => u.ReportReceived).WithMany(r => r.ReportsReceived).HasForeignKey(u => u.ReportingUserId);
+            builder.HasOne(u => u.ReportReceived).WithMany(r => r.ReportsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

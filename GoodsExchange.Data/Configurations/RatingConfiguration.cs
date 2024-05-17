@@ -17,15 +17,13 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasKey(r => r.RatingId);
 
-            builder.Property(r => r.RatingId).ValueGeneratedOnAdd();
-
             builder.Property(r => r.NumberStars).IsRequired();
 
             builder.Property(r => r.Feedback).HasMaxLength(255);
 
-            builder.HasOne(u=>u.RatingGiven).WithMany(r=>r.RatingsGiven).HasForeignKey(u => u.RatingUserId);
+            builder.HasOne(u=>u.RatingGiven).WithMany(r=>r.RatingsGiven).HasForeignKey(u => u.RatingUserId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(u=>u.RatingReceived).WithMany(r=>r.RatingsReceived).HasForeignKey(u => u.RatingUserId);
+            builder.HasOne(u=>u.RatingReceived).WithMany(r=>r.RatingsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
 
         }
     }
