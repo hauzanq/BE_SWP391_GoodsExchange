@@ -1,3 +1,5 @@
+using AutoMapper;
+using GoodsExchange.BusinessLogic.AutoMapperModule;
 using GoodsExchange.BusinessLogic.Services;
 using GoodsExchange.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,8 @@ namespace GoodsExchange.BusinessLogic.Generations.DependencyInjection
             services.AddScoped<IRoleService, RoleService>();
         
             services.AddScoped<IUserService, UserService>();
+
+            services.AddAutoMapper(cfg => cfg.ConfigUserModule());
         }
     }
 }

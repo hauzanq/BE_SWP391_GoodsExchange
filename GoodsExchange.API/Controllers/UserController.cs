@@ -19,6 +19,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
+
         public ActionResult<UserViewModel> CreateUser(CreateUserRequestModel userCreate)
         {
             var userCreated = _userService.CreateUser(userCreate);
