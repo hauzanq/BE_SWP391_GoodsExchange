@@ -9,7 +9,7 @@ namespace GoodsExchange.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             builder.Services.AddDbContext<GoodsExchangeDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -25,7 +25,7 @@ namespace GoodsExchange.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.InitializerDependencyInjection();
-
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
