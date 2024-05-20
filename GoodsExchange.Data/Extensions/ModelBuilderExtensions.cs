@@ -46,6 +46,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "john.doe@example.com",
                         DateOfBirth = new DateTime(1985, 6, 15),
                         PhoneNumber = "555-1234567",
+                        UserImageUrl = "",
                         UserName = "johndoe",
                         Password = "password123",
                         Status = true
@@ -59,6 +60,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "jane.smith@example.com",
                         DateOfBirth = new DateTime(1992, 3, 10),
                         PhoneNumber = "555-7654321",
+                        UserImageUrl = "",
                         UserName = "janesmith",
                         Password = "password456",
                         Status = true
@@ -72,6 +74,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "michael.johnson@example.com",
                         DateOfBirth = new DateTime(1978, 11, 22),
                         PhoneNumber = "555-2468013",
+                        UserImageUrl = "",
                         UserName = "michaeljohnson",
                         Password = "password789",
                         Status = false
@@ -85,6 +88,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "emily.davis@example.com",
                         DateOfBirth = new DateTime(1990, 7, 1),
                         PhoneNumber = "555-3691258",
+                        UserImageUrl = "",
                         UserName = "emilydavis",
                         Password = "passwordabc",
                         Status = true
@@ -98,6 +102,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "david.lee@example.com",
                         DateOfBirth = new DateTime(1982, 4, 30),
                         PhoneNumber = "555-4725836",
+                        UserImageUrl = "",
                         UserName = "davidlee",
                         Password = "passworddef",
                         Status = false
