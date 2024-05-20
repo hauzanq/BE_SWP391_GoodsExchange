@@ -4,6 +4,7 @@ using GoodsExchange.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    partial class GoodsExchangeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240520094312_UpdateRelationship")]
+    partial class UpdateRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,28 +145,6 @@ namespace GoodsExchange.Data.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810"),
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
-                            RoleName = "Moderator"
-                        },
-                        new
-                        {
-                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
-                            RoleName = "Buyer"
-                        },
-                        new
-                        {
-                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
-                            RoleName = "Seller"
-                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.User", b =>
@@ -218,78 +198,6 @@ namespace GoodsExchange.Data.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("31397fee-71c6-4212-9753-04be30505f18"),
-                            DateOfBirth = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "john.doe@example.com",
-                            FirstName = "John",
-                            LastName = "Doe",
-                            Password = "password123",
-                            PhoneNumber = "555-1234567",
-                            RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810"),
-                            Status = true,
-                            UserImageUrl = "",
-                            UserName = "johndoe"
-                        },
-                        new
-                        {
-                            UserId = new Guid("1fa42a62-f50d-4ac6-91ef-d6fd6f55523d"),
-                            DateOfBirth = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "jane.smith@example.com",
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            Password = "password456",
-                            PhoneNumber = "555-7654321",
-                            RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
-                            Status = true,
-                            UserImageUrl = "",
-                            UserName = "janesmith"
-                        },
-                        new
-                        {
-                            UserId = new Guid("31690ab6-2820-4e6f-b2f7-bcd8ee87abb3"),
-                            DateOfBirth = new DateTime(1978, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "michael.johnson@example.com",
-                            FirstName = "Michael",
-                            LastName = "Johnson",
-                            Password = "password789",
-                            PhoneNumber = "555-2468013",
-                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
-                            Status = false,
-                            UserImageUrl = "",
-                            UserName = "michaeljohnson"
-                        },
-                        new
-                        {
-                            UserId = new Guid("b30a70c8-dc20-4d71-b945-80cdfd7d4cf6"),
-                            DateOfBirth = new DateTime(1990, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "emily.davis@example.com",
-                            FirstName = "Emily",
-                            LastName = "Davis",
-                            Password = "passwordabc",
-                            PhoneNumber = "555-3691258",
-                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
-                            Status = true,
-                            UserImageUrl = "",
-                            UserName = "emilydavis"
-                        },
-                        new
-                        {
-                            UserId = new Guid("4f096f46-759a-4575-ab1b-0a5af76fc4b7"),
-                            DateOfBirth = new DateTime(1982, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "david.lee@example.com",
-                            FirstName = "David",
-                            LastName = "Lee",
-                            Password = "passworddef",
-                            PhoneNumber = "555-4725836",
-                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
-                            Status = false,
-                            UserImageUrl = "",
-                            UserName = "davidlee"
-                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.UserRole", b =>

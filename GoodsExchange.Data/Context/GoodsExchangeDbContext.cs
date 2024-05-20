@@ -1,4 +1,5 @@
 ﻿using GoodsExchange.Data.Configurations;
+using GoodsExchange.Data.Extensions;
 using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,8 +45,7 @@ namespace GoodsExchange.Data.Context
             modelBuilder.ApplyConfiguration(new RatingConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.Seed();
         }
-
-        
     }
 }
