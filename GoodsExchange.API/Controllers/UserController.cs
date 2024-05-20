@@ -19,10 +19,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-
-        public ActionResult<UserViewModel> CreateUser(CreateUserRequestModel userCreate)
+        public async Task<ActionResult<UserViewModel>> CreateUser(CreateUserRequestModel userCreate)
         {
-            var userCreated = _userService.CreateUser(userCreate);
+            var userCreated = await _userService.CreateUser(userCreate);
 
             if (userCreated == null)
             {
@@ -32,9 +31,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<UserViewModel>> GetAll()
+        public async Task<ActionResult<List<UserViewModel>>> GetAll()
         {
-            var userList = _userService.GetAll();
+            var userList = await  _userService.GetAll();
 
             if (userList == null)
             {
@@ -44,9 +43,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet("idTmp")]
-        public ActionResult<UserViewModel> GetById(int idTmp)
+        public async Task<ActionResult<UserViewModel>> GetById(int idTmp)
         {
-            var userDetail = _userService.GetById(idTmp);
+            var userDetail =await _userService.GetById(idTmp);
 
             if (userDetail == null)
             {
@@ -56,9 +55,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<bool> DeleteUser(int idTmp)
+        public async Task< ActionResult<bool>> DeleteUser(int idTmp)
         {
-            var check = _userService.DeleteUser(idTmp);
+            var check = await _userService.DeleteUser(idTmp);
 
             if (check == false)
             {
@@ -68,9 +67,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPut]
-        public ActionResult<UserViewModel> UpdateUser(UpdateUserRequestModel userCreate)
+        public async Task <ActionResult<UserViewModel>> UpdateUser(UpdateUserRequestModel userCreate)
         {
-            var userUpdated = _userService.UpdateUser(userCreate);
+            var userUpdated = await  _userService.UpdateUser(userCreate);
 
             if (userUpdated == null)
             {

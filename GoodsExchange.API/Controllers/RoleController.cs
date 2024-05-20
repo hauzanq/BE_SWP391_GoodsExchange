@@ -14,17 +14,17 @@ namespace GoodsExchange.API.Controllers
     public class RoleController : ControllerBase
     {
 
-        private IRoleService _roleService;
+        private IRoleService  _roleService;
 
         public RoleController(IRoleService roleService)
         {
-            _roleService = roleService;
+             _roleService = roleService;
         }
 
         [HttpPost]
-        public ActionResult<RoleViewModel> CreateRole(CreateRoleRequestModel roleCreate)
+        public async Task<ActionResult<RoleViewModel>> CreateRole(CreateRoleRequestModel roleCreate)
         {
-            var roleCreated = _roleService.CreateRole(roleCreate);
+            var roleCreated = await _roleService.CreateRole(roleCreate);
 
             if (roleCreated == null)
             {
@@ -34,9 +34,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<RoleViewModel>> GetAll()
+        public async Task<ActionResult<List<RoleViewModel>>> GetAll()
         {
-            var roleList = _roleService.GetAll();
+            var roleList = await _roleService.GetAll();
 
             if (roleList == null)
             {
@@ -46,9 +46,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet("idTmp")]
-        public ActionResult<RoleViewModel> GetById(int idTmp)
+        public async Task<ActionResult<RoleViewModel>> GetById(int idTmp)
         {
-            var roleDetail = _roleService.GetById(idTmp);
+            var roleDetail = await _roleService.GetById(idTmp);
 
             if (roleDetail == null)
             {
@@ -58,9 +58,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<bool> DeleteRole(int idTmp)
+        public async Task<ActionResult<bool>> DeleteRole(int idTmp)
         {
-            var check = _roleService.DeleteRole(idTmp);
+            var check = await _roleService.DeleteRole(idTmp);
 
             if (check == false)
             {
@@ -70,9 +70,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPut]
-        public ActionResult<RoleViewModel> UpdateRole(UpdateRoleRequestModel roleCreate)
+        public async Task<ActionResult<RoleViewModel>> UpdateRole(UpdateRoleRequestModel roleCreate)
         {
-            var roleUpdated = _roleService.UpdateRole(roleCreate);
+            var roleUpdated = await _roleService.UpdateRole(roleCreate);
 
             if (roleUpdated == null)
             {

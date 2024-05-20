@@ -6,45 +6,38 @@ namespace GoodsExchange.BusinessLogic.Services
 
     public interface IRatingService
     {
-        public RatingViewModel CreateRating(CreateRatingRequestModel ratingCreate);
-        public RatingViewModel UpdateRating(UpdateRatingRequestModel ratingUpdate);
-        public bool DeleteRating(int idTmp);
-        public List<RatingViewModel> GetAll();
-        public RatingViewModel GetById(int idTmp);
+        Task<RatingViewModel> CreateRating(CreateRatingRequestModel ratingCreate);
+        Task<RatingViewModel> UpdateRating(UpdateRatingRequestModel ratingUpdate);
+        Task<bool> DeleteRating(int idTmp);
+        Task<List<RatingViewModel>> GetAll();
+        Task<RatingViewModel> GetById(int idTmp);
     }
 
     public class RatingService : IRatingService
     {
-
-        public RatingService()
-        {
-            
-        }
-        public RatingViewModel CreateRating(CreateRatingRequestModel ratingCreate)
+        public Task<RatingViewModel> CreateRating(CreateRatingRequestModel ratingCreate)
         {
             throw new NotImplementedException();
         }
 
-        public RatingViewModel UpdateRating(UpdateRatingRequestModel ratingUpdate)
+        public Task<bool> DeleteRating(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteRating(int idTmp)
+        public Task<List<RatingViewModel>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public List<RatingViewModel> GetAll()
+        public Task<RatingViewModel> GetById(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public RatingViewModel GetById(int idTmp)
+        public Task<RatingViewModel> UpdateRating(UpdateRatingRequestModel ratingUpdate)
         {
             throw new NotImplementedException();
         }
-
     }
-
 }

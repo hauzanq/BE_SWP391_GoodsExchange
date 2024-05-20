@@ -24,7 +24,7 @@ namespace GoodsExchange.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.InitializerDependencyInjection();
+            builder.Services.InitializerDependency();
             
             var app = builder.Build();
 

@@ -5,45 +5,39 @@ namespace GoodsExchange.BusinessLogic.Services
 
     public interface ICategoryService
     {
-        public CategoryViewModel CreateCategory(CreateCategoryRequestModel categoryCreate);
-        public CategoryViewModel UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
-        public bool DeleteCategory(int idTmp);
-        public List<CategoryViewModel> GetAll();
-        public CategoryViewModel GetById(int idTmp);
+        Task<CategoryViewModel> CreateCategory(CreateCategoryRequestModel categoryCreate);
+        Task<CategoryViewModel> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
+        Task<bool> DeleteCategory(int idTmp);
+        Task<List<CategoryViewModel>> GetAll();
+        Task<CategoryViewModel> GetById(int idTmp);
     }
 
     public class CategoryService : ICategoryService
     {
-
-        public CategoryService()
-        {
-                
-        }
-        public CategoryViewModel CreateCategory(CreateCategoryRequestModel categoryCreate)
+        public Task<CategoryViewModel> CreateCategory(CreateCategoryRequestModel categoryCreate)
         {
             throw new NotImplementedException();
         }
 
-        public CategoryViewModel UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
+        public Task<bool> DeleteCategory(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteCategory(int idTmp)
+        public Task<List<CategoryViewModel>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public List<CategoryViewModel> GetAll()
+        public Task<CategoryViewModel> GetById(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public CategoryViewModel GetById(int idTmp)
+        public Task<CategoryViewModel> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
         {
             throw new NotImplementedException();
         }
-
     }
 
 }

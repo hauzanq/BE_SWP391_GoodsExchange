@@ -6,46 +6,38 @@ namespace GoodsExchange.BusinessLogic.Services
 
     public interface IProductService
     {
-        public ProductViewModel CreateProduct(CreateProductRequestModel productCreate);
-        public ProductViewModel UpdateProduct(UpdateProductRequestModel productUpdate);
-        public bool DeleteProduct(int idTmp);
-        public List<ProductViewModel> GetAll();
-        public ProductViewModel GetById(int idTmp);
+        Task<ProductViewModel> CreateProduct(CreateProductRequestModel productCreate);
+        Task<ProductViewModel> UpdateProduct(UpdateProductRequestModel productUpdate);
+        Task<bool> DeleteProduct(int idTmp);
+        Task<List<ProductViewModel>> GetAll();
+        Task<ProductViewModel> GetById(int idTmp);
     }
 
     public class ProductService : IProductService
     {
-
-        public ProductService()
-        {
-
-        }
-
-        public ProductViewModel CreateProduct(CreateProductRequestModel productCreate)
+        public Task<ProductViewModel> CreateProduct(CreateProductRequestModel productCreate)
         {
             throw new NotImplementedException();
         }
 
-        public ProductViewModel UpdateProduct(UpdateProductRequestModel productUpdate)
+        public Task<bool> DeleteProduct(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteProduct(int idTmp)
+        public Task<List<ProductViewModel>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public List<ProductViewModel> GetAll()
+        public Task<ProductViewModel> GetById(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public ProductViewModel GetById(int idTmp)
+        public Task<ProductViewModel> UpdateProduct(UpdateProductRequestModel productUpdate)
         {
             throw new NotImplementedException();
         }
-
     }
-
 }

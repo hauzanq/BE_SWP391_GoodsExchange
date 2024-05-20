@@ -14,5 +14,6 @@ namespace GoodsExchange.Data.Models
         public User ReportMade { get; set; }
         public Guid TargetUserId { get; set; }
         public User ReportReceived { get; set; }
+        public Product Product { get; set; }
     }
 }
