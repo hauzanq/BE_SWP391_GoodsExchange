@@ -19,9 +19,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ReportViewModel> CreateReport(CreateReportRequestModel reportCreate)
+        public async Task<ActionResult<ReportViewModel>> CreateReport(CreateReportRequestModel reportCreate)
         {
-            var reportCreated = _reportService.CreateReport(reportCreate);
+            var reportCreated =  await _reportService.CreateReport(reportCreate);
 
             if (reportCreated == null)
             {
@@ -31,9 +31,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ReportViewModel>> GetAll()
+        public async Task<ActionResult<List<ReportViewModel>>> GetAll()
         {
-            var reportList = _reportService.GetAll();
+            var reportList = await _reportService.GetAll();
 
             if (reportList == null)
             {
@@ -43,9 +43,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet("idTmp")]
-        public ActionResult<ReportViewModel> GetById(int idTmp)
+        public async Task<ActionResult<ReportViewModel>> GetById(int idTmp)
         {
-            var reportDetail = _reportService.GetById(idTmp);
+            var reportDetail = await _reportService.GetById(idTmp);
 
             if (reportDetail == null)
             {
@@ -55,9 +55,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<bool> DeleteReport(int idTmp)
+        public async Task<ActionResult<bool>> DeleteReport(int idTmp)
         {
-            var check = _reportService.DeleteReport(idTmp);
+            var check = await _reportService.DeleteReport(idTmp);
 
             if (check == false)
             {
@@ -67,9 +67,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPut]
-        public ActionResult<ReportViewModel> UpdateReport(UpdateReportRequestModel reportCreate)
+        public async Task<ActionResult<ReportViewModel>> UpdateReport(UpdateReportRequestModel reportCreate)
         {
-            var reportUpdated = _reportService.UpdateReport(reportCreate);
+            var reportUpdated = await _reportService.UpdateReport(reportCreate);
 
             if (reportUpdated == null)
             {

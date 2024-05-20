@@ -19,9 +19,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<RatingViewModel> CreateRating(CreateRatingRequestModel ratingCreate)
+        public async Task<ActionResult<RatingViewModel>> CreateRating(CreateRatingRequestModel ratingCreate)
         {
-            var ratingCreated = _ratingService.CreateRating(ratingCreate);
+            var ratingCreated = await _ratingService.CreateRating(ratingCreate);
 
             if (ratingCreated == null)
             {
@@ -32,9 +32,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpGet]
-        public ActionResult<List<RatingViewModel>> GetAll()
+        public async Task<ActionResult<List<RatingViewModel>>> GetAll()
         {
-            var ratingList = _ratingService.GetAll();
+            var ratingList = await _ratingService.GetAll();
 
             if (ratingList == null)
             {
@@ -45,9 +45,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpGet("idTmp")]
-        public ActionResult<RatingViewModel> GetById(int idTmp)
+        public async Task<ActionResult<RatingViewModel>> GetById(int idTmp)
         {
-            var ratingDetail = _ratingService.GetById(idTmp);
+            var ratingDetail = await _ratingService.GetById(idTmp);
 
             if (ratingDetail == null)
             {
@@ -58,9 +58,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpDelete]
-        public ActionResult<bool> DeleteRating(int idTmp)
+        public async Task<ActionResult<bool>> DeleteRating(int idTmp)
         {
-            var check = _ratingService.DeleteRating(idTmp);
+            var check = await _ratingService.DeleteRating(idTmp);
 
             if (check == false)
             {
@@ -71,9 +71,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPut]
-        public ActionResult<RatingViewModel> UpdateRating(UpdateRatingRequestModel ratingCreate)
+        public async Task<ActionResult<RatingViewModel>> UpdateRating(UpdateRatingRequestModel ratingCreate)
         {
-            var ratingUpdated = _ratingService.UpdateRating(ratingCreate);
+            var ratingUpdated = await _ratingService.UpdateRating(ratingCreate);
 
             if (ratingUpdated == null)
             {

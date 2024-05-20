@@ -19,7 +19,7 @@ namespace GoodsExchange.Data.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Report> Reports { get; set; }
-        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Rate> Ratings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
 

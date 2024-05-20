@@ -3,48 +3,40 @@ using GoodsExchange.BusinessLogic.ViewModels;
 
 namespace GoodsExchange.BusinessLogic.Services
 {
-
     public interface IRoleService
     {
-        public RoleViewModel CreateRole(CreateRoleRequestModel roleCreate);
-        public RoleViewModel UpdateRole(UpdateRoleRequestModel roleUpdate);
-        public bool DeleteRole(int idTmp);
-        public List<RoleViewModel> GetAll();
-        public RoleViewModel GetById(int idTmp);
+        Task<RoleViewModel> CreateRole(CreateRoleRequestModel roleCreate);
+        Task<RoleViewModel> UpdateRole(UpdateRoleRequestModel roleUpdate);
+        Task<bool> DeleteRole(int idTmp);
+        Task<List<RoleViewModel>> GetAll();
+        Task<RoleViewModel> GetById(int idTmp);
     }
 
     public class RoleService : IRoleService
     {
-        public RoleService()
-        {
-            
-        }
-
-        public RoleViewModel CreateRole(CreateRoleRequestModel roleCreate)
+        public Task<RoleViewModel> CreateRole(CreateRoleRequestModel roleCreate)
         {
             throw new NotImplementedException();
         }
 
-        public RoleViewModel UpdateRole(UpdateRoleRequestModel roleUpdate)
+        public Task<bool> DeleteRole(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteRole(int idTmp)
+        public Task<List<RoleViewModel>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public List<RoleViewModel> GetAll()
+        public Task<RoleViewModel> GetById(int idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public RoleViewModel GetById(int idTmp)
+        public Task<RoleViewModel> UpdateRole(UpdateRoleRequestModel roleUpdate)
         {
             throw new NotImplementedException();
         }
-
     }
-
 }

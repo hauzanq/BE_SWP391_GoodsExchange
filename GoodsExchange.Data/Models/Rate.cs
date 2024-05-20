@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.Data.Models
 {
-    public class Rating
+    public class Rate
     {
         public Guid RatingId { get; set; }
         public int NumberStars { get; set; }
@@ -15,5 +15,6 @@ namespace GoodsExchange.Data.Models
         public User RatingGiven { get; set; }
         public Guid TargetUserId { get; set; }
         public User RatingReceived { get; set; }
+        public Product Product { get; set; }
     }
 }

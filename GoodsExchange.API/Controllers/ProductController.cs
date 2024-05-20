@@ -21,9 +21,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPost]
-        public ActionResult<ProductViewModel> CreateProduct(CreateProductRequestModel productCreate)
+        public async Task<ActionResult<ProductViewModel>> CreateProduct(CreateProductRequestModel productCreate)
         {
-            var productCreated = _productService.CreateProduct(productCreate);
+            var productCreated = await _productService.CreateProduct(productCreate);
 
             if (productCreated == null)
             {
@@ -34,9 +34,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpGet]
-        public ActionResult<List<ProductViewModel>> GetAll()
+        public async Task<ActionResult<List<ProductViewModel>>> GetAll()
         {
-            var productList = _productService.GetAll();
+            var productList = await _productService.GetAll();
 
             if (productList == null)
             {
@@ -47,9 +47,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpGet("idTmp")]
-        public ActionResult<ProductViewModel> GetById(int idTmp)
-        {
-            var productDetail = _productService.GetById(idTmp);
+        public async Task<ActionResult<ProductViewModel>> GetById(int idTmp)
+        { 
+            var productDetail = await _productService.GetById(idTmp);
 
             if (productDetail == null)
             {
@@ -60,9 +60,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpDelete]
-        public ActionResult<bool> DeleteProduct(int idTmp)
+        public async Task<ActionResult<bool>> DeleteProduct(int idTmp)
         {
-            var check = _productService.DeleteProduct(idTmp);
+            var check = await _productService.DeleteProduct(idTmp);
 
             if (check == false)
             {
@@ -73,9 +73,9 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPut]
-        public ActionResult<ProductViewModel> UpdateProduct(UpdateProductRequestModel productCreate)
+        public async Task<ActionResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel productCreate)
         {
-            var productUpdated = _productService.UpdateProduct(productCreate);
+            var productUpdated = await _productService.UpdateProduct(productCreate);
 
             if (productUpdated == null)
             {
