@@ -1,43 +1,262 @@
+using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.Data.Context;
+using GoodsExchange.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoodsExchange.BusinessLogic.Services
 {
 
     public interface IProductService
     {
-        Task<ProductViewModel> CreateProduct(CreateProductRequestModel productCreate);
-        Task<ProductViewModel> UpdateProduct(UpdateProductRequestModel productUpdate);
-        Task<bool> DeleteProduct(int idTmp);
-        Task<List<ProductViewModel>> GetAll();
-        Task<ProductViewModel> GetById(int idTmp);
+        Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
+        Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
+        Task<ApiResult<bool>> DeleteProduct(Guid id);
+        Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model);
+        Task<ApiResult<ProductViewModel>> GetById(Guid id);
+        Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
+        Task<ApiResult<bool>> ApproveProduct(Guid id);
     }
 
     public class ProductService : IProductService
     {
-        public Task<ProductViewModel> CreateProduct(CreateProductRequestModel productCreate)
+        private readonly GoodsExchangeDbContext _context;
+        public ProductService(GoodsExchangeDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<bool> DeleteProduct(int idTmp)
+        public async Task<ApiResult<bool>> ApproveProduct(Guid id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return new ApiErrorResult<bool>("Product does not exists.");
+            }
+            product.IsApproved = true;
+            product.ApprovedDate = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>();
         }
 
-        public Task<List<ProductViewModel>> GetAll()
+        public async Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request)
         {
-            throw new NotImplementedException();
+            var product = new Product()
+            {
+                ProductName = request.ProductName,
+                Description = request.Description,
+                ProductImageUrl = request.ProductImageUrl,
+                Price = request.Price,
+                CategoryId = request.CategoryId,
+                UploadDate = DateTime.Now,
+                Status = false
+            };
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+            var result = new ProductViewModel()
+            {
+                ProductName = product.ProductName,
+                Description = product.Description,
+                ProductImageUrl = product.ProductImageUrl,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                UploadDate = product.UploadDate,
+                Status = product.Status
+            };
+
+            return new ApiSuccessResult<ProductViewModel>(result);
         }
 
-        public Task<ProductViewModel> GetById(int idTmp)
+        public async Task<ApiResult<bool>> DeleteProduct(Guid id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return new ApiErrorResult<bool>("Product does not exists.");
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>();
         }
 
-        public Task<ProductViewModel> UpdateProduct(UpdateProductRequestModel productUpdate)
+        public async Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel paging, SearchRequestModel search, GetAllProductRequestModel model)
         {
-            throw new NotImplementedException();
+            var query = _context.Products.AsQueryable();
+
+            #region Searching
+            if (!string.IsNullOrEmpty(search.KeyWords))
+            {
+                query = query.Where(p => p.ProductName.Contains(search.KeyWords));
+            }
+            #endregion
+
+            #region Filtering
+
+            if (!string.IsNullOrEmpty(model.ProductName))
+            {
+                query = query.Where(p => p.ProductName.Contains(model.ProductName));
+            }
+            if (model.MinPrice != null)
+            {
+                query = query.Where(p => p.Price >= model.MinPrice);
+            }
+            if (model.MaxPrice != null)
+            {
+                query = query.Where(p => p.Price <= model.MaxPrice);
+            }
+            if (model.Status != null)
+            {
+                query = query.Where(p => p.Status == model.Status);
+            }
+            if (model.StartUploadDate != null)
+            {
+                query = query.Where(p => p.UploadDate >= model.StartUploadDate);
+            }
+            if (model.EndUploadDate != null)
+            {
+                query = query.Where(p => p.UploadDate <= model.EndUploadDate);
+            }
+            if (model.IsApproved != null)
+            {
+                query = query.Where(p => p.IsApproved == model.IsApproved);
+            }
+            if (model.StartApprovedDate != null)
+            {
+                query = query.Where(p => p.ApprovedDate >= model.StartApprovedDate);
+            }
+            if (model.EndApprovedDate != null)
+            {
+                query = query.Where(p => p.ApprovedDate <= model.EndApprovedDate);
+            }
+
+            if (!string.IsNullOrEmpty(model.CategoryName))
+            {
+                query = query.Where(p => p.Category.CategoryName.Contains(model.CategoryName));
+            }
+
+            #endregion
+
+            #region Sorting
+            if (!string.IsNullOrEmpty(model.ProductName) && model.ProductName.ToLower() == "asc")
+            {
+                query = query.OrderBy(p => p.ProductName);
+            }
+            else if (!string.IsNullOrEmpty(model.ProductName) && model.ProductName.ToLower() == "desc")
+            {
+                query = query.OrderByDescending(p => p.ProductName);
+            }
+
+            
+            if (model.MinPrice.HasValue && model.MaxPrice.HasValue)
+            {
+                if (model.MinPrice.Value <= model.MaxPrice.Value)
+                {
+                    query = query.OrderBy(p => p.Price);
+                }
+                else
+                {
+                    query = query.OrderByDescending(p => p.Price);
+                }
+            }
+
+                #endregion
+
+                var totalItems = await query.CountAsync();
+                var totalPages = (int)Math.Ceiling((double)totalItems / paging.PageSize);
+
+                var data = await query.Skip((paging.PageIndex - 1) * paging.PageSize)
+                                    .Take(paging.PageSize)
+                                    .Select(p => new ProductViewModel()
+                                    {
+                                        ProductId = p.ProductId,
+                                        ProductName = p.ProductName,
+                                        Description = p.Description,
+                                        ProductImageUrl = p.ProductImageUrl,
+                                        Status = p.Status,
+                                        Price = p.Price,
+                                        CategoryId = p.CategoryId,
+                                        ApprovedDate = p.ApprovedDate,
+                                        UploadDate = p.UploadDate,
+                                    })
+                                    .ToListAsync();
+
+                var result = new PageResult<ProductViewModel>()
+                {
+                    Items = data,
+                    TotalPage = totalPages,
+                    CurrentPage = paging.PageIndex
+                };
+                return result;
+            }
+
+            public async Task<ApiResult<ProductViewModel>> GetById(Guid id)
+            {
+                var product = await _context.Products.FindAsync(id);
+                if (product == null)
+                {
+                    return new ApiErrorResult<ProductViewModel>("Product does not exists.");
+                }
+
+                var result = new ProductViewModel()
+                {
+                    ProductName = product.ProductName,
+                    Description = product.Description,
+                    ProductImageUrl = product.ProductImageUrl,
+                    Price = product.Price,
+                    CategoryId = product.CategoryId,
+                    UploadDate = product.UploadDate,
+                    Status = product.Status
+                };
+
+                return new ApiSuccessResult<ProductViewModel>(result);
+            }
+
+            public async Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request)
+            {
+                var product = await _context.Products.FindAsync(request.ProductId);
+                if (product == null)
+                {
+                    return new ApiErrorResult<ProductViewModel>("Product does not exists.");
+                }
+
+                product.ProductName = request.ProductName;
+                product.Description = request.Description;
+                product.ProductImageUrl = request.ProductImageUrl;
+                product.Price = request.Price.Value;
+                product.Status = request.Status.Value;
+                product.CategoryId = request.CategoryId;
+
+                await _context.SaveChangesAsync();
+                var result = new ProductViewModel()
+                {
+                    ProductName = product.ProductName,
+                    Description = product.Description,
+                    ProductImageUrl = product.ProductImageUrl,
+                    Price = product.Price,
+                    CategoryId = product.CategoryId,
+                    UploadDate = product.UploadDate,
+                    Status = product.Status
+                };
+
+                return new ApiSuccessResult<ProductViewModel>(result);
+            }
+
+            public async Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status)
+            {
+                var product = await _context.Products.FindAsync(id);
+                if (product == null)
+                {
+                    return new ApiErrorResult<bool>("Product does not exists.");
+                }
+
+                product.Status = status;
+                await _context.SaveChangesAsync();
+
+                return new ApiSuccessResult<bool>();
+            }
         }
     }
-}
