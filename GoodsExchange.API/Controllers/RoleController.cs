@@ -21,65 +21,6 @@ namespace GoodsExchange.API.Controllers
              _roleService = roleService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<RoleViewModel>> CreateRole(CreateRoleRequestModel roleCreate)
-        {
-            var roleCreated = await _roleService.CreateRole(roleCreate);
-
-            if (roleCreated == null)
-            {
-                return NotFound("");
-            }
-            return roleCreated;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<List<RoleViewModel>>> GetAll()
-        {
-            var roleList = await _roleService.GetAll();
-
-            if (roleList == null)
-            {
-                return NotFound("");
-            }
-            return roleList;
-        }
-
-        [HttpGet("idTmp")]
-        public async Task<ActionResult<RoleViewModel>> GetById(int idTmp)
-        {
-            var roleDetail = await _roleService.GetById(idTmp);
-
-            if (roleDetail == null)
-            {
-                return NotFound("");
-            }
-            return roleDetail;
-        }
-
-        [HttpDelete]
-        public async Task<ActionResult<bool>> DeleteRole(int idTmp)
-        {
-            var check = await _roleService.DeleteRole(idTmp);
-
-            if (check == false)
-            {
-                return NotFound("");
-            }
-            return check;
-        }
-
-        [HttpPut]
-        public async Task<ActionResult<RoleViewModel>> UpdateRole(UpdateRoleRequestModel roleCreate)
-        {
-            var roleUpdated = await _roleService.UpdateRole(roleCreate);
-
-            if (roleUpdated == null)
-            {
-                return NotFound("");
-            }
-            return roleUpdated;
-        }
     }
 
 }

@@ -1,40 +1,70 @@
+using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Role;
 using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoodsExchange.BusinessLogic.Services
 {
     public interface IRoleService
     {
-        Task<RoleViewModel> CreateRole(CreateRoleRequestModel roleCreate);
-        Task<RoleViewModel> UpdateRole(UpdateRoleRequestModel roleUpdate);
-        Task<bool> DeleteRole(int idTmp);
-        Task<List<RoleViewModel>> GetAll();
-        Task<RoleViewModel> GetById(int idTmp);
+        Task<ApiResult<RoleViewModel>> CreateRole(CreateRoleRequestModel request);
+        Task<ApiResult<RoleViewModel>> UpdateRole(UpdateRoleRequestModel request);
+        Task<ApiResult<bool>> DeleteRole(Guid id);
+        Task<ApiResult<List<RoleViewModel>>> GetAll();
+        Task<ApiResult<RoleViewModel>> GetById(Guid id);
+        Task<ApiResult<List<RoleViewModel>>> GetUserRole(Guid id);
     }
 
     public class RoleService : IRoleService
     {
-        public Task<RoleViewModel> CreateRole(CreateRoleRequestModel roleCreate)
+        private readonly GoodsExchangeDbContext _context;
+
+        public RoleService(GoodsExchangeDbContext context)
+        {
+            _context = context;
+        }
+
+        public Task<ApiResult<RoleViewModel>> CreateRole(CreateRoleRequestModel request)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteRole(int idTmp)
+        public Task<ApiResult<bool>> DeleteRole(Guid idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<RoleViewModel>> GetAll()
+        public Task<ApiResult<List<RoleViewModel>>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<RoleViewModel> GetById(int idTmp)
+        public Task<ApiResult<RoleViewModel>> GetById(Guid idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public Task<RoleViewModel> UpdateRole(UpdateRoleRequestModel roleUpdate)
+        public async Task<ApiResult<List<RoleViewModel>>> GetUserRole(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return new ApiErrorResult<List<RoleViewModel>>("User does not exists");
+            }
+
+            var roles = await _context.UserRoles.Where(ur =>ur.User == user).Select(ur => ur.Role).ToListAsync();
+
+            var result = roles.Select(r => new RoleViewModel()
+            {
+                RoleId = r.RoleId,
+                RoleName = r.RoleName,
+            }).ToList();
+
+            return new ApiSuccessResult<List<RoleViewModel>>(result);
+        }
+
+        public Task<ApiResult<RoleViewModel>> UpdateRole(UpdateRoleRequestModel request)
         {
             throw new NotImplementedException();
         }

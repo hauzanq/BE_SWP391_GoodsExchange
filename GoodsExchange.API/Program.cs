@@ -1,6 +1,9 @@
-using GoodsExchange.BusinessLogic.Generations.DependencyInjection;
+﻿using FluentValidation.AspNetCore;
 using GoodsExchange.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using GoodsExchange.API.StartConfigurations;
 
 namespace GoodsExchange.API
 {
@@ -10,25 +13,55 @@ namespace GoodsExchange.API
         {
             var builder = WebApplication.CreateBuilder(args);
             
+            // DI for DbContext
             builder.Services.AddDbContext<GoodsExchangeDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            // Add services to the container.
-            builder.Services.AddAuthorization();
+            // DI for services
+            builder.Services.InitializerDependency();
 
+            // Dependency for Fluent Validation
+            builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+            // Swagger configuration
+            builder.Services.ConfigSwaggerOptions();
+
+            #region Authenticate with JWTBearer
+
+            string issuer = builder.Configuration.GetValue<string>("Tokens:Issuer");
+            string signingKey = builder.Configuration.GetValue<string>("Tokens:Key");
+            
+            byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = issuer,
+
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
+                };
+            });
+
+            #endregion
             builder.Services.AddControllers();
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.InitializerDependency();
-            
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -37,6 +70,7 @@ namespace GoodsExchange.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
