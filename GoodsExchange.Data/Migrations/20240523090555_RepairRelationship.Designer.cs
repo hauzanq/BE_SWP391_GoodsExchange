@@ -4,6 +4,7 @@ using GoodsExchange.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    partial class GoodsExchangeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523090555_RepairRelationship")]
+    partial class RepairRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,28 +38,6 @@ namespace GoodsExchange.Data.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
-                            CategoryName = "Stationery"
-                        },
-                        new
-                        {
-                            CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
-                            CategoryName = "Drawing Supplies"
-                        },
-                        new
-                        {
-                            CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
-                            CategoryName = "Books and Materials"
-                        },
-                        new
-                        {
-                            CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
-                            CategoryName = "Tech Devices"
-                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
@@ -104,138 +84,6 @@ namespace GoodsExchange.Data.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = new Guid("c9b824ca-9b89-4e4d-ac98-ef620f8c50b5"),
-                            ApprovedDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
-                            Description = "Premium ballpoint pen for everyday use",
-                            IsApproved = true,
-                            Price = 2.99f,
-                            ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
-                            ProductName = "Ballpoint Pen",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("8b17adbe-2da6-46c1-ae33-3a43ec988f6c"),
-                            ApprovedDate = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
-                            Description = "Durable mechanical pencil with 0.5mm lead",
-                            IsApproved = true,
-                            Price = 4.5f,
-                            ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
-                            ProductName = "Mechanical Pencil",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("9f036ca5-361c-42b8-aebc-c4c6b55481ff"),
-                            ApprovedDate = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
-                            Description = "Set of 24 high-quality colored pencils",
-                            IsApproved = true,
-                            Price = 9.99f,
-                            ProductImageUrl = "https://example.com/colored-pencils.jpg",
-                            ProductName = "Colored Pencils",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("4b06683a-d623-4a5b-88c8-fc7ddea6e561"),
-                            ApprovedDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
-                            Description = "A5 size sketchbook with acid-free pages",
-                            IsApproved = true,
-                            Price = 12.99f,
-                            ProductImageUrl = "https://example.com/sketchbook.jpg",
-                            ProductName = "Sketchbook",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("d188f86a-b7bd-4c14-bc77-09265f85729e"),
-                            ApprovedDate = new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
-                            Description = "High school-level chemistry textbook",
-                            IsApproved = true,
-                            Price = 29.99f,
-                            ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
-                            ProductName = "Chemistry Textbook",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("ea3f9d0a-fd3f-4d8e-a065-594036f9eb4d"),
-                            ApprovedDate = new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
-                            Description = "Grade 7 mathematics practice workbook",
-                            IsApproved = true,
-                            Price = 14.99f,
-                            ProductImageUrl = "https://example.com/math-workbook.jpg",
-                            ProductName = "Mathematics Workbook",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("e72cc9a5-49f5-4896-a186-28c37380b963"),
-                            ApprovedDate = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
-                            Description = "Scientific calculator with graphing capabilities",
-                            IsApproved = true,
-                            Price = 59.99f,
-                            ProductImageUrl = "https://example.com/graphing-calculator.jpg",
-                            ProductName = "Graphing Calculator",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("c39e1231-f3ef-4e4a-b652-bd3578360fe4"),
-                            ApprovedDate = new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
-                            Description = "High-performance tablet for educational use",
-                            IsApproved = true,
-                            Price = 299.99f,
-                            ProductImageUrl = "https://example.com/tablet-computer.jpg",
-                            ProductName = "Tablet Computer",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("733aebf8-441c-400f-8050-3665a67759ca"),
-                            ApprovedDate = new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
-                            Description = "Durable 30cm plastic ruler",
-                            IsApproved = true,
-                            Price = 1.5f,
-                            ProductImageUrl = "https://example.com/ruler.jpg",
-                            ProductName = "Ruler",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            ProductId = new Guid("635ed14e-9859-4daa-b152-8ee7d62e6b46"),
-                            ApprovedDate = new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
-                            Description = "Set of 4 fluorescent highlighters",
-                            IsApproved = true,
-                            Price = 3.99f,
-                            ProductImageUrl = "https://example.com/highlighter-set.jpg",
-                            ProductName = "Highlighter Set",
-                            Status = true,
-                            UploadDate = new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Rate", b =>
@@ -397,7 +245,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("14670f4f-e528-490c-8fec-c47c9ef7a1df"),
+                            UserId = new Guid("6ea3fd32-96a2-4b0b-862a-3de2158b8b68"),
                             DateOfBirth = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.doe@example.com",
                             FirstName = "John",
@@ -411,7 +259,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("48d97624-3e0c-43e7-9226-39226bece954"),
+                            UserId = new Guid("f306b2a2-fbe5-41c0-bd1f-75eb00ef3fa2"),
                             DateOfBirth = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jane.smith@example.com",
                             FirstName = "Jane",
@@ -425,7 +273,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("44ae76e6-c528-47fe-9682-c537e906b1f5"),
+                            UserId = new Guid("863aa0e5-1331-4f9f-a27c-ebfaaaf84ae9"),
                             DateOfBirth = new DateTime(1978, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "michael.johnson@example.com",
                             FirstName = "Michael",
@@ -439,7 +287,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("ca8fcf7b-3f45-48eb-b85f-e769b5456c37"),
+                            UserId = new Guid("6b840da9-37fe-4f7f-ba3b-e96138685bfe"),
                             DateOfBirth = new DateTime(1990, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "emily.davis@example.com",
                             FirstName = "Emily",
@@ -453,7 +301,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("1679790e-7b6a-401e-b6ad-523e131cf15a"),
+                            UserId = new Guid("c898cf09-4b01-4e79-9b8c-f396c318d69e"),
                             DateOfBirth = new DateTime(1982, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "david.lee@example.com",
                             FirstName = "David",
