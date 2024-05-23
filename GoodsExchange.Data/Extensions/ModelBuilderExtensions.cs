@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace GoodsExchange.Data.Extensions
                         UserName = "johndoe",
                         Password = "password123",
                         Status = true
-                    }, 
+                    },
                     new User()
                     {
                         UserId = Guid.NewGuid(),
@@ -64,7 +65,7 @@ namespace GoodsExchange.Data.Extensions
                         UserName = "janesmith",
                         Password = "password456",
                         Status = true
-                    }, 
+                    },
                     new User
                     {
                         UserId = Guid.NewGuid(),
@@ -106,6 +107,162 @@ namespace GoodsExchange.Data.Extensions
                         UserName = "davidlee",
                         Password = "passworddef",
                         Status = false
+                    }
+                );
+            builder.Entity<Category>().HasData
+                (
+                    new Category()
+                    {
+                        CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB"),
+                        CategoryName = "Stationery"
+                    },
+                    new Category()
+                    {
+                        CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF"),
+                        CategoryName = "Drawing Supplies"
+                    },
+                    new Category()
+                    {
+                        CategoryId = new Guid("F0FDE948-4E6D-4412-A417-3EAC5F927D44"),
+                        CategoryName = "Books and Materials"
+                    },
+                    new Category()
+                    {
+                        CategoryId = new Guid("E0B58109-B173-442A-86D5-972E0BC3E093"),
+                        CategoryName = "Tech Devices"
+                    }
+                );
+            builder.Entity<Product>().HasData
+                (
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Ballpoint Pen",
+                        Description = "Premium ballpoint pen for everyday use",
+                        ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
+                        Price = 2.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 4, 15),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 4, 16),
+                        CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Mechanical Pencil",
+                        Description = "Durable mechanical pencil with 0.5mm lead",
+                        ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
+                        Price = 4.50f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 5, 1),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 5, 2),
+                        CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Colored Pencils",
+                        Description = "Set of 24 high-quality colored pencils",
+                        ProductImageUrl = "https://example.com/colored-pencils.jpg",
+                        Price = 9.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 3, 20),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 3, 21),
+                        CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Sketchbook",
+                        Description = "A5 size sketchbook with acid-free pages",
+                        ProductImageUrl = "https://example.com/sketchbook.jpg",
+                        Price = 12.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 6, 1),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 6, 2),
+                        CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Chemistry Textbook",
+                        Description = "High school-level chemistry textbook",
+                        ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
+                        Price = 29.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 2, 10),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 2, 11),
+                        CategoryId = new Guid("F0FDE948-4E6D-4412-A417-3EAC5F927D44")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Mathematics Workbook",
+                        Description = "Grade 7 mathematics practice workbook",
+                        ProductImageUrl = "https://example.com/math-workbook.jpg",
+                        Price = 14.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 7, 1),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 7, 2),
+                        CategoryId = new Guid("F0FDE948-4E6D-4412-A417-3EAC5F927D44")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Graphing Calculator",
+                        Description = "Scientific calculator with graphing capabilities",
+                        ProductImageUrl = "https://example.com/graphing-calculator.jpg",
+                        Price = 59.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 3, 15),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 3, 16),
+                        CategoryId = new Guid("E0B58109-B173-442A-86D5-972E0BC3E093")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Tablet Computer",
+                        Description = "High-performance tablet for educational use",
+                        ProductImageUrl = "https://example.com/tablet-computer.jpg",
+                        Price = 299.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 5, 20),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 5, 21),
+                        CategoryId = new Guid("E0B58109-B173-442A-86D5-972E0BC3E093")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Ruler",
+                        Description = "Durable 30cm plastic ruler",
+                        ProductImageUrl = "https://example.com/ruler.jpg",
+                        Price = 1.50f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 4, 1),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 4, 2),
+                        CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
+                    },
+                    new Product
+                    {
+                        ProductId = Guid.NewGuid(),
+                        ProductName = "Highlighter Set",
+                        Description = "Set of 4 fluorescent highlighters",
+                        ProductImageUrl = "https://example.com/highlighter-set.jpg",
+                        Price = 3.99f,
+                        Status = true,
+                        UploadDate = new DateTime(2023, 6, 15),
+                        IsApproved = true,
+                        ApprovedDate = new DateTime(2023, 6, 16),
+                        CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
                     }
                 );
         }

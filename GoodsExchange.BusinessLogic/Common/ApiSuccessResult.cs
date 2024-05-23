@@ -13,5 +13,10 @@ namespace GoodsExchange.BusinessLogic.Common
             IsSuccessed = true;
             Data = data;
         }
+        public ApiSuccessResult()
+        {
+            IsSuccessed = true;
+            Message = "Success";
+        }
     }
 }

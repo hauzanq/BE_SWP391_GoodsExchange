@@ -25,7 +25,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasOne(u=>u.RatingReceived).WithMany(r=>r.RatingsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(r => r.Product).WithOne(p => p.Rate).HasForeignKey<Product>(p =>p.ProductId);
+            builder.HasOne(r => r.Product).WithOne(p => p.Rate).HasForeignKey<Rate>(r =>r.ProductId);
         }
     }
 }

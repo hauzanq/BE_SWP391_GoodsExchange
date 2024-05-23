@@ -1,13 +1,14 @@
+using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.Services;
-using GoodsExchange.BusinessLogic.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodsExchange.API.Controllers
 {
 
     [ApiController]
-
     [Route("/api/v1/products")]
     public class ProductController : ControllerBase
     {
@@ -21,68 +22,97 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<ProductViewModel>> CreateProduct(CreateProductRequestModel productCreate)
+        [Route("create")]
+        [Authorize(Roles = UserRole.Seller)]
+        public async Task<IActionResult> CreateProduct([FromQuery] CreateProductRequestModel request)
         {
-            var productCreated = await _productService.CreateProduct(productCreate);
-
-            if (productCreated == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return productCreated;
+            var result = await _productService.CreateProduct(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
-
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductViewModel>>> GetAll()
+        [Route("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var productList = await _productService.GetAll();
-
-            if (productList == null)
-            {
-                return NotFound("");
-            }
-            return productList;
+            var result = await _productService.GetById(id);
+            return Ok(result);
         }
 
-
-        [HttpGet("idTmp")]
-        public async Task<ActionResult<ProductViewModel>> GetById(int idTmp)
-        { 
-            var productDetail = await _productService.GetById(idTmp);
-
-            if (productDetail == null)
+        [HttpPost]
+        [Route("all")]
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return productDetail;
+            var result = await _productService.GetProductsAsync(request, search, model);
+            return Ok(result);
         }
-
 
         [HttpDelete]
-        public async Task<ActionResult<bool>> DeleteProduct(int idTmp)
+        [Route("{id}")]
+        [Authorize(Roles = UserRole.Seller)]
+        public async Task<IActionResult> DeleteProduct(Guid id)
         {
-            var check = await _productService.DeleteProduct(idTmp);
-
-            if (check == false)
+            var result = await _productService.DeleteProduct(id);
+            if (!result.IsSuccessed)
             {
-                return NotFound("");
+                return BadRequest(result);
             }
-            return check;
+            return Ok(result);
         }
-
 
         [HttpPut]
-        public async Task<ActionResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel productCreate)
+        [Route("update")]
+        [Authorize(Roles = UserRole.Seller)]
+        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductRequestModel request)
         {
-            var productUpdated = await _productService.UpdateProduct(productCreate);
-
-            if (productUpdated == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return productUpdated;
+            var result = await _productService.UpdateProduct(request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPatch]
+        [Route("status/{id}")]
+        [Authorize(Roles = UserRole.Seller)]
+        public async Task<IActionResult> UpdateProductStatus(Guid id, bool status)
+        {
+            var result = await _productService.UpdateProductStatus(id, status);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPatch]
+        [Route("approve/{id}")]
+        [Authorize(Roles = UserRole.Moderator)]
+        public async Task<IActionResult> ApproveProduct(Guid id)
+        {
+            var result = await _productService.ApproveProduct(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
-
 }

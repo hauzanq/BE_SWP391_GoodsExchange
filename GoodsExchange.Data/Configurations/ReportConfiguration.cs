@@ -1,11 +1,6 @@
 ﻿using GoodsExchange.Data.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GoodsExchange.Data.Configurations
 {
@@ -25,7 +20,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasOne(u => u.ReportReceived).WithMany(r => r.ReportsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(r => r.Product).WithOne(p => p.Report).HasForeignKey<Product>(p=>p.ProductId);
+            builder.HasOne(r => r.Product).WithMany(p => p.Report).HasForeignKey(r => r.ProductId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
