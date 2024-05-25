@@ -16,8 +16,8 @@ namespace GoodsExchange.Data.Configurations
             builder.ToTable("UserRoles");
             builder.HasKey(ur => new {ur.UserId , ur.RoleId});
 
-            builder.HasOne(ur=> ur.User).WithMany(u=>u.Roles).HasForeignKey(u=>u.UserId);
-            builder.HasOne(ur=> ur.Role).WithMany(u=>u.Users).HasForeignKey(u=>u.RoleId);
+            builder.HasOne(ur=> ur.User).WithMany(u=>u.UserRoles).HasForeignKey(u=>u.UserId);
+            builder.HasOne(ur=> ur.Role).WithMany(u=>u.UserRoles).HasForeignKey(u=>u.RoleId);
         }
     }
 }

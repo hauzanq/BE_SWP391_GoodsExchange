@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240520095102_Seeding")]
-    partial class Seeding
+    [Migration("20240524133035_SeedingDataForEntities")]
+    partial class SeedingDataForEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,12 +38,38 @@ namespace GoodsExchange.Data.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
+                            CategoryName = "Stationery"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
+                            CategoryName = "Drawing Supplies"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
+                            CategoryName = "Books and Materials"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
+                            CategoryName = "Tech Devices"
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
                 {
                     b.Property<Guid>("ProductId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ApprovedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
@@ -52,6 +78,9 @@ namespace GoodsExchange.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
@@ -69,11 +98,146 @@ namespace GoodsExchange.Data.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ProductId");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = new Guid("8d8b3c74-1c3f-40af-af76-224a186b5362"),
+                            ApprovedDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
+                            Description = "Premium ballpoint pen for everyday use",
+                            IsApproved = true,
+                            Price = 2.99f,
+                            ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
+                            ProductName = "Ballpoint Pen",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("a58ef700-9264-44a3-9ead-8ab29643c612"),
+                            ApprovedDate = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
+                            Description = "Durable mechanical pencil with 0.5mm lead",
+                            IsApproved = true,
+                            Price = 4.5f,
+                            ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
+                            ProductName = "Mechanical Pencil",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("4cce3fa4-f770-4444-8d46-0ce725d9849f"),
+                            ApprovedDate = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
+                            Description = "Set of 24 high-quality colored pencils",
+                            IsApproved = true,
+                            Price = 9.99f,
+                            ProductImageUrl = "https://example.com/colored-pencils.jpg",
+                            ProductName = "Colored Pencils",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("e80311af-5660-482f-a4b1-1d3274510edb"),
+                            ApprovedDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
+                            Description = "A5 size sketchbook with acid-free pages",
+                            IsApproved = true,
+                            Price = 12.99f,
+                            ProductImageUrl = "https://example.com/sketchbook.jpg",
+                            ProductName = "Sketchbook",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("ab8c274e-6993-4943-9e6b-22b1bab4804d"),
+                            ApprovedDate = new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
+                            Description = "High school-level chemistry textbook",
+                            IsApproved = true,
+                            Price = 29.99f,
+                            ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
+                            ProductName = "Chemistry Textbook",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("569eb778-377d-44ad-972a-63a5e3b5bbdb"),
+                            ApprovedDate = new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
+                            Description = "Grade 7 mathematics practice workbook",
+                            IsApproved = true,
+                            Price = 14.99f,
+                            ProductImageUrl = "https://example.com/math-workbook.jpg",
+                            ProductName = "Mathematics Workbook",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("754a289e-1434-4213-9dd0-6ffda8e1c0bf"),
+                            ApprovedDate = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
+                            Description = "Scientific calculator with graphing capabilities",
+                            IsApproved = true,
+                            Price = 59.99f,
+                            ProductImageUrl = "https://example.com/graphing-calculator.jpg",
+                            ProductName = "Graphing Calculator",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("d217145d-f571-4fa8-8fd0-1cc664a4f4cd"),
+                            ApprovedDate = new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
+                            Description = "High-performance tablet for educational use",
+                            IsApproved = true,
+                            Price = 299.99f,
+                            ProductImageUrl = "https://example.com/tablet-computer.jpg",
+                            ProductName = "Tablet Computer",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("b9fb0979-1238-4639-9cc5-4005bd004a0f"),
+                            ApprovedDate = new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
+                            Description = "Durable 30cm plastic ruler",
+                            IsApproved = true,
+                            Price = 1.5f,
+                            ProductImageUrl = "https://example.com/ruler.jpg",
+                            ProductName = "Ruler",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            ProductId = new Guid("41e810c4-5b7b-426d-9f03-c07e05f5f7d6"),
+                            ApprovedDate = new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
+                            Description = "Set of 4 fluorescent highlighters",
+                            IsApproved = true,
+                            Price = 3.99f,
+                            ProductImageUrl = "https://example.com/highlighter-set.jpg",
+                            ProductName = "Highlighter Set",
+                            Status = true,
+                            UploadDate = new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Rate", b =>
@@ -90,6 +254,9 @@ namespace GoodsExchange.Data.Migrations
                     b.Property<int>("NumberStars")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("RatingUserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -97,6 +264,9 @@ namespace GoodsExchange.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("RatingId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.HasIndex("RatingUserId");
 
@@ -111,6 +281,9 @@ namespace GoodsExchange.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -123,6 +296,8 @@ namespace GoodsExchange.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ReportId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("ReportingUserId");
 
@@ -224,7 +399,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("31397fee-71c6-4212-9753-04be30505f18"),
+                            UserId = new Guid("0af02748-9d43-4110-81e5-93d9ece8cfda"),
                             DateOfBirth = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.doe@example.com",
                             FirstName = "John",
@@ -238,7 +413,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("1fa42a62-f50d-4ac6-91ef-d6fd6f55523d"),
+                            UserId = new Guid("b6b6e80f-cc04-43e3-800f-a3c89b3ba017"),
                             DateOfBirth = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jane.smith@example.com",
                             FirstName = "Jane",
@@ -252,7 +427,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("31690ab6-2820-4e6f-b2f7-bcd8ee87abb3"),
+                            UserId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
                             DateOfBirth = new DateTime(1978, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "michael.johnson@example.com",
                             FirstName = "Michael",
@@ -266,28 +441,28 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            UserId = new Guid("b30a70c8-dc20-4d71-b945-80cdfd7d4cf6"),
+                            UserId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
                             DateOfBirth = new DateTime(1990, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "emily.davis@example.com",
                             FirstName = "Emily",
                             LastName = "Davis",
                             Password = "passwordabc",
                             PhoneNumber = "555-3691258",
-                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
+                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
                             Status = true,
                             UserImageUrl = "",
                             UserName = "emilydavis"
                         },
                         new
                         {
-                            UserId = new Guid("4f096f46-759a-4575-ab1b-0a5af76fc4b7"),
+                            UserId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
                             DateOfBirth = new DateTime(1982, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "david.lee@example.com",
                             FirstName = "David",
                             LastName = "Lee",
                             Password = "passworddef",
                             PhoneNumber = "555-4725836",
-                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
+                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             Status = false,
                             UserImageUrl = "",
                             UserName = "davidlee"
@@ -307,6 +482,33 @@ namespace GoodsExchange.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("0af02748-9d43-4110-81e5-93d9ece8cfda"),
+                            RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810")
+                        },
+                        new
+                        {
+                            UserId = new Guid("b6b6e80f-cc04-43e3-800f-a3c89b3ba017"),
+                            RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693")
+                        },
+                        new
+                        {
+                            UserId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
+                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4")
+                        },
+                        new
+                        {
+                            UserId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
+                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4")
+                        },
+                        new
+                        {
+                            UserId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
+                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b")
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
@@ -317,27 +519,17 @@ namespace GoodsExchange.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GoodsExchange.Data.Models.Rate", "Rate")
-                        .WithOne("Product")
-                        .HasForeignKey("GoodsExchange.Data.Models.Product", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GoodsExchange.Data.Models.Report", "Report")
-                        .WithOne("Product")
-                        .HasForeignKey("GoodsExchange.Data.Models.Product", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Rate");
-
-                    b.Navigation("Report");
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Rate", b =>
                 {
+                    b.HasOne("GoodsExchange.Data.Models.Product", "Product")
+                        .WithOne("Rate")
+                        .HasForeignKey("GoodsExchange.Data.Models.Rate", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("GoodsExchange.Data.Models.User", "RatingGiven")
                         .WithMany("RatingsGiven")
                         .HasForeignKey("RatingUserId")
@@ -350,6 +542,8 @@ namespace GoodsExchange.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.Navigation("Product");
+
                     b.Navigation("RatingGiven");
 
                     b.Navigation("RatingReceived");
@@ -357,6 +551,12 @@ namespace GoodsExchange.Data.Migrations
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Report", b =>
                 {
+                    b.HasOne("GoodsExchange.Data.Models.Product", "Product")
+                        .WithMany("Report")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("GoodsExchange.Data.Models.User", "ReportMade")
                         .WithMany("ReportsMade")
                         .HasForeignKey("ReportingUserId")
@@ -368,6 +568,8 @@ namespace GoodsExchange.Data.Migrations
                         .HasForeignKey("TargetUserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("ReportMade");
 
@@ -383,7 +585,7 @@ namespace GoodsExchange.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("GoodsExchange.Data.Models.User", "User")
-                        .WithMany("Roles")
+                        .WithMany("UserRole")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -398,16 +600,12 @@ namespace GoodsExchange.Data.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("GoodsExchange.Data.Models.Rate", b =>
+            modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
                 {
-                    b.Navigation("Product")
+                    b.Navigation("Rate")
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("GoodsExchange.Data.Models.Report", b =>
-                {
-                    b.Navigation("Product")
-                        .IsRequired();
+                    b.Navigation("Report");
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Role", b =>
@@ -425,7 +623,7 @@ namespace GoodsExchange.Data.Migrations
 
                     b.Navigation("ReportsReceived");
 
-                    b.Navigation("Roles");
+                    b.Navigation("UserRole");
                 });
 #pragma warning restore 612, 618
         }

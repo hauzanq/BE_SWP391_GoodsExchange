@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.BusinessLogic.RequestModels.Product
 {
-    public class SearchRequestModel
-    {
-        public string? KeyWords { get; set; }
-    }
     public class GetAllProductRequestModel
     {
         public string? ProductName { get; set; }

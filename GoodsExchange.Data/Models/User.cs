@@ -9,7 +9,6 @@ namespace GoodsExchange.Data.Models
     public class User
     {
         public Guid UserId { get; set; }
-        public Guid RoleId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -19,7 +18,7 @@ namespace GoodsExchange.Data.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public bool Status { get; set; }
-        public List<UserRole> Roles { get; set; }
+        public List<UserRole> UserRoles { get; set; }
         public List<Rate> RatingsGiven { get; set; }
         public List<Rate> RatingsReceived { get; set; }
         public List<Report> ReportsMade { get; set; }

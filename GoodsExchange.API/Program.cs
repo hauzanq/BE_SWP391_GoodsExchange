@@ -1,9 +1,10 @@
 ﻿using FluentValidation.AspNetCore;
-using GoodsExchange.Data.Context;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using GoodsExchange.API.StartConfigurations;
+using GoodsExchange.BusinessLogic.RequestModels.User;
+using GoodsExchange.Data.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GoodsExchange.API
 {
@@ -12,21 +13,8 @@ namespace GoodsExchange.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
-            // DI for DbContext
-            builder.Services.AddDbContext<GoodsExchangeDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
 
-            // DI for services
-            builder.Services.InitializerDependency();
-
-            // Dependency for Fluent Validation
-            builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-
-            // Swagger configuration
-            builder.Services.ConfigSwaggerOptions();
+            builder.Services.AddControllers();
 
             #region Authenticate with JWTBearer
 
@@ -58,7 +46,22 @@ namespace GoodsExchange.API
             });
 
             #endregion
-            builder.Services.AddControllers();
+
+            // Swagger configuration
+            builder.Services.ConfigSwaggerOptions();
+
+            // DI for FluentValidation
+            builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+
+            // DI for DbContext
+            builder.Services.AddDbContext<GoodsExchangeDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            // Register services with DI
+            builder.Services.RegisterService();
 
             var app = builder.Build();
 

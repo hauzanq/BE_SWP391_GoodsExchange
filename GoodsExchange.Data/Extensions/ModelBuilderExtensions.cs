@@ -1,11 +1,5 @@
 ﻿using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GoodsExchange.Data.Extensions
 {
@@ -40,8 +34,7 @@ namespace GoodsExchange.Data.Extensions
                 (
                     new User()
                     {
-                        UserId = Guid.NewGuid(),
-                        RoleId = new Guid("E398CEE3-6381-4A52-AAF5-20A2E9B54810"),
+                        UserId = new Guid("0AF02748-9D43-4110-81E5-93D9ECE8CFDA"),
                         FirstName = "John",
                         LastName = "Doe",
                         Email = "john.doe@example.com",
@@ -54,8 +47,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new User()
                     {
-                        UserId = Guid.NewGuid(),
-                        RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
+                        UserId = new Guid("B6B6E80F-CC04-43E3-800F-A3C89B3BA017"),
                         FirstName = "Jane",
                         LastName = "Smith",
                         Email = "jane.smith@example.com",
@@ -68,8 +60,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new User
                     {
-                        UserId = Guid.NewGuid(),
-                        RoleId = new Guid("CA5AF2D0-6B92-49BB-91FF-2E5D9F1279D4"),
+                        UserId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         FirstName = "Michael",
                         LastName = "Johnson",
                         Email = "michael.johnson@example.com",
@@ -82,8 +73,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new User
                     {
-                        UserId = Guid.NewGuid(),
-                        RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
+                        UserId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         FirstName = "Emily",
                         LastName = "Davis",
                         Email = "emily.davis@example.com",
@@ -96,8 +86,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new User
                     {
-                        UserId = Guid.NewGuid(),
-                        RoleId = new Guid("CA5AF2D0-6B92-49BB-91FF-2E5D9F1279D4"),
+                        UserId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
                         FirstName = "David",
                         LastName = "Lee",
                         Email = "david.lee@example.com",
@@ -107,6 +96,34 @@ namespace GoodsExchange.Data.Extensions
                         UserName = "davidlee",
                         Password = "passworddef",
                         Status = false
+                    }
+                );
+            builder.Entity<UserRole>().HasData
+                (
+                    new UserRole()
+                    {
+                        UserId = new Guid("0AF02748-9D43-4110-81E5-93D9ECE8CFDA"),
+                        RoleId = new Guid("E398CEE3-6381-4A52-AAF5-20A2E9B54810")
+                    },
+                    new UserRole()
+                    {
+                        UserId = new Guid("B6B6E80F-CC04-43E3-800F-A3C89B3BA017"),
+                        RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693")
+                    },
+                    new UserRole()
+                    {
+                        UserId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        RoleId = new Guid("CA5AF2D0-6B92-49BB-91FF-2E5D9F1279D4")
+                    },
+                    new UserRole()
+                    {
+                        UserId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        RoleId = new Guid("CA5AF2D0-6B92-49BB-91FF-2E5D9F1279D4")
+                    },
+                    new UserRole()
+                    {
+                        UserId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B")
                     }
                 );
             builder.Entity<Category>().HasData

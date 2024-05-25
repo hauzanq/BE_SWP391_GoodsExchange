@@ -13,7 +13,7 @@ namespace GoodsExchange.API.StartConfigurations
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger GoodsExchange", Version = "v1" });
 
 
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
                     Name = "Authorization",
