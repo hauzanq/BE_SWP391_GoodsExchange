@@ -2,9 +2,9 @@ using GoodsExchange.BusinessLogic.Services;
 
 namespace GoodsExchange.API.StartConfigurations
 {
-    public static class DependencyConfiguration
+    public static class RegisterServiceConfiguration
     {
-        public static void InitializerDependency(this IServiceCollection services)
+        public static void RegisterService(this IServiceCollection services)
         {
 
             services.AddScoped<ICategoryService, CategoryService>();

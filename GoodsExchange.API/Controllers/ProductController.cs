@@ -23,7 +23,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Route("create")]
-        [Authorize(Roles = UserRole.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Seller)]
         public async Task<IActionResult> CreateProduct([FromQuery] CreateProductRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [Authorize(Roles = UserRole.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Seller)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var result = await _productService.DeleteProduct(id);
@@ -73,7 +73,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPut]
         [Route("update")]
-        [Authorize(Roles = UserRole.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Seller)]
         public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -91,7 +91,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch]
         [Route("status/{id}")]
-        [Authorize(Roles = UserRole.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Seller)]
         public async Task<IActionResult> UpdateProductStatus(Guid id, bool status)
         {
             var result = await _productService.UpdateProductStatus(id, status);
@@ -104,7 +104,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch]
         [Route("approve/{id}")]
-        [Authorize(Roles = UserRole.Moderator)]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
         public async Task<IActionResult> ApproveProduct(Guid id)
         {
             var result = await _productService.ApproveProduct(id);

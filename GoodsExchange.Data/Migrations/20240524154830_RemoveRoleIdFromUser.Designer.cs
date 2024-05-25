@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240523092453_SeedingProductAndCategory")]
-    partial class SeedingProductAndCategory
+    [Migration("20240524154830_RemoveRoleIdFromUser")]
+    partial class RemoveRoleIdFromUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,7 +110,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("c9b824ca-9b89-4e4d-ac98-ef620f8c50b5"),
+                            ProductId = new Guid("74b67181-857d-4870-bc79-07c8e6b435d0"),
                             ApprovedDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Premium ballpoint pen for everyday use",
@@ -123,7 +123,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("8b17adbe-2da6-46c1-ae33-3a43ec988f6c"),
+                            ProductId = new Guid("a9cea1f2-dc30-4ee5-ad0f-4faa8701dac3"),
                             ApprovedDate = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable mechanical pencil with 0.5mm lead",
@@ -136,7 +136,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("9f036ca5-361c-42b8-aebc-c4c6b55481ff"),
+                            ProductId = new Guid("68a2fd9c-1bee-485f-8fd9-82ed163f8bff"),
                             ApprovedDate = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "Set of 24 high-quality colored pencils",
@@ -149,7 +149,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("4b06683a-d623-4a5b-88c8-fc7ddea6e561"),
+                            ProductId = new Guid("3f86d44f-3217-4895-864d-480d7123d265"),
                             ApprovedDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "A5 size sketchbook with acid-free pages",
@@ -162,7 +162,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("d188f86a-b7bd-4c14-bc77-09265f85729e"),
+                            ProductId = new Guid("715fa57a-ae78-47e4-a82b-315d186cf698"),
                             ApprovedDate = new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "High school-level chemistry textbook",
@@ -175,7 +175,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("ea3f9d0a-fd3f-4d8e-a065-594036f9eb4d"),
+                            ProductId = new Guid("3544651a-9d54-464a-9721-322acf8a1a18"),
                             ApprovedDate = new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "Grade 7 mathematics practice workbook",
@@ -188,7 +188,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("e72cc9a5-49f5-4896-a186-28c37380b963"),
+                            ProductId = new Guid("a8d2027d-f034-473b-b3d4-c941251fe227"),
                             ApprovedDate = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "Scientific calculator with graphing capabilities",
@@ -201,7 +201,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("c39e1231-f3ef-4e4a-b652-bd3578360fe4"),
+                            ProductId = new Guid("aa1651fa-2455-4a62-8356-0eaaf2257202"),
                             ApprovedDate = new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "High-performance tablet for educational use",
@@ -214,7 +214,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("733aebf8-441c-400f-8050-3665a67759ca"),
+                            ProductId = new Guid("a74b7ce8-b8f8-40d4-b0a5-05507eab6a44"),
                             ApprovedDate = new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable 30cm plastic ruler",
@@ -227,7 +227,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("635ed14e-9859-4daa-b152-8ee7d62e6b46"),
+                            ProductId = new Guid("014e5790-db27-411a-9e53-dc1615ecb71c"),
                             ApprovedDate = new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Set of 4 fluorescent highlighters",
@@ -376,9 +376,6 @@ namespace GoodsExchange.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -399,70 +396,65 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("14670f4f-e528-490c-8fec-c47c9ef7a1df"),
+                            UserId = new Guid("0af02748-9d43-4110-81e5-93d9ece8cfda"),
                             DateOfBirth = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.doe@example.com",
                             FirstName = "John",
                             LastName = "Doe",
                             Password = "password123",
                             PhoneNumber = "555-1234567",
-                            RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810"),
                             Status = true,
                             UserImageUrl = "",
                             UserName = "johndoe"
                         },
                         new
                         {
-                            UserId = new Guid("48d97624-3e0c-43e7-9226-39226bece954"),
+                            UserId = new Guid("b6b6e80f-cc04-43e3-800f-a3c89b3ba017"),
                             DateOfBirth = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jane.smith@example.com",
                             FirstName = "Jane",
                             LastName = "Smith",
                             Password = "password456",
                             PhoneNumber = "555-7654321",
-                            RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             Status = true,
                             UserImageUrl = "",
                             UserName = "janesmith"
                         },
                         new
                         {
-                            UserId = new Guid("44ae76e6-c528-47fe-9682-c537e906b1f5"),
+                            UserId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
                             DateOfBirth = new DateTime(1978, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "michael.johnson@example.com",
                             FirstName = "Michael",
                             LastName = "Johnson",
                             Password = "password789",
                             PhoneNumber = "555-2468013",
-                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
                             Status = false,
                             UserImageUrl = "",
                             UserName = "michaeljohnson"
                         },
                         new
                         {
-                            UserId = new Guid("ca8fcf7b-3f45-48eb-b85f-e769b5456c37"),
+                            UserId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
                             DateOfBirth = new DateTime(1990, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "emily.davis@example.com",
                             FirstName = "Emily",
                             LastName = "Davis",
                             Password = "passwordabc",
                             PhoneNumber = "555-3691258",
-                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             Status = true,
                             UserImageUrl = "",
                             UserName = "emilydavis"
                         },
                         new
                         {
-                            UserId = new Guid("1679790e-7b6a-401e-b6ad-523e131cf15a"),
+                            UserId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
                             DateOfBirth = new DateTime(1982, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "david.lee@example.com",
                             FirstName = "David",
                             LastName = "Lee",
                             Password = "passworddef",
                             PhoneNumber = "555-4725836",
-                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4"),
                             Status = false,
                             UserImageUrl = "",
                             UserName = "davidlee"
@@ -482,6 +474,33 @@ namespace GoodsExchange.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("0af02748-9d43-4110-81e5-93d9ece8cfda"),
+                            RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810")
+                        },
+                        new
+                        {
+                            UserId = new Guid("b6b6e80f-cc04-43e3-800f-a3c89b3ba017"),
+                            RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693")
+                        },
+                        new
+                        {
+                            UserId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
+                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4")
+                        },
+                        new
+                        {
+                            UserId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
+                            RoleId = new Guid("ca5af2d0-6b92-49bb-91ff-2e5d9f1279d4")
+                        },
+                        new
+                        {
+                            UserId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
+                            RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b")
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
@@ -552,13 +571,13 @@ namespace GoodsExchange.Data.Migrations
             modelBuilder.Entity("GoodsExchange.Data.Models.UserRole", b =>
                 {
                     b.HasOne("GoodsExchange.Data.Models.Role", "Role")
-                        .WithMany("Users")
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GoodsExchange.Data.Models.User", "User")
-                        .WithMany("Roles")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -583,7 +602,7 @@ namespace GoodsExchange.Data.Migrations
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Role", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.User", b =>
@@ -596,7 +615,7 @@ namespace GoodsExchange.Data.Migrations
 
                     b.Navigation("ReportsReceived");
 
-                    b.Navigation("Roles");
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

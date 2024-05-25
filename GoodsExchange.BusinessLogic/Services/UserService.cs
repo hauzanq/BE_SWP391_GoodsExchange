@@ -1,7 +1,10 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.User;
-using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.BusinessLogic.ViewModels.User;
 using GoodsExchange.Data.Context;
+using GoodsExchange.Data.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,24 +18,42 @@ namespace GoodsExchange.BusinessLogic.Services
     public interface IUserService
     {
         Task<ApiResult<string>> Authenticate(LoginRequest request);
-        Task<ApiResult<UserViewModel>> CreateUser(RegisterRequest userCreate);
-        Task<ApiResult<UserViewModel>> UpdateUser(UpdateUserRequestModel userUpdate);
-        Task<ApiResult<bool>> DeleteUser(Guid id);
-        Task<ApiResult<List<UserViewModel>>> GetAll();
-        Task<ApiResult<UserViewModel>> GetById(Guid id);
+        Task<ApiResult<UserProfileViewModel>> Register(RegisterRequest request);
+        Task<ApiResult<UserProfileViewModel>> UpdateUser(Guid id, UpdateUserRequestModel request);
+        Task<ApiResult<bool>> ActiveUser(Guid id);
+        Task<ApiResult<bool>> DeActiveUser(Guid id);
+        Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetAllUserRequestModel model);
+        Task<ApiResult<UserProfileViewModel>> GetById(Guid id);
     }
 
     public class UserService : IUserService
     {
         private readonly GoodsExchangeDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IRoleService _roleService;
-        public UserService(GoodsExchangeDbContext context, IRoleService roleService, IConfiguration configuration)
+        public UserService(GoodsExchangeDbContext context, IRoleService roleService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _roleService = roleService;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        public async Task<ApiResult<bool>> ActiveUser(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("User does not exist");
+            }
+
+            user.Status = true;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
+        }
+
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _context.Users.Where(u => u.UserName == request.UserName && u.Password == request.Password).FirstOrDefaultAsync();
@@ -41,17 +62,17 @@ namespace GoodsExchange.BusinessLogic.Services
                 return new ApiErrorResult<string>("User does not exist");
             }
 
-            var roles = (await _roleService.GetUserRole(user.UserId)).Data;
+            var roles = await _roleService.GetRolesOfUser(user.UserId);
 
             var userClaims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
                 new Claim(ClaimTypes.Role, string.Join(";",roles))
             };
 
-            // Đóng gói secret key vào SymmetricSecurityKey để ký và giải mã token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -67,29 +88,202 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        public Task<ApiResult<UserViewModel>> CreateUser(RegisterRequest userCreate)
+        public async Task<ApiResult<bool>> DeActiveUser(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("User does not exist");
+            }
+
+            user.Status = false;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
         }
 
-        public Task<ApiResult<bool>> DeleteUser(Guid id)
+        public async Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetAllUserRequestModel model)
         {
-            throw new NotImplementedException();
+            var query = _context.Users.Include(u => u.UserRoles).AsQueryable();
+
+            #region Searching
+            if (!string.IsNullOrEmpty(search.KeyWords))
+            {
+                query = query.Where(u => u.FirstName.Contains(search.KeyWords)
+                                        || u.LastName.Contains(search.KeyWords)
+                                        || u.Email.Contains(search.KeyWords));
+            }
+            #endregion
+
+            #region Filtering
+            if (!string.IsNullOrEmpty(model.RoleName))
+            {
+                query = query.Where(u => u.UserRoles.Any(ur => ur.Role.RoleName.Contains(model.RoleName)));
+            }
+
+            if (model.Status != null)
+            {
+                query = query.Where(u => u.Status == model.Status);
+            }
+
+            #endregion
+
+            #region Sorting
+            if (!string.IsNullOrEmpty(model.FirstName) && model.FirstName.ToLower() == "asc")
+            {
+                query = query.OrderBy(p => p.FirstName);
+            }
+            else if (!string.IsNullOrEmpty(model.FirstName) && model.FirstName.ToLower() == "desc")
+            {
+                query = query.OrderByDescending(p => p.FirstName);
+            }
+
+            if (!string.IsNullOrEmpty(model.LastName) && model.LastName.ToLower() == "asc")
+            {
+                query = query.OrderBy(p => p.LastName);
+            }
+            else if (!string.IsNullOrEmpty(model.LastName) && model.LastName.ToLower() == "desc")
+            {
+                query = query.OrderByDescending(p => p.LastName);
+            }
+
+            if (!string.IsNullOrEmpty(model.Email) && model.Email.ToLower() == "asc")
+            {
+                query = query.OrderBy(p => p.Email);
+            }
+            else if (!string.IsNullOrEmpty(model.Email) && model.Email.ToLower() == "desc")
+            {
+                query = query.OrderByDescending(p => p.Email);
+            }
+            #endregion
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalItems / paging.PageSize);
+
+            var data = await query.Select(u => new AdminUserViewModel()
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                RoleName = string.Join(", ", u.UserRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.Role.RoleName)),
+                Status = u.Status
+            }).ToListAsync();
+
+            var result = new PageResult<AdminUserViewModel>()
+            {
+                Items = data,
+                TotalPage = totalPages,
+                CurrentPage = paging.PageIndex
+            };
+
+            return result;
         }
 
-        public Task<ApiResult<List<UserViewModel>>> GetAll()
+        public async Task<ApiResult<UserProfileViewModel>> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("User does not exist");
+            }
+
+            var result = new UserProfileViewModel()
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                UserImageUrl = user.UserImageUrl
+            };
+            return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public Task<ApiResult<UserViewModel>> GetById(Guid id)
+        public async Task<ApiResult<UserProfileViewModel>> Register(RegisterRequest request)
         {
-            throw new NotImplementedException();
+            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName);
+            if (usernameAvailable)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("Username available.");
+            }
+
+            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email);
+            if (emailAvailable)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("Email available.");
+            }
+
+            var buyer = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer);
+            var seller = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller);
+
+            var user = new User()
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                DateOfBirth = request.DateOfBirth,
+                PhoneNumber = request.PhoneNumber,
+                UserImageUrl = request.UserImageUrl,
+                UserName = request.UserName,
+                Password = request.Password,
+                Status = true,
+                UserRoles = new List<UserRole>
+                {
+                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
+                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
+                }
+            };
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            var result = new UserProfileViewModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                UserImageUrl = user.UserImageUrl,
+                UserName = user.UserName,
+            };
+
+            return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public Task<ApiResult<UserViewModel>> UpdateUser(UpdateUserRequestModel userUpdate)
+        public async Task<ApiResult<UserProfileViewModel>> UpdateUser(Guid id, UpdateUserRequestModel request)
         {
-            throw new NotImplementedException();
+            var currentUserId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (currentUserId != id)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("You do not have permission to update information for this account");
+            }
+
+            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != id);
+            if (usernameAvailable)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("Username available.");
+            }
+
+            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != id);
+            if (emailAvailable)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("Email available.");
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.DateOfBirth = request.DateOfBirth;
+            user.PhoneNumber = request.PhoneNumber;
+            user.UserName = request.UserName;
+            user.Password = request.Password;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<UserProfileViewModel>();
         }
     }
 }

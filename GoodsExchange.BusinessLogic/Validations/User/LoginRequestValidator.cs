@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using GoodsExchange.BusinessLogic.RequestModels.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodsExchange.BusinessLogic.RequestModels.User
+namespace GoodsExchange.BusinessLogic.Validations.User
 {
-    public class LoginRequestValidator  :AbstractValidator<LoginRequest>
+    public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
         public LoginRequestValidator()
         {

@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
+using GoodsExchange.BusinessLogic.RequestModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodsExchange.BusinessLogic.RequestModels.User
+namespace GoodsExchange.BusinessLogic.Validations.User
 {
-    public class RegisterRequestValidator  :AbstractValidator<RegisterRequest>
+    public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
     {
         public RegisterRequestValidator()
         {
@@ -29,7 +30,8 @@ namespace GoodsExchange.BusinessLogic.RequestModels.User
             RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required")
                                     .MinimumLength(6).WithMessage("Password is at least 6 characters");
 
-            RuleFor(x => x).Custom((request, context) => {
+            RuleFor(x => x).Custom((request, context) =>
+            {
                 if (request.Password != request.ConfirmPassword)
                 {
                     context.AddFailure("Confirm password is not match");
