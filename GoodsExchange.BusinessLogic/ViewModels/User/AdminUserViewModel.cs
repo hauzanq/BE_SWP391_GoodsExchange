@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodsExchange.Data.Models
+namespace GoodsExchange.BusinessLogic.ViewModels.User
 {
-    public class Role
+    public class AdminUserViewModel : BaseUserViewModel
     {
-        public Guid RoleId { get; set; }
         public string RoleName { get; set; }
-        public List<UserRole> UserRoles { get; set; }
+        public bool Status { get; set; }
     }
 }
