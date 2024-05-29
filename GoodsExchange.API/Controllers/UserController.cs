@@ -22,7 +22,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate(LoginRequest request)
+        public async Task<IActionResult> Authenticate(LoginRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -35,7 +35,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -51,16 +51,16 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("update-account")]
         [Authorize]
-        public async Task<IActionResult> UpdateUser(Guid id, UpdateUserRequestModel request)
+        public async Task<IActionResult> UpdateUser(UpdateUserRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.UpdateUser(id,request);
+            var result = await _userService.UpdateUser(request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -69,7 +69,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("update/active")]
+        [Route("{id}/active")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         public async Task<IActionResult> ActiveUser(Guid id)
         {
@@ -87,7 +87,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("update/deactive")]
+        [Route("{id}/deactive")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         public async Task<IActionResult> DeActiveUser(Guid id)
         {
@@ -105,9 +105,9 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("all")]
+        [Route("list-moderators")]
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
-        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] SearchRequestModel search, [FromQuery] GetAllUserRequestModel model)
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] SearchRequestModel search, [FromQuery] GetUserRequestModel model)
         {
             var result = await _userService.GetAll(paging, search, model);
             return Ok(result);
