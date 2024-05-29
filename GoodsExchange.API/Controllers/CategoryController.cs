@@ -22,65 +22,66 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         public async Task<ActionResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
         {
-            var categoryCreated = await _categoryService.CreateCategory(categoryCreate);
-
-            if (categoryCreated == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return categoryCreated;
+            var result = await _categoryService.CreateCategory(categoryCreate);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
 
         [HttpGet]
-        public async Task<ActionResult<List<CategoryViewModel>>> GetAll()
+        public async Task<ActionResult<CategoryViewModel>> GetAll()
         {
-            var categoryList = await _categoryService.GetAll();
-
-            if (categoryList == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return categoryList;
+            var result = await _categoryService.GetAll();
+            return Ok(result);
         }
 
 
-        [HttpGet("idTmp")]
-        public async Task<ActionResult<CategoryViewModel>> GetById(int idTmp)
+        [HttpGet("id")]
+        public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
         {
-            var categoryDetail = await _categoryService.GetById(idTmp);
-
-            if (categoryDetail == null)
-            {
-                return NotFound("");
-            }
-            return categoryDetail;
+            var result = await _categoryService.GetById(id);
+            return Ok(result);
         }
 
 
         [HttpDelete]
-        public async Task<ActionResult<bool>> DeleteCategory(int idTmp)
+        [Route("id")]
+        public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
-            var check = await _categoryService.DeleteCategory(idTmp);
-
-            if (check == false)
+            var result = await _categoryService.DeleteCategory(id);  
+            if (!result.IsSuccessed)
             {
-                return NotFound("");
+                return BadRequest(result);
             }
-            return check;
+            return Ok(result);
         }
 
 
         [HttpPut]
         public async Task<ActionResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryCreate)
         {
-            var categoryUpdated = await _categoryService.UpdateCategory(categoryCreate);
-
-            if (categoryUpdated == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return categoryUpdated;
+            var result = await _categoryService.UpdateCategory(categoryCreate);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
     }
 
