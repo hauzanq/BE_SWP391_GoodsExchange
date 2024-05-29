@@ -11,5 +11,6 @@ namespace GoodsExchange.BusinessLogic.ViewModels
         public DateTime UploadDate { get; set; }
         public DateTime ApprovedDate { get; set; }
         public Guid CategoryId { get; set; }
+
     }
 }
