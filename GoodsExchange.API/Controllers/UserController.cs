@@ -12,7 +12,7 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/users")]
     public class UserController : ControllerBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
@@ -70,7 +70,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch]
         [Route("update/active")]
-        [Authorize(Roles = SystemConstant.Roles.Administrator)]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
         public async Task<IActionResult> ActiveUser(Guid id)
         {
             if (!ModelState.IsValid)
@@ -88,7 +88,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch]
         [Route("update/deactive")]
-        [Authorize(Roles = SystemConstant.Roles.Administrator)]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
         public async Task<IActionResult> DeActiveUser(Guid id)
         {
             if (!ModelState.IsValid)

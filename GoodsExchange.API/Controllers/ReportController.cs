@@ -1,6 +1,8 @@
+using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
 using GoodsExchange.BusinessLogic.Services;
-using GoodsExchange.BusinessLogic.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodsExchange.API.Controllers
@@ -10,73 +12,73 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/reports")]
     public class ReportController : ControllerBase
     {
-
-        private IReportService _reportService;
-
+        private readonly IReportService _reportService;
         public ReportController(IReportService reportService)
         {
             _reportService = reportService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ReportViewModel>> CreateReport(CreateReportRequestModel reportCreate)
+        [Route("send")]
+        [Authorize]
+        public async Task<IActionResult> SendReport(CreateReportRequestModel request)
         {
-            var reportCreated =  await _reportService.CreateReport(reportCreate);
-
-            if (reportCreated == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return reportCreated;
+
+            var result = await _reportService.SendReport(request);
+            
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result.Message);
+            }
+
+            return Ok(result);    
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ReportViewModel>>> GetAll()
+        [Route("all")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging)
         {
-            var reportList = await _reportService.GetAll();
-
-            if (reportList == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("");
+                return BadRequest(ModelState);
             }
-            return reportList;
+
+            var result = await _reportService.GetAll(paging);
+
+            return Ok(result);
         }
 
-        [HttpGet("idTmp")]
-        public async Task<ActionResult<ReportViewModel>> GetById(int idTmp)
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var reportDetail = await _reportService.GetById(idTmp);
-
-            if (reportDetail == null)
+            var result = await _reportService.GetById(id);
+            if (!result.IsSuccessed)
             {
-                return NotFound("");
+                return BadRequest(result.Message);
             }
-            return reportDetail;
+            return Ok(result);
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<bool>> DeleteReport(int idTmp)
+        [HttpPost]
+        [Route("{id}")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> ApproveReport(Guid id)
         {
-            var check = await _reportService.DeleteReport(idTmp);
-
-            if (check == false)
+            var result = await _reportService.ApproveReport(id);
+            if (!result.IsSuccessed)
             {
-                return NotFound("");
+                return BadRequest(result.Message);
             }
-            return check;
+            return Ok(result);
         }
 
-        [HttpPut]
-        public async Task<ActionResult<ReportViewModel>> UpdateReport(UpdateReportRequestModel reportCreate)
-        {
-            var reportUpdated = await _reportService.UpdateReport(reportCreate);
-
-            if (reportUpdated == null)
-            {
-                return NotFound("");
-            }
-            return reportUpdated;
-        }
     }
 
 }

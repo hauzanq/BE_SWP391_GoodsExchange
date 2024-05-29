@@ -16,5 +16,7 @@ namespace GoodsExchange.Data.Models
         public User ReportReceived { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
+        public bool IsApprove { get; set; }
+        public bool IsActive { get; set; }
     }
 }
