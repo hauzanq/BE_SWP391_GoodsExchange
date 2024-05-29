@@ -50,17 +50,13 @@ namespace GoodsExchange.API.Controllers
         [HttpGet("id")]
         public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var result = await _categoryService.GetById(id);
             return Ok(result);
         }
 
 
         [HttpDelete]
-        [Route("{id:Guid}")]
+        [Route("id")]
         public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
             var result = await _categoryService.DeleteCategory(id);  
