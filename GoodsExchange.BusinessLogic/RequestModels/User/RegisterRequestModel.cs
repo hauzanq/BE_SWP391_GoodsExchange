@@ -1,6 +1,6 @@
 namespace GoodsExchange.BusinessLogic.RequestModels.User
 {
-    public class RegisterRequest
+    public class RegisterRequestModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
