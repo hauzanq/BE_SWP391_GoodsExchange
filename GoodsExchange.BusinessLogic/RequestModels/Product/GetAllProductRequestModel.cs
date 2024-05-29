@@ -17,6 +17,7 @@ namespace GoodsExchange.BusinessLogic.RequestModels.Product
         public bool? IsApproved { get; set; }
         public DateTime? StartApprovedDate { get; set; }
         public DateTime? EndApprovedDate { get; set; }
+
         public string CategoryName { get; set; }
     }
 }

@@ -1,42 +1,112 @@
+using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Category;
 using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.Data.Context;
+using GoodsExchange.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 namespace GoodsExchange.BusinessLogic.Services
 {
 
     public interface ICategoryService
     {
-        Task<CategoryViewModel> CreateCategory(CreateCategoryRequestModel categoryCreate);
-        Task<CategoryViewModel> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
-        Task<bool> DeleteCategory(int idTmp);
-        Task<List<CategoryViewModel>> GetAll();
-        Task<CategoryViewModel> GetById(int idTmp);
+        Task<ApiResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate);
+        Task<ApiResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
+        Task<ApiResult<bool>> DeleteCategory(Guid id);
+        Task<ApiResult<List<CategoryViewModel>>> GetAll();
+        Task<ApiResult<CategoryViewModel>>GetById(Guid idTmp);
     }
 
     public class CategoryService : ICategoryService
     {
-        public Task<CategoryViewModel> CreateCategory(CreateCategoryRequestModel categoryCreate)
+        private readonly GoodsExchangeDbContext _dbContext;
+        public CategoryService(GoodsExchangeDbContext dbContext)
+
+        {
+            _dbContext = dbContext;
+        }
+
+        /// <summary>
+        /// Create Categories has only categoriesName because categoriesID is indentity base on guid 
+        /// </summary>
+        /// <param name="categoryCreate"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
+        {
+            var category = new Category()
+            {
+                CategoryName = categoryCreate.CategoryName,
+            };
+            await _dbContext.AddAsync(category);
+            await _dbContext.SaveChangesAsync();
+
+            var result = new CategoryViewModel()
+            {
+                CategoryName = category.CategoryName,
+
+            };
+            return new ApiSuccessResult<CategoryViewModel>(result);
+
+        }
+        /// <summary>
+        /// Delete categories must be delete the relationship of categories such as Product ..
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ApiResult<bool>> DeleteCategory(Guid id)
+        {
+            var existedCategory = await _dbContext.Categories
+                                              //    .Include(c => c.Products)
+                                                  .Where(c=> c.CategoryId.Equals(id)).FirstOrDefaultAsync();
+            if (existedCategory == null)
+            {
+                return new ApiErrorResult<bool>("Categories doesn't existed");
+            }
+            _dbContext.Remove(existedCategory);
+            await _dbContext.SaveChangesAsync();
+            return new ApiSuccessResult<bool>(true);
+
+        }
+
+        public async Task<ApiResult<List<CategoryViewModel>>> GetAll()
+        {
+            var categories = await _dbContext.Categories.ToListAsync();
+            var result = categories.Select(c => new CategoryViewModel
+            {
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName,
+
+            }).ToList();
+            return new ApiSuccessResult<List<CategoryViewModel>>(result);
+        }
+
+
+
+        public Task<ApiResult<CategoryViewModel>>GetById(Guid idTmp)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteCategory(int idTmp)
+        public async Task<ApiResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
         {
-            throw new NotImplementedException();
-        }
+            var categoriesExisted = await _dbContext.Categories.FindAsync(categoryUpdate.CategoryId);
+            if(categoriesExisted == null)
+            {
+                return new ApiErrorResult<CategoryViewModel>("Categories doesn't existed");
+            }
+            
+            categoriesExisted.CategoryName = categoryUpdate.CategoryName;
+            await _dbContext.SaveChangesAsync();
+            var result = new CategoryViewModel()
+            {
+                
+                CategoryName = categoryUpdate.CategoryName,
+            };
+            return new ApiSuccessResult<CategoryViewModel>(result);
 
-        public Task<List<CategoryViewModel>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+            
 
-        public Task<CategoryViewModel> GetById(int idTmp)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<CategoryViewModel> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
-        {
-            throw new NotImplementedException();
+                        
         }
     }
 
