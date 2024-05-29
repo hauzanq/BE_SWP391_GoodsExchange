@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.BusinessLogic.RequestModels.User
 {
-    public class GetAllUserRequestModel
+    public class GetUserRequestModel
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

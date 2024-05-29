@@ -17,13 +17,15 @@ namespace GoodsExchange.BusinessLogic.Services
 
     public interface IUserService
     {
-        Task<ApiResult<string>> Authenticate(LoginRequest request);
-        Task<ApiResult<UserProfileViewModel>> Register(RegisterRequest request);
-        Task<ApiResult<UserProfileViewModel>> UpdateUser(Guid id, UpdateUserRequestModel request);
+        Task<ApiResult<string>> Authenticate(LoginRequestModel request);
+        Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request);
+        Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request);
         Task<ApiResult<bool>> ActiveUser(Guid id);
         Task<ApiResult<bool>> DeActiveUser(Guid id);
-        Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetAllUserRequestModel model);
+        Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model);
         Task<ApiResult<UserProfileViewModel>> GetById(Guid id);
+        Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request);
+        Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request);
     }
 
     public class UserService : IUserService
@@ -54,12 +56,17 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
+        public async Task<ApiResult<string>> Authenticate(LoginRequestModel request)
         {
             var user = await _context.Users.Where(u => u.UserName == request.UserName && u.Password == request.Password).FirstOrDefaultAsync();
             if (user == null)
             {
                 return new ApiErrorResult<string>("User does not exist");
+            }
+
+            if (!user.Status)
+            {
+                return new ApiErrorResult<string>("User account is inactive");
             }
 
             var roles = await _roleService.GetRolesOfUser(user.UserId);
@@ -88,6 +95,31 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
+        public async Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request)
+        {
+            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            if (request.UserName != user.UserName )
+            {
+                return new ApiErrorResult<string>("UserName is incorrect.");
+            }
+
+            if (request.OldPassword != user.Password)
+            {
+                return new ApiErrorResult<string>("OldPassword is incorrect.");
+            }
+
+            if (request.ConfirmNewPassword != request.ConfirmNewPassword)
+            {
+                return new ApiErrorResult<string>("New password and confirm new password do not match.");
+            }
+
+            user.Password = request.NewPassword;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<string>("Change password successfully.");
+
+        }
+
         public async Task<ApiResult<bool>> DeActiveUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -102,9 +134,14 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetAllUserRequestModel model)
+        public Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request)
         {
-            var query = _context.Users.Include(u => u.UserRoles).AsQueryable();
+            throw new NotImplementedException();
+        }
+
+        public async Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model)
+        {
+            var query = _context.Users.Include(u => u.UserRoles).AsQueryable().Where(u=>u.UserRoles.Any(ur=>ur.Role.RoleName == SystemConstant.Roles.Moderator));
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -200,7 +237,7 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> Register(RegisterRequest request)
+        public async Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request)
         {
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName);
             if (usernameAvailable)
@@ -252,27 +289,23 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> UpdateUser(Guid id, UpdateUserRequestModel request)
+        public async Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request)
         {
-            var currentUserId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (currentUserId != id)
-            {
-                return new ApiErrorResult<UserProfileViewModel>("You do not have permission to update information for this account");
-            }
+            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)));
 
-            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != id);
+            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
             if (usernameAvailable)
             {
                 return new ApiErrorResult<UserProfileViewModel>("Username available.");
             }
 
-            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != id);
+            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
             if (emailAvailable)
             {
                 return new ApiErrorResult<UserProfileViewModel>("Email available.");
             }
 
-            var user = await _context.Users.FindAsync(id);
+            
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = request.Email;
