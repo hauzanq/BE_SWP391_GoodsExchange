@@ -20,4 +20,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\GoodsExchange.Data\GoodsExchange.Data.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="ViewModels\Category\" />
+	  <Folder Include="ViewModels\Rating\" />
+	  <Folder Include="ViewModels\Report\" />
+	  <Folder Include="ViewModels\Role\" />
+	</ItemGroup>
 </Project>
