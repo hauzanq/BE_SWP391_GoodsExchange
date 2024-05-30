@@ -61,6 +61,7 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 ReportMade = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
                 ReportReceived = _userService.GetById(report.TargetUserId).Result.Data.UserName.ToString(),
+                ProductId = _productService.GetById(report.ProductId).Result.Data.ProductId,
                 ProductName = _productService.GetById(report.ProductId).Result.Data.ProductName.ToString(),
                 Reason = report.Reason,
                 IsApprove = false,
@@ -80,6 +81,7 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 ReportMade = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
                 ReportReceived = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
+                ProductId = _productService.GetById(report.ProductId).Result.Data.ProductId,
                 ProductName = _productService.GetById(report.ProductId).Result.Data.ProductName.ToString(),
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
@@ -108,6 +110,7 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 ReportMade = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
                 ReportReceived = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
+                ProductId = _productService.GetById(report.ProductId).Result.Data.ProductId,
                 ProductName = _productService.GetById(report.ProductId).Result.Data.ProductName.ToString(),
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
