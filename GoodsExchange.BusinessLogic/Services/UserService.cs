@@ -80,13 +80,13 @@ namespace GoodsExchange.BusinessLogic.Services
                 new Claim(ClaimTypes.Role, string.Join(";",roles))
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTAuthentication:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken
                 (
-                    issuer: _configuration["Tokens:Issuer"],
-                    audience: _configuration["Tokens:Issuer"],
+                    issuer: _configuration["JWTAuthentication:Issuer"],
+                    audience: _configuration["JWTAuthentication:Issuer"],
                     claims: userClaims,
                     expires: DateTime.Now.AddHours(3),
                     signingCredentials: creds
