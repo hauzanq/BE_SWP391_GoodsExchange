@@ -23,5 +23,6 @@ namespace GoodsExchange.Data.Models
         public List<Rate> RatingsReceived { get; set; }
         public List<Report> ReportsMade { get; set; }
         public List<Report> ReportsReceived { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

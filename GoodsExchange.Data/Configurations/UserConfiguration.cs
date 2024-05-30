@@ -31,6 +31,8 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(u => u.Status).IsRequired();
 
+            builder.HasMany(u => u.Products).WithOne(p => p.UserUpload).HasForeignKey(p => p.UserUploadId);
+
         }
     }
 }

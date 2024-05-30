@@ -10,7 +10,7 @@ namespace GoodsExchange.BusinessLogic.ViewModels
         public bool Status { get; set; }
         public DateTime UploadDate { get; set; }
         public DateTime ApprovedDate { get; set; }
-        public Guid CategoryId { get; set; }
+        public string CategoryName { get; set; }
 
     }
 }

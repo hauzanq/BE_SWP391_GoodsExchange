@@ -58,6 +58,18 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("{id}/details")]
+        public async Task<IActionResult> GetProductDetails(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _productService.GetProductDetails(id);
+            return Ok(result);
+        }
+
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Seller)]

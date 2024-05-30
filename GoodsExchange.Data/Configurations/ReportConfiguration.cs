@@ -22,7 +22,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasOne(u => u.ReportReceived).WithMany(r => r.ReportsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(r => r.Product).WithMany(p => p.Report).HasForeignKey(r => r.ProductId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(r => r.Product).WithMany(p => p.Reports).HasForeignKey(r => r.ProductId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
