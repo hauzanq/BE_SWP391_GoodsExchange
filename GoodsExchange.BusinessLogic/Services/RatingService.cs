@@ -1,7 +1,4 @@
-using GoodsExchange.BusinessLogic.RequestModels.Rating;
-using GoodsExchange.BusinessLogic.ViewModels;
 using GoodsExchange.Data.Context;
-using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoodsExchange.BusinessLogic.Services
