@@ -32,7 +32,7 @@ namespace GoodsExchange.Data.Extensions
                 );
             builder.Entity<User>().HasData
                 (
-                    new User()
+                    new User()      // Administrator
                     {
                         UserId = new Guid("0AF02748-9D43-4110-81E5-93D9ECE8CFDA"),
                         FirstName = "John",
@@ -45,7 +45,7 @@ namespace GoodsExchange.Data.Extensions
                         Password = "password123",
                         Status = true
                     },
-                    new User()
+                    new User()      // Moderator
                     {
                         UserId = new Guid("B6B6E80F-CC04-43E3-800F-A3C89B3BA017"),
                         FirstName = "Jane",
@@ -58,7 +58,7 @@ namespace GoodsExchange.Data.Extensions
                         Password = "password456",
                         Status = true
                     },
-                    new User
+                    new User        // Buyer
                     {
                         UserId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         FirstName = "Michael",
@@ -71,7 +71,7 @@ namespace GoodsExchange.Data.Extensions
                         Password = "password789",
                         Status = false
                     },
-                    new User
+                    new User        // Buyer
                     {
                         UserId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         FirstName = "Emily",
@@ -84,7 +84,7 @@ namespace GoodsExchange.Data.Extensions
                         Password = "passwordabc",
                         Status = true
                     },
-                    new User
+                    new User        // Seller
                     {
                         UserId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
                         FirstName = "David",
@@ -160,6 +160,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 2.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 4, 15),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 4, 16),
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
@@ -173,6 +174,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 4.50f,
                         Status = true,
                         UploadDate = new DateTime(2023, 5, 1),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 5, 2),
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
@@ -186,6 +188,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 9.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 3, 20),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 3, 21),
                         CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF")
@@ -199,6 +202,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 12.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 6, 1),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 6, 2),
                         CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF")
@@ -212,6 +216,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 29.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 2, 10),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 2, 11),
                         CategoryId = new Guid("F0FDE948-4E6D-4412-A417-3EAC5F927D44")
@@ -225,6 +230,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 14.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 7, 1),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 7, 2),
                         CategoryId = new Guid("F0FDE948-4E6D-4412-A417-3EAC5F927D44")
@@ -238,6 +244,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 59.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 3, 15),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 3, 16),
                         CategoryId = new Guid("E0B58109-B173-442A-86D5-972E0BC3E093")
@@ -251,6 +258,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 299.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 5, 20),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 5, 21),
                         CategoryId = new Guid("E0B58109-B173-442A-86D5-972E0BC3E093")
@@ -264,6 +272,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 1.50f,
                         Status = true,
                         UploadDate = new DateTime(2023, 4, 1),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 4, 2),
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
@@ -277,6 +286,7 @@ namespace GoodsExchange.Data.Extensions
                         Price = 3.99f,
                         Status = true,
                         UploadDate = new DateTime(2023, 6, 15),
+                        UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
                         ApprovedDate = new DateTime(2023, 6, 16),
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")

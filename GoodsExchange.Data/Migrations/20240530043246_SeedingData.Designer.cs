@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240526050808_AddFieldForReport")]
-    partial class AddFieldForReport
+    [Migration("20240530043246_SeedingData")]
+    partial class SeedingData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,16 +101,21 @@ namespace GoodsExchange.Data.Migrations
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserUploadId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("ProductId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserUploadId");
 
                     b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("577a210a-3db6-4ef6-85f1-f0de92da33f4"),
+                            ProductId = new Guid("0daf9fce-edd6-4b04-acf6-78b1cf4fae82"),
                             ApprovedDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Premium ballpoint pen for everyday use",
@@ -119,11 +124,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
                             ProductName = "Ballpoint Pen",
                             Status = true,
-                            UploadDate = new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("5954a910-2598-4b69-8508-7a07394f2b3d"),
+                            ProductId = new Guid("37d23fef-e712-4484-90b2-73224e1ff670"),
                             ApprovedDate = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable mechanical pencil with 0.5mm lead",
@@ -132,11 +138,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
                             ProductName = "Mechanical Pencil",
                             Status = true,
-                            UploadDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("24d383c7-f644-49b5-a679-2ce074b92890"),
+                            ProductId = new Guid("26b45647-a505-41e4-bdad-b4176ea7b433"),
                             ApprovedDate = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "Set of 24 high-quality colored pencils",
@@ -145,11 +152,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/colored-pencils.jpg",
                             ProductName = "Colored Pencils",
                             Status = true,
-                            UploadDate = new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("58397f59-aed9-4c18-a396-3820505dd05e"),
+                            ProductId = new Guid("2ea7d4c6-a31a-4705-9967-1eab8772be73"),
                             ApprovedDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "A5 size sketchbook with acid-free pages",
@@ -158,11 +166,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/sketchbook.jpg",
                             ProductName = "Sketchbook",
                             Status = true,
-                            UploadDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("e2fa0f4b-48cf-4fdf-987b-e2914b04addf"),
+                            ProductId = new Guid("50437644-f174-4bed-9665-b18989aae882"),
                             ApprovedDate = new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "High school-level chemistry textbook",
@@ -171,11 +180,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
                             ProductName = "Chemistry Textbook",
                             Status = true,
-                            UploadDate = new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("f933f3b1-6aa4-4892-a17f-a819e3c1b796"),
+                            ProductId = new Guid("46ef99d0-5aa3-4ba4-9f80-7319ad5d8e6c"),
                             ApprovedDate = new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "Grade 7 mathematics practice workbook",
@@ -184,11 +194,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/math-workbook.jpg",
                             ProductName = "Mathematics Workbook",
                             Status = true,
-                            UploadDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("1480b424-e089-46d9-af4a-55f84a7c4f07"),
+                            ProductId = new Guid("3fa8d0e8-62e1-4672-aaed-3644b8030ca7"),
                             ApprovedDate = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "Scientific calculator with graphing capabilities",
@@ -197,11 +208,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/graphing-calculator.jpg",
                             ProductName = "Graphing Calculator",
                             Status = true,
-                            UploadDate = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("87b9299d-b192-4bb7-afa2-ef975509a12a"),
+                            ProductId = new Guid("23404ff4-750c-4041-8b45-20dda9cd3f83"),
                             ApprovedDate = new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "High-performance tablet for educational use",
@@ -210,11 +222,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/tablet-computer.jpg",
                             ProductName = "Tablet Computer",
                             Status = true,
-                            UploadDate = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("64fe6e60-3fc6-4070-9372-9128a0b32e45"),
+                            ProductId = new Guid("d5006d69-db7e-4a60-93cf-9a47a27d755d"),
                             ApprovedDate = new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable 30cm plastic ruler",
@@ -223,11 +236,12 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/ruler.jpg",
                             ProductName = "Ruler",
                             Status = true,
-                            UploadDate = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         },
                         new
                         {
-                            ProductId = new Guid("2206107c-a77f-461c-800f-9bf87a6cd389"),
+                            ProductId = new Guid("8f9b0f6f-deff-4b4a-8745-64dca2467540"),
                             ApprovedDate = new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Set of 4 fluorescent highlighters",
@@ -236,7 +250,8 @@ namespace GoodsExchange.Data.Migrations
                             ProductImageUrl = "https://example.com/highlighter-set.jpg",
                             ProductName = "Highlighter Set",
                             Status = true,
-                            UploadDate = new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UploadDate = new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
                         });
                 });
 
@@ -521,7 +536,15 @@ namespace GoodsExchange.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GoodsExchange.Data.Models.User", "UserUpload")
+                        .WithMany("Products")
+                        .HasForeignKey("UserUploadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("UserUpload");
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Rate", b =>
@@ -529,7 +552,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasOne("GoodsExchange.Data.Models.Product", "Product")
                         .WithOne("Rate")
                         .HasForeignKey("GoodsExchange.Data.Models.Rate", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("GoodsExchange.Data.Models.User", "RatingGiven")
@@ -554,7 +577,7 @@ namespace GoodsExchange.Data.Migrations
             modelBuilder.Entity("GoodsExchange.Data.Models.Report", b =>
                 {
                     b.HasOne("GoodsExchange.Data.Models.Product", "Product")
-                        .WithMany("Report")
+                        .WithMany("Reports")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -607,7 +630,7 @@ namespace GoodsExchange.Data.Migrations
                     b.Navigation("Rate")
                         .IsRequired();
 
-                    b.Navigation("Report");
+                    b.Navigation("Reports");
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Role", b =>
@@ -617,6 +640,8 @@ namespace GoodsExchange.Data.Migrations
 
             modelBuilder.Entity("GoodsExchange.Data.Models.User", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("RatingsGiven");
 
                     b.Navigation("RatingsReceived");
