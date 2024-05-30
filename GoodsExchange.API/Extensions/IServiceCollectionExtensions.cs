@@ -27,7 +27,7 @@ namespace GoodsExchange.API.Extensions
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
                     ValidIssuer = configuration["JWTAuthentication:Issuer"],
-                    ValidAudience = configuration["JWTAuthentication:Key"],
+                    ValidAudience = configuration["JWTAuthentication:Issuer"],
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTAuthentication:Key"]))
 
