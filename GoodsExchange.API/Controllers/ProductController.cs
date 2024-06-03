@@ -38,14 +38,6 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            var result = await _productService.GetById(id);
-            return Ok(result);
-        }
-
         [HttpPost]
         [Route("all")]
         public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
@@ -59,14 +51,14 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("{id}/details")]
+        [Route("{id}")]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetProductDetails(id);
+            var result = await _productService.GetById(id);
             return Ok(result);
         }
 

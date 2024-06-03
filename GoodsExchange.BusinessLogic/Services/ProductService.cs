@@ -5,7 +5,6 @@ using GoodsExchange.BusinessLogic.ViewModels.Product;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace GoodsExchange.BusinessLogic.Services
 {
@@ -16,8 +15,7 @@ namespace GoodsExchange.BusinessLogic.Services
         Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
         Task<ApiResult<bool>> DeleteProduct(Guid id);
         Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model);
-        Task<ApiResult<ProductViewModel>> GetById(Guid id);
-        Task<ApiResult<ProductDetailsViewModel>> GetProductDetails(Guid id);
+        Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id);
         Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
         Task<ApiResult<bool>> ApproveProduct(Guid id);
     }
@@ -56,7 +54,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 Price = request.Price,
                 CategoryId = request.CategoryId,
                 UploadDate = DateTime.Now,
-                Status = false
+                IsActive = false
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
@@ -68,7 +66,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 Price = product.Price,
                 CategoryName = product.Category.CategoryName,
                 UploadDate = product.UploadDate,
-                Status = product.Status
+                Status = product.IsActive
             };
 
             return new ApiSuccessResult<ProductViewModel>(result);
@@ -90,7 +88,7 @@ namespace GoodsExchange.BusinessLogic.Services
 
         public async Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel paging, SearchRequestModel search, GetAllProductRequestModel model)
         {
-            var query = _context.Products.Where(p => p.UserUpload.Status == true).AsQueryable();
+            var query = _context.Products.Where(p => p.UserUpload.IsActive == true).AsQueryable();
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -115,7 +113,7 @@ namespace GoodsExchange.BusinessLogic.Services
             }
             if (model.Status != null)
             {
-                query = query.Where(p => p.Status == model.Status);
+                query = query.Where(p => p.IsActive == model.Status);
             }
             if (model.StartUploadDate != null)
             {
@@ -181,7 +179,7 @@ namespace GoodsExchange.BusinessLogic.Services
                                     ProductName = p.ProductName,
                                     Description = p.Description,
                                     ProductImageUrl = p.ProductImageUrl,
-                                    Status = p.Status,
+                                    Status = p.IsActive,
                                     Price = p.Price,
                                     CategoryName = p.Category.CategoryName,
                                     ApprovedDate = p.ApprovedDate,
@@ -198,27 +196,6 @@ namespace GoodsExchange.BusinessLogic.Services
             return result;
         }
 
-        public async Task<ApiResult<ProductViewModel>> GetById(Guid id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return new ApiErrorResult<ProductViewModel>("Product does not exists.");
-            }
-
-            var result = new ProductViewModel()
-            {
-                ProductName = product.ProductName,
-                Description = product.Description,
-                ProductImageUrl = product.ProductImageUrl,
-                Price = product.Price,
-                CategoryName = product.Category.CategoryName,
-                UploadDate = product.UploadDate,
-                Status = product.Status
-            };
-
-            return new ApiSuccessResult<ProductViewModel>(result);
-        }
 
         public async Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request)
         {
@@ -232,7 +209,7 @@ namespace GoodsExchange.BusinessLogic.Services
             product.Description = request.Description;
             product.ProductImageUrl = request.ProductImageUrl;
             product.Price = request.Price.Value;
-            product.Status = request.Status.Value;
+            product.IsActive = request.Status.Value;
             product.CategoryId = request.CategoryId;
 
             await _context.SaveChangesAsync();
@@ -244,7 +221,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 Price = product.Price,
                 CategoryName = product.Category.CategoryName,
                 UploadDate = product.UploadDate,
-                Status = product.Status
+                Status = product.IsActive
             };
 
             return new ApiSuccessResult<ProductViewModel>(result);
@@ -258,13 +235,13 @@ namespace GoodsExchange.BusinessLogic.Services
                 return new ApiErrorResult<bool>("Product does not exists.");
             }
 
-            product.Status = status;
+            product.IsActive = status;
             await _context.SaveChangesAsync();
 
             return new ApiSuccessResult<bool>();
         }
 
-        public async Task<ApiResult<ProductDetailsViewModel>> GetProductDetails(Guid id)
+        public async Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
