@@ -1,4 +1,5 @@
-﻿using GoodsExchange.BusinessLogic.RequestModels.Email;
+﻿using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.RequestModels.Email;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace GoodsExchange.BusinessLogic.Services
 {
     public interface IEmailService
     {
-        Task<bool> SendEmailAsync(EmailRequestModel request);
+        Task<ApiResult<bool>> SendEmailAsync(EmailRequestModel request);
     }
     public  class EmailService : IEmailService
     {
@@ -19,9 +20,8 @@ namespace GoodsExchange.BusinessLogic.Services
             _emailSettings = emailSetting.Value;
         }
 
-        public Task<bool> SendEmailAsync(EmailRequestModel request)
+        public Task<ApiResult<bool>> SendEmailAsync(EmailRequestModel request)
         {
-
             throw new NotImplementedException();
         }
     }
