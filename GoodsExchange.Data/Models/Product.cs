@@ -7,7 +7,7 @@
         public string Description { get; set; }
         public string ProductImageUrl { get; set; }
         public float Price { get; set; }
-        public bool Status { get; set; }
+        public bool IsActive { get; set; }
         public DateTime UploadDate { get; set; }
         public Guid UserUploadId { get; set; }
         public User UserUpload{ get; set; }

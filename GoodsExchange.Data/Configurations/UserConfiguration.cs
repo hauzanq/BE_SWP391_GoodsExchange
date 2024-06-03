@@ -31,7 +31,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(u => u.PhoneNumber).HasMaxLength(20);
 
-            builder.Property(u => u.Status).IsRequired();
+            builder.Property(u => u.IsActive).IsRequired();
 
             builder.HasMany(u => u.Products).WithOne(p => p.UserUpload).HasForeignKey(p => p.UserUploadId);
 

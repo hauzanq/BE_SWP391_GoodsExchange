@@ -17,11 +17,10 @@ namespace GoodsExchange.BusinessLogic.Services
 
     public interface IUserService
     {
-        Task<ApiResult<string>> Authenticate(LoginRequestModel request);
+        Task<ApiResult<string>> Login(LoginRequestModel request);
         Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request);
         Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request);
-        Task<ApiResult<bool>> ActiveUser(Guid id);
-        Task<ApiResult<bool>> DeActiveUser(Guid id);
+        Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status);
         Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model);
         Task<ApiResult<UserProfileViewModel>> GetById(Guid id);
         Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request);
@@ -42,7 +41,7 @@ namespace GoodsExchange.BusinessLogic.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResult<bool>> ActiveUser(Guid id)
+        public async Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -50,13 +49,13 @@ namespace GoodsExchange.BusinessLogic.Services
                 return new ApiErrorResult<bool>("User does not exist");
             }
 
-            user.Status = true;
+            user.IsActive = status;
             await _context.SaveChangesAsync();
 
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<string>> Authenticate(LoginRequestModel request)
+        public async Task<ApiResult<string>> Login(LoginRequestModel request)
         {
             var user = await _context.Users.Where(u => u.UserName == request.UserName && u.Password == request.Password).FirstOrDefaultAsync();
             if (user == null)
@@ -64,7 +63,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 return new ApiErrorResult<string>("User does not exist");
             }
 
-            if (!user.Status)
+            if (!user.IsActive)
             {
                 return new ApiErrorResult<string>("User account is inactive");
             }
@@ -119,21 +118,7 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<string>("Change password successfully.");
 
         }
-
-        public async Task<ApiResult<bool>> DeActiveUser(Guid id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return new ApiErrorResult<bool>("User does not exist");
-            }
-
-            user.Status = false;
-            await _context.SaveChangesAsync();
-
-            return new ApiSuccessResult<bool>(true);
-        }
-
+        
         public Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request)
         {
             throw new NotImplementedException();
@@ -160,7 +145,7 @@ namespace GoodsExchange.BusinessLogic.Services
 
             if (model.Status != null)
             {
-                query = query.Where(u => u.Status == model.Status);
+                query = query.Where(u => u.IsActive == model.Status);
             }
 
             #endregion
@@ -203,7 +188,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 LastName = u.LastName,
                 Email = u.Email,
                 RoleName = string.Join(", ", u.UserRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.Role.RoleName)),
-                Status = u.Status
+                Status = u.IsActive
             }).ToListAsync();
 
             var result = new PageResult<AdminUserViewModel>()
@@ -264,7 +249,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 UserImageUrl = request.UserImageUrl,
                 UserName = request.UserName,
                 Password = request.Password,
-                Status = true,
+                IsActive = true,
                 UserRoles = new List<UserRole>
                 {
                     new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },

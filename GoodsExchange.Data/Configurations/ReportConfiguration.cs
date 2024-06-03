@@ -13,7 +13,9 @@ namespace GoodsExchange.Data.Configurations
             builder.HasKey(r => r.ReportId);
 
             builder.Property(r => r.Reason).IsRequired().HasMaxLength(255);
-            
+
+            builder.Property(r => r.CreateDate).HasColumnType("datetime");
+
             builder.Property(r => r.IsApprove).IsRequired().HasDefaultValue(false);
 
             builder.Property(r => r.IsActive).IsRequired().HasDefaultValue(true);
