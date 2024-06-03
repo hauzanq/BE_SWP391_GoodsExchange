@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.BusinessLogic.RequestModels.Email
 {
+    /// <summary>
+    /// SOME INFORMATION ABOUT GMAIL ToEmail.
+    /// Subject : nội dung Title của một Email Thông thường 
+    /// Body : Render HTML/CSS to send content with popular and friendly for ToEmail
+    /// </summary>
     public class EmailRequestModel
     {
         public string ToEmail {  get; set; }
