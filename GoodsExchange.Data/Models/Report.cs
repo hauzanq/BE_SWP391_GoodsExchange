@@ -10,6 +10,7 @@ namespace GoodsExchange.Data.Models
     {
         public Guid ReportId { get; set; }
         public string Reason { get; set; }
+        public DateTime CreateDate { get; set; }
         public Guid ReportingUserId { get; set; }
         public User ReportMade { get; set; }
         public Guid TargetUserId { get; set; }

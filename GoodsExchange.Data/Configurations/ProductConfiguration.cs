@@ -25,7 +25,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(p => p.Price).IsRequired();
 
-            builder.Property(p => p.Status).IsRequired();
+            builder.Property(p => p.IsActive).IsRequired();
 
             builder.HasMany(p=>p.Reports).WithOne(r=>r.Product).HasForeignKey(r=>r.ProductId);  
 
