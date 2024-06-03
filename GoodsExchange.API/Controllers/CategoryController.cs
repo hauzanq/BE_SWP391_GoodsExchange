@@ -1,13 +1,16 @@
+using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Category;
 using GoodsExchange.BusinessLogic.Services;
 using GoodsExchange.BusinessLogic.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodsExchange.API.Controllers
 {
 
     [ApiController]
-    [Route("/api/v1/categorys")]
+    [Route("/api/v1/categories")]
+
     public class CategoryController : ControllerBase
     {
 
@@ -20,6 +23,8 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+
         public async Task<ActionResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
         {
             if (!ModelState.IsValid)
@@ -57,6 +62,8 @@ namespace GoodsExchange.API.Controllers
 
         [HttpDelete]
         [Route("id")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+
         public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
             var result = await _categoryService.DeleteCategory(id);  

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.BusinessLogic.Services
 {
+    /// <summary>
+    /// Setting Email Server Host 
+    /// </summary>
     public class EmailSettings
     {
         public string Email { get; set; }
