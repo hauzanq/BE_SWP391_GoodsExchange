@@ -42,12 +42,11 @@ namespace GoodsExchange.API.Extensions
             {
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
-                    Description =
-                        @"JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below. Example: 'Bearer 12345example'",
                     Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Description = "JWT Authorization using the Bearer scheme. \"Bearer\" is not needed.Just paste the jwt"
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
