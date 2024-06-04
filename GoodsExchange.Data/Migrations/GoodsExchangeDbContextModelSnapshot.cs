@@ -113,7 +113,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("50eb83df-c77d-4ce3-a391-6a4f9c1cd2cf"),
+                            ProductId = new Guid("585bb080-ff25-4c6a-8c18-3202ae908861"),
                             ApprovedDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Premium ballpoint pen for everyday use",
@@ -127,7 +127,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("447db95d-5f61-4ec8-8dcb-a1ceb8c4cdfa"),
+                            ProductId = new Guid("7c9b35fd-0016-4f57-93ba-99934213cdaa"),
                             ApprovedDate = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable mechanical pencil with 0.5mm lead",
@@ -141,7 +141,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("e8b1c158-c5f1-4fe5-a7d0-a2ba72108a50"),
+                            ProductId = new Guid("bfb1099b-0452-44b0-a639-1f33bad1b6df"),
                             ApprovedDate = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "Set of 24 high-quality colored pencils",
@@ -155,7 +155,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("963d621d-67a6-4315-b0f3-7945ce69e7bf"),
+                            ProductId = new Guid("739f8541-2523-4077-8e8a-b301722d7e5f"),
                             ApprovedDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "A5 size sketchbook with acid-free pages",
@@ -169,7 +169,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("e14df864-42b8-443b-98f1-77ffded29dcb"),
+                            ProductId = new Guid("54602982-ebf4-43fc-9f57-327d5f0a0acf"),
                             ApprovedDate = new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "High school-level chemistry textbook",
@@ -183,7 +183,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("1bcf8677-48ed-441b-a6cd-fe5a59d5f0c4"),
+                            ProductId = new Guid("f713762a-f0e8-4648-9064-38de61c88bf4"),
                             ApprovedDate = new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "Grade 7 mathematics practice workbook",
@@ -197,7 +197,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("ce56a4ed-e16f-4781-b084-ca06304e6566"),
+                            ProductId = new Guid("e97f1563-dc67-4d96-8077-9db254a9fda5"),
                             ApprovedDate = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "Scientific calculator with graphing capabilities",
@@ -211,7 +211,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("289e4c30-50fa-4bd6-932d-7aad9a594156"),
+                            ProductId = new Guid("113df6d1-2d9e-4140-acd7-d7ab00a915e7"),
                             ApprovedDate = new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "High-performance tablet for educational use",
@@ -225,7 +225,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("4ec642f8-2530-4f2b-880d-fa139bae57d2"),
+                            ProductId = new Guid("b51b8a83-ccde-457e-94d6-dbda5550e75b"),
                             ApprovedDate = new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable 30cm plastic ruler",
@@ -239,7 +239,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("ef403b25-a514-4710-b5a6-9f28d9f67d0f"),
+                            ProductId = new Guid("a17ca448-ea39-4a7c-87db-45c2f444cd19"),
                             ApprovedDate = new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Set of 4 fluorescent highlighters",
