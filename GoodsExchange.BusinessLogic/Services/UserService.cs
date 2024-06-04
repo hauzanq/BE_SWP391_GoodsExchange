@@ -73,11 +73,11 @@ namespace GoodsExchange.BusinessLogic.Services
 
             var userClaims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
-                new Claim(ClaimTypes.Role, string.Join(";",roles))
+                new Claim("id",user.UserId.ToString()),
+                new Claim("username",user.UserName),
+                new Claim("emailaddress", user.Email),
+                new Claim("mobilephone", user.PhoneNumber),
+                new Claim("roles", string.Join(";",roles))
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTAuthentication:Key"]));
