@@ -1,5 +1,6 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
+using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.User;
 using GoodsExchange.BusinessLogic.ViewModels.User;
 using GoodsExchange.Data.Context;
@@ -17,7 +18,7 @@ namespace GoodsExchange.BusinessLogic.Services
 
     public interface IUserService
     {
-        Task<ApiResult<string>> Login(LoginRequestModel request);
+        Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request);
         Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request);
         Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request);
         Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status);
@@ -55,17 +56,17 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<string>> Login(LoginRequestModel request)
+        public async Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request)
         {
             var user = await _context.Users.Where(u => u.UserName == request.UserName && u.Password == request.Password).FirstOrDefaultAsync();
             if (user == null)
             {
-                return new ApiErrorResult<string>("User does not exist");
+                return new ApiErrorResult<LoginViewModel>("User does not exist");
             }
 
             if (!user.IsActive)
             {
-                return new ApiErrorResult<string>("User account is inactive");
+                return new ApiErrorResult<LoginViewModel>("User account is inactive");
             }
 
             var roles = await _roleService.GetRolesOfUser(user.UserId);
@@ -91,12 +92,16 @@ namespace GoodsExchange.BusinessLogic.Services
                     signingCredentials: creds
                 );
 
-            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+            return new ApiSuccessResult<LoginViewModel>(new LoginViewModel()
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Roles = _roleService.GetRolesOfUser(user.UserId).Result
+            });
         }
 
         public async Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request)
         {
-            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             if (request.UserName != user.UserName )
             {
                 return new ApiErrorResult<string>("UserName is incorrect.");
@@ -276,8 +281,7 @@ namespace GoodsExchange.BusinessLogic.Services
 
         public async Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request)
         {
-            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)));
-
+            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
             if (usernameAvailable)
             {
