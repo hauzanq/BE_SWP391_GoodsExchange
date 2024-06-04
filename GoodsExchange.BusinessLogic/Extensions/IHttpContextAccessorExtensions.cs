@@ -8,13 +8,13 @@ namespace GoodsExchange.BusinessLogic.Extensions
         public static string GetCurrentUserName(this IHttpContextAccessor httpContextAccessor)
         {
             var user = httpContextAccessor.HttpContext?.User;
-            return user?.FindFirstValue(ClaimTypes.Name);
+            return user?.FindFirstValue("username");
         }
 
         public static string GetCurrentUserId(this IHttpContextAccessor httpContextAccessor)
         {
             var user = httpContextAccessor.HttpContext?.User;
-            return user?.FindFirstValue(ClaimTypes.NameIdentifier);
+            return user?.FindFirstValue("id");
         }
     }
 }
