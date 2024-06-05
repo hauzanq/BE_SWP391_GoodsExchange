@@ -28,7 +28,9 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             var token = await _userService.Login(request);
+
             return Ok(token);
         }
 
