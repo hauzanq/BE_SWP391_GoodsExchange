@@ -11,6 +11,7 @@ namespace GoodsExchange.Data.Models
         public Guid RatingId { get; set; }
         public int NumberStars { get; set; }
         public string Feedback { get; set; }
+        public DateTime CreateDate { get; set; }
         public Guid RatingUserId { get; set; }
         public User RatingGiven { get; set; }
         public Guid TargetUserId { get; set; }

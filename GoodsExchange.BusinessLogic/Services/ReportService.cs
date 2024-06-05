@@ -1,6 +1,6 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
-using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.BusinessLogic.ViewModels.Report;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +20,10 @@ namespace GoodsExchange.BusinessLogic.Services
     {
         private readonly GoodsExchangeDbContext _context;
         private readonly IUserService _userService;
-        private readonly IProductService _productService;
-        public ReportService(GoodsExchangeDbContext context, IUserService userService, IProductService productService)
+        public ReportService(GoodsExchangeDbContext context, IUserService userService)
         {
             _context = context;
             _userService = userService;
-            _productService = productService;
         }
 
         public async Task<ApiResult<bool>> ApproveReport(Guid id)
@@ -61,8 +59,8 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 ReportMade = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
                 ReportReceived = _userService.GetById(report.TargetUserId).Result.Data.UserName.ToString(),
-                ProductId = _productService.GetById(report.ProductId).Result.Data.ProductId,
-                ProductName = _productService.GetById(report.ProductId).Result.Data.ProductName.ToString(),
+                ProductId = _context.Products.Find(report.ProductId).ProductId,
+                ProductName = _context.Products.Find(report.ProductId).ProductName,
                 Reason = report.Reason,
                 IsApprove = false,
                 IsActive = true
@@ -81,8 +79,8 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 ReportMade = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
                 ReportReceived = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
-                ProductId = _productService.GetById(report.ProductId).Result.Data.ProductId,
-                ProductName = _productService.GetById(report.ProductId).Result.Data.ProductName.ToString(),
+                ProductId = _context.Products.Find(report.ProductId).ProductId,
+                ProductName = _context.Products.Find(report.ProductId).ProductName,
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive  
@@ -110,8 +108,8 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 ReportMade = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
                 ReportReceived = _userService.GetById(report.ReportingUserId).Result.Data.UserName.ToString(),
-                ProductId = _productService.GetById(report.ProductId).Result.Data.ProductId,
-                ProductName = _productService.GetById(report.ProductId).Result.Data.ProductName.ToString(),
+                ProductId = _context.Products.Find(report.ProductId).ProductId,
+                ProductName = _context.Products.Find(report.ProductId).ProductName,
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive

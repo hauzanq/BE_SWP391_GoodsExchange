@@ -12,7 +12,6 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/products")]
     public class ProductController : ControllerBase
     {
-
         private readonly IProductService _productService;
 
         public ProductController(IProductService productService)
@@ -20,11 +19,10 @@ namespace GoodsExchange.API.Controllers
             _productService = productService;
         }
 
-
         [HttpPost]
         [Route("create")]
         [Authorize(Roles = SystemConstant.Roles.Seller)]
-        public async Task<IActionResult> CreateProduct([FromQuery] CreateProductRequestModel request)
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -38,16 +36,9 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            var result = await _productService.GetById(id);
-            return Ok(result);
-        }
-
         [HttpPost]
         [Route("all")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
         {
             if (!ModelState.IsValid)
@@ -58,15 +49,31 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+
         [HttpPost]
-        [Route("{id}/details")]
+        [Route("seller/all")]
+        [Authorize(Roles = SystemConstant.Roles.Seller)]
+        public async Task<IActionResult> GetProductsBySeller([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _productService.GetProductsAsync(request, search, model, true);
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        [Route("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetProductDetails(id);
+            var result = await _productService.GetById(id);
             return Ok(result);
         }
 
@@ -86,7 +93,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPut]
         [Route("update")]
         [Authorize(Roles = SystemConstant.Roles.Seller)]
-        public async Task<IActionResult> UpdateProduct([FromQuery] UpdateProductRequestModel request)
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequestModel request)
         {
             if (!ModelState.IsValid)
             {

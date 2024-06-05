@@ -20,15 +20,17 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("authenticate")]
+        [Route("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate(LoginRequestModel request)
+        public async Task<IActionResult> Login(LoginRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var token = await _userService.Authenticate (request);
+
+            var token = await _userService.Login(request);
+
             return Ok(token);
         }
 
@@ -69,34 +71,16 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("{id}/active")]
+        [Route("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> ActiveUser(Guid id)
+        public async Task<IActionResult> ChangeUserStatus(Guid id,bool status)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.ActiveUser(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
-        }
-
-        [HttpPatch]
-        [Route("{id}/deactive")]
-        [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> DeActiveUser(Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _userService.DeActiveUser(id);
+            var result = await _userService.ChangeUserStatus(id,status);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

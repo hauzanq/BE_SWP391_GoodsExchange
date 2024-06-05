@@ -11,13 +11,10 @@ namespace GoodsExchange.BusinessLogic.RequestModels.Product
         public string? ProductName { get; set; }
         public float? MinPrice { get; set; }
         public float? MaxPrice { get; set; }
-        public bool? Status { get; set; }
         public DateTime? StartUploadDate { get; set; }
         public DateTime? EndUploadDate { get; set; }
-        public bool? IsApproved { get; set; }
         public DateTime? StartApprovedDate { get; set; }
         public DateTime? EndApprovedDate { get; set; }
-
-        public string CategoryName { get; set; }
+        public string? CategoryName { get; set; }
     }
 }

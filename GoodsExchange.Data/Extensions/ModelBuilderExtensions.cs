@@ -41,9 +41,9 @@ namespace GoodsExchange.Data.Extensions
                         DateOfBirth = new DateTime(1985, 6, 15),
                         PhoneNumber = "555-1234567",
                         UserImageUrl = "",
-                        UserName = "johndoe",
-                        Password = "password123",
-                        Status = true
+                        UserName = "admin",
+                        Password = "123456789",
+                        IsActive = true
                     },
                     new User()      // Moderator
                     {
@@ -54,9 +54,9 @@ namespace GoodsExchange.Data.Extensions
                         DateOfBirth = new DateTime(1992, 3, 10),
                         PhoneNumber = "555-7654321",
                         UserImageUrl = "",
-                        UserName = "janesmith",
-                        Password = "password456",
-                        Status = true
+                        UserName = "moderator",
+                        Password = "123456789",
+                        IsActive = true
                     },
                     new User        // Buyer
                     {
@@ -67,9 +67,9 @@ namespace GoodsExchange.Data.Extensions
                         DateOfBirth = new DateTime(1978, 11, 22),
                         PhoneNumber = "555-2468013",
                         UserImageUrl = "",
-                        UserName = "michaeljohnson",
-                        Password = "password789",
-                        Status = false
+                        UserName = "buyer1",
+                        Password = "123456789",
+                        IsActive = true
                     },
                     new User        // Buyer
                     {
@@ -80,9 +80,9 @@ namespace GoodsExchange.Data.Extensions
                         DateOfBirth = new DateTime(1990, 7, 1),
                         PhoneNumber = "555-3691258",
                         UserImageUrl = "",
-                        UserName = "emilydavis",
-                        Password = "passwordabc",
-                        Status = true
+                        UserName = "buyer2",
+                        Password = "123456789",
+                        IsActive = true
                     },
                     new User        // Seller
                     {
@@ -93,9 +93,9 @@ namespace GoodsExchange.Data.Extensions
                         DateOfBirth = new DateTime(1982, 4, 30),
                         PhoneNumber = "555-4725836",
                         UserImageUrl = "",
-                        UserName = "davidlee",
-                        Password = "passworddef",
-                        Status = false
+                        UserName = "seller",
+                        Password = "123456789",
+                        IsActive = true
                     }
                 );
             builder.Entity<UserRole>().HasData
@@ -158,7 +158,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Premium ballpoint pen for everyday use",
                         ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
                         Price = 2.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 4, 15),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -172,7 +172,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Durable mechanical pencil with 0.5mm lead",
                         ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
                         Price = 4.50f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 5, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -186,7 +186,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Set of 24 high-quality colored pencils",
                         ProductImageUrl = "https://example.com/colored-pencils.jpg",
                         Price = 9.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 3, 20),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -200,7 +200,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "A5 size sketchbook with acid-free pages",
                         ProductImageUrl = "https://example.com/sketchbook.jpg",
                         Price = 12.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 6, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -214,7 +214,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "High school-level chemistry textbook",
                         ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
                         Price = 29.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 2, 10),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -228,7 +228,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Grade 7 mathematics practice workbook",
                         ProductImageUrl = "https://example.com/math-workbook.jpg",
                         Price = 14.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 7, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -242,7 +242,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Scientific calculator with graphing capabilities",
                         ProductImageUrl = "https://example.com/graphing-calculator.jpg",
                         Price = 59.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 3, 15),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -256,7 +256,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "High-performance tablet for educational use",
                         ProductImageUrl = "https://example.com/tablet-computer.jpg",
                         Price = 299.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 5, 20),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -270,7 +270,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Durable 30cm plastic ruler",
                         ProductImageUrl = "https://example.com/ruler.jpg",
                         Price = 1.50f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 4, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -284,7 +284,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Set of 4 fluorescent highlighters",
                         ProductImageUrl = "https://example.com/highlighter-set.jpg",
                         Price = 3.99f,
-                        Status = true,
+                        IsActive = true,
                         UploadDate = new DateTime(2023, 6, 15),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
