@@ -1,6 +1,6 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
-using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.BusinessLogic.ViewModels.Report;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
