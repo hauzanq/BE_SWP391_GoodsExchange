@@ -1,4 +1,4 @@
-namespace GoodsExchange.BusinessLogic.ViewModels
+namespace GoodsExchange.BusinessLogic.ViewModels.Report
 {
     public class ReportViewModel
     {

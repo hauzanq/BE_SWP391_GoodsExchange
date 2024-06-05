@@ -1,4 +1,4 @@
-namespace GoodsExchange.BusinessLogic.ViewModels
+namespace GoodsExchange.BusinessLogic.ViewModels.Role
 {
     public class RoleViewModel
     {

@@ -7,7 +7,6 @@ namespace GoodsExchange.BusinessLogic.RequestModels.Product
         public string? Description { get; set; }
         public string? ProductImageUrl { get; set; }
         public float? Price { get; set; }
-        public bool? Status { get; set; }
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
     }
 }

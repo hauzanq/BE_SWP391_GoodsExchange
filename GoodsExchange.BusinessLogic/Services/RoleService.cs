@@ -1,6 +1,6 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Role;
-using GoodsExchange.BusinessLogic.ViewModels;
+using GoodsExchange.BusinessLogic.ViewModels.Role;
 using GoodsExchange.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
