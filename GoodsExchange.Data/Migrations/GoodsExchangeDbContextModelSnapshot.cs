@@ -113,7 +113,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("585bb080-ff25-4c6a-8c18-3202ae908861"),
+                            ProductId = new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219"),
                             ApprovedDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Premium ballpoint pen for everyday use",
@@ -127,7 +127,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("7c9b35fd-0016-4f57-93ba-99934213cdaa"),
+                            ProductId = new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc"),
                             ApprovedDate = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable mechanical pencil with 0.5mm lead",
@@ -141,7 +141,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("bfb1099b-0452-44b0-a639-1f33bad1b6df"),
+                            ProductId = new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de"),
                             ApprovedDate = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "Set of 24 high-quality colored pencils",
@@ -155,7 +155,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("739f8541-2523-4077-8e8a-b301722d7e5f"),
+                            ProductId = new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"),
                             ApprovedDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"),
                             Description = "A5 size sketchbook with acid-free pages",
@@ -169,7 +169,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("54602982-ebf4-43fc-9f57-327d5f0a0acf"),
+                            ProductId = new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab"),
                             ApprovedDate = new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "High school-level chemistry textbook",
@@ -183,7 +183,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("f713762a-f0e8-4648-9064-38de61c88bf4"),
+                            ProductId = new Guid("d96ccbb3-39c2-4d9e-b829-1705216664fa"),
                             ApprovedDate = new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"),
                             Description = "Grade 7 mathematics practice workbook",
@@ -197,7 +197,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("e97f1563-dc67-4d96-8077-9db254a9fda5"),
+                            ProductId = new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3"),
                             ApprovedDate = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "Scientific calculator with graphing capabilities",
@@ -211,7 +211,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("113df6d1-2d9e-4140-acd7-d7ab00a915e7"),
+                            ProductId = new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea"),
                             ApprovedDate = new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"),
                             Description = "High-performance tablet for educational use",
@@ -225,7 +225,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("b51b8a83-ccde-457e-94d6-dbda5550e75b"),
+                            ProductId = new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce"),
                             ApprovedDate = new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Durable 30cm plastic ruler",
@@ -239,7 +239,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("a17ca448-ea39-4a7c-87db-45c2f444cd19"),
+                            ProductId = new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767"),
                             ApprovedDate = new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CategoryId = new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"),
                             Description = "Set of 4 fluorescent highlighters",
@@ -318,21 +318,133 @@ namespace GoodsExchange.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("ReportingUserId")
+                    b.Property<Guid>("ReceiverId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TargetUserId")
+                    b.Property<Guid>("SenderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ReportId");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ReportingUserId");
+                    b.HasIndex("ReceiverId");
 
-                    b.HasIndex("TargetUserId");
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Reports", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ReportId = new Guid("937283db-8b5a-496d-b79d-4f052be09327"),
+                            CreateDate = new DateTime(2023, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219"),
+                            Reason = "Spam content",
+                            ReceiverId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
+                            SenderId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("3aed3257-a4e3-491d-a679-f18d2af5a08a"),
+                            CreateDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc"),
+                            Reason = "Inappropriate content",
+                            ReceiverId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
+                            SenderId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("3516a591-6fc7-4f06-af6d-d22b592d3b3a"),
+                            CreateDate = new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de"),
+                            Reason = "Copyright infringement",
+                            ReceiverId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
+                            SenderId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("34c3914f-8f19-4e3e-91de-eb662a49abe0"),
+                            CreateDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"),
+                            Reason = "Misleading information",
+                            ReceiverId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
+                            SenderId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("ea0c8f8f-f249-43b4-b363-490dd233d245"),
+                            CreateDate = new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"),
+                            Reason = "Hate speech",
+                            ReceiverId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
+                            SenderId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("7df1a416-b856-4477-851c-e96fbc04aa0c"),
+                            CreateDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab"),
+                            Reason = "Illegal activity",
+                            ReceiverId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
+                            SenderId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("e6f7b0e1-a386-450a-8990-44a17a53264d"),
+                            CreateDate = new DateTime(2023, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3"),
+                            Reason = "Violation of terms of service",
+                            ReceiverId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
+                            SenderId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("b6c5905b-f7df-48ef-9d27-adf314089ed7"),
+                            CreateDate = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea"),
+                            Reason = "Harassment",
+                            ReceiverId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"),
+                            SenderId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("c437e6f0-9273-40ac-9169-a65d14071b8c"),
+                            CreateDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce"),
+                            Reason = "Fraud",
+                            ReceiverId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
+                            SenderId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
+                        },
+                        new
+                        {
+                            ReportId = new Guid("87822d6f-2fcd-4d3b-a6d9-4df3e4af4dc6"),
+                            CreateDate = new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            IsApprove = false,
+                            ProductId = new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767"),
+                            Reason = "Violation of privacy",
+                            ReceiverId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"),
+                            SenderId = new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c")
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Role", b =>
@@ -596,23 +708,23 @@ namespace GoodsExchange.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("GoodsExchange.Data.Models.User", "ReportMade")
-                        .WithMany("ReportsMade")
-                        .HasForeignKey("ReportingUserId")
+                    b.HasOne("GoodsExchange.Data.Models.User", "Receiver")
+                        .WithMany("ReportsReceived")
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("GoodsExchange.Data.Models.User", "ReportReceived")
-                        .WithMany("ReportsReceived")
-                        .HasForeignKey("TargetUserId")
+                    b.HasOne("GoodsExchange.Data.Models.User", "Sender")
+                        .WithMany("ReportsMade")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("ReportMade");
+                    b.Navigation("Receiver");
 
-                    b.Navigation("ReportReceived");
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.UserRole", b =>
