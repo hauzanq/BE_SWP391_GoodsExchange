@@ -20,9 +20,9 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(r => r.IsActive).IsRequired().HasDefaultValue(true);
 
-            builder.HasOne(u => u.ReportMade).WithMany(r => r.ReportsMade).HasForeignKey(u => u.ReportingUserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(u => u.Sender).WithMany(r => r.ReportsMade).HasForeignKey(u => u.SenderId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(u => u.ReportReceived).WithMany(r => r.ReportsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(u => u.Receiver).WithMany(r => r.ReportsReceived).HasForeignKey(u => u.ReceiverId).OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(r => r.Product).WithMany(p => p.Reports).HasForeignKey(r => r.ProductId).OnDelete(DeleteBehavior.NoAction);
         }
