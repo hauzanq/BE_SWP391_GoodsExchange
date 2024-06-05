@@ -7,6 +7,7 @@ namespace GoodsExchange.Data.Extensions
     {
         public static void Seed(this ModelBuilder builder)
         {
+            #region Roles
             builder.Entity<Role>().HasData
                 (
                     new Role()
@@ -30,6 +31,10 @@ namespace GoodsExchange.Data.Extensions
                         RoleName = "Seller",
                     }
                 );
+
+            #endregion
+
+            #region Users
             builder.Entity<User>().HasData
                 (
                     new User()      // Administrator
@@ -98,6 +103,10 @@ namespace GoodsExchange.Data.Extensions
                         IsActive = true
                     }
                 );
+
+            #endregion
+
+            #region UserRoles
             builder.Entity<UserRole>().HasData
                 (
                     new UserRole()
@@ -126,6 +135,9 @@ namespace GoodsExchange.Data.Extensions
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B")
                     }
                 );
+            #endregion
+
+            #region Catgories
             builder.Entity<Category>().HasData
                 (
                     new Category()
@@ -149,11 +161,15 @@ namespace GoodsExchange.Data.Extensions
                         CategoryName = "Tech Devices"
                     }
                 );
+
+            #endregion
+
+            #region Products
             builder.Entity<Product>().HasData
                 (
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("EEE1A0C9-77C3-4FC1-B6A2-DA34CF31C219"),
                         ProductName = "Ballpoint Pen",
                         Description = "Premium ballpoint pen for everyday use",
                         ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
@@ -167,7 +183,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("EF26CAEC-CEBE-47CC-8E2F-BAECBF5047FC"),
                         ProductName = "Mechanical Pencil",
                         Description = "Durable mechanical pencil with 0.5mm lead",
                         ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
@@ -181,7 +197,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("DC3E969C-5A30-4028-8A96-DB3F0DCD53DE"),
                         ProductName = "Colored Pencils",
                         Description = "Set of 24 high-quality colored pencils",
                         ProductImageUrl = "https://example.com/colored-pencils.jpg",
@@ -195,7 +211,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("864A10B2-8045-469D-A4F3-D52433195FA5"),
                         ProductName = "Sketchbook",
                         Description = "A5 size sketchbook with acid-free pages",
                         ProductImageUrl = "https://example.com/sketchbook.jpg",
@@ -209,7 +225,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("77E9BB4D-286E-4F0D-AB61-FAC48C135CAB"),
                         ProductName = "Chemistry Textbook",
                         Description = "High school-level chemistry textbook",
                         ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
@@ -223,7 +239,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("D96CCBB3-39C2-4D9E-B829-1705216664FA"),
                         ProductName = "Mathematics Workbook",
                         Description = "Grade 7 mathematics practice workbook",
                         ProductImageUrl = "https://example.com/math-workbook.jpg",
@@ -237,7 +253,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("6EDE9679-64BD-48AF-A1EF-B04F55EE8FA3"),
                         ProductName = "Graphing Calculator",
                         Description = "Scientific calculator with graphing capabilities",
                         ProductImageUrl = "https://example.com/graphing-calculator.jpg",
@@ -251,7 +267,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("79E9860D-EFDC-43B6-8CA2-B077798F62EA"),
                         ProductName = "Tablet Computer",
                         Description = "High-performance tablet for educational use",
                         ProductImageUrl = "https://example.com/tablet-computer.jpg",
@@ -265,7 +281,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("EC851619-5B2F-4A01-B2C8-EA4EC62C85CE"),
                         ProductName = "Ruler",
                         Description = "Durable 30cm plastic ruler",
                         ProductImageUrl = "https://example.com/ruler.jpg",
@@ -279,7 +295,7 @@ namespace GoodsExchange.Data.Extensions
                     },
                     new Product
                     {
-                        ProductId = Guid.NewGuid(),
+                        ProductId = new Guid("D6AFE29B-0A86-4E4F-B29D-28571E906767"),
                         ProductName = "Highlighter Set",
                         Description = "Set of 4 fluorescent highlighters",
                         ProductImageUrl = "https://example.com/highlighter-set.jpg",
@@ -292,6 +308,128 @@ namespace GoodsExchange.Data.Extensions
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
                     }
                 );
+            #endregion
+
+            #region Reports
+
+            builder.Entity<Report>().HasData
+                (
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Spam content",
+                        CreateDate = new DateTime(2023, 5, 15),
+                        SenderId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ProductId = new Guid("EEE1A0C9-77C3-4FC1-B6A2-DA34CF31C219"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Inappropriate content",
+                        CreateDate = new DateTime(2023, 6, 1),
+                        SenderId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ProductId = new Guid("EF26CAEC-CEBE-47CC-8E2F-BAECBF5047FC"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Copyright infringement",
+                        CreateDate = new DateTime(2023, 4, 20),
+                        SenderId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ReceiverId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        ProductId = new Guid("DC3E969C-5A30-4028-8A96-DB3F0DCD53DE"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Misleading information",
+                        CreateDate = new DateTime(2023, 7, 1),
+                        SenderId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ReceiverId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ProductId = new Guid("864A10B2-8045-469D-A4F3-D52433195FA5"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Hate speech",
+                        CreateDate = new DateTime(2023, 3, 10),
+                        SenderId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ProductId = new Guid("864A10B2-8045-469D-A4F3-D52433195FA5"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Illegal activity",
+                        CreateDate = new DateTime(2023, 9, 1),
+                        SenderId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ReceiverId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        ProductId = new Guid("77E9BB4D-286E-4F0D-AB61-FAC48C135CAB"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Violation of terms of service",
+                        CreateDate = new DateTime(2023, 11, 15),
+                        SenderId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ReceiverId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ProductId = new Guid("6EDE9679-64BD-48AF-A1EF-B04F55EE8FA3"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Harassment",
+                        CreateDate = new DateTime(2023, 8, 1),
+                        SenderId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ProductId = new Guid("79E9860D-EFDC-43B6-8CA2-B077798F62EA"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Fraud",
+                        CreateDate = new DateTime(2023, 2, 1),
+                        SenderId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ReceiverId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
+                        ProductId = new Guid("EC851619-5B2F-4A01-B2C8-EA4EC62C85CE"),
+                        IsApprove = false,
+                        IsActive = true
+                    },
+                    new Report
+                    {
+                        ReportId = Guid.NewGuid(),
+                        Reason = "Violation of privacy",
+                        CreateDate = new DateTime(2023, 12, 1),
+                        SenderId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
+                        ReceiverId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
+                        ProductId = new Guid("D6AFE29B-0A86-4E4F-B29D-28571E906767"),
+                        IsApprove = false,
+                        IsActive = true
+                    }
+                );
+            #endregion
+
+            #region Rates
+
+            #endregion
         }
     }
 }
