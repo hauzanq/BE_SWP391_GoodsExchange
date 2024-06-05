@@ -8,6 +8,7 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Product
         public string ProductImageUrl { get; set; }
         public float Price { get; set; }
         public bool IsActive { get; set; }
+        public bool IsApproved { get; set; }
         public string UserUpload { get; set; }
         public DateTime UploadDate { get; set; }
         public DateTime ApprovedDate { get; set; }
