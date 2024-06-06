@@ -155,8 +155,6 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 query = query.Where(p => p.ApprovedDate <= model.EndApprovedDate);
             }
-            
-
             if (!string.IsNullOrEmpty(model.CategoryName))
             {
                 query = query.Where(p => p.Category.CategoryName.Contains(model.CategoryName));
