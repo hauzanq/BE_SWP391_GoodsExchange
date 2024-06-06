@@ -31,6 +31,7 @@ namespace GoodsExchange.API.Controllers
             var token = await _userService.Login(request);
             return Ok(token);
         }
+        
 
         [HttpPost]
         [Route("register")]
