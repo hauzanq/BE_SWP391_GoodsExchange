@@ -323,6 +323,7 @@ namespace GoodsExchange.Data.Extensions
                         ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         ProductId = new Guid("EEE1A0C9-77C3-4FC1-B6A2-DA34CF31C219"),
                         IsApprove = false,
+                       
                         IsActive = true
                     },
                     new Report
