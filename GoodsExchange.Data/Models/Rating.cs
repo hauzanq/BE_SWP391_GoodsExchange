@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.Data.Models
 {
-    public class Rate
+    public class Rating
     {
         public Guid RatingId { get; set; }
         public int NumberStars { get; set; }
         public string Feedback { get; set; }
         public DateTime CreateDate { get; set; }
-        public Guid RatingUserId { get; set; }
-        public User RatingGiven { get; set; }
-        public Guid TargetUserId { get; set; }
-        public User RatingReceived { get; set; }
+        public Guid SenderId { get; set; }
+        public User Sender { get; set; }
+        public Guid ReceiverId { get; set; }
+        public User Receiver { get; set; }
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
     }

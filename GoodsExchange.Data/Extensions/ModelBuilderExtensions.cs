@@ -177,7 +177,7 @@ namespace GoodsExchange.Data.Extensions
                         IsActive = true,
                         UploadDate = new DateTime(2023, 4, 15),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
-                        IsApproved = true,
+                        IsApproved = false,
                         ApprovedDate = new DateTime(2023, 4, 16),
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
                     },
@@ -191,7 +191,7 @@ namespace GoodsExchange.Data.Extensions
                         IsActive = true,
                         UploadDate = new DateTime(2023, 5, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
-                        IsApproved = true,
+                        IsApproved = false,
                         ApprovedDate = new DateTime(2023, 5, 2),
                         CategoryId = new Guid("94D367D0-61D1-4979-BA88-99B2F83FE9EB")
                     },
@@ -205,7 +205,7 @@ namespace GoodsExchange.Data.Extensions
                         IsActive = true,
                         UploadDate = new DateTime(2023, 3, 20),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
-                        IsApproved = true,
+                        IsApproved = false,
                         ApprovedDate = new DateTime(2023, 3, 21),
                         CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF")
                     },
@@ -219,7 +219,7 @@ namespace GoodsExchange.Data.Extensions
                         IsActive = true,
                         UploadDate = new DateTime(2023, 6, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
-                        IsApproved = true,
+                        IsApproved = false,
                         ApprovedDate = new DateTime(2023, 6, 2),
                         CategoryId = new Guid("CE74FC86-9CDF-4805-960C-E4647F21F6CF")
                     },
@@ -233,7 +233,7 @@ namespace GoodsExchange.Data.Extensions
                         IsActive = true,
                         UploadDate = new DateTime(2023, 2, 10),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
-                        IsApproved = true,
+                        IsApproved = false,
                         ApprovedDate = new DateTime(2023, 2, 11),
                         CategoryId = new Guid("F0FDE948-4E6D-4412-A417-3EAC5F927D44")
                     },
@@ -244,7 +244,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Grade 7 mathematics practice workbook",
                         ProductImageUrl = "https://example.com/math-workbook.jpg",
                         Price = 14.99f,
-                        IsActive = true,
+                        IsActive = false,
                         UploadDate = new DateTime(2023, 7, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -258,7 +258,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Scientific calculator with graphing capabilities",
                         ProductImageUrl = "https://example.com/graphing-calculator.jpg",
                         Price = 59.99f,
-                        IsActive = true,
+                        IsActive = false,
                         UploadDate = new DateTime(2023, 3, 15),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -272,7 +272,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "High-performance tablet for educational use",
                         ProductImageUrl = "https://example.com/tablet-computer.jpg",
                         Price = 299.99f,
-                        IsActive = true,
+                        IsActive = false,
                         UploadDate = new DateTime(2023, 5, 20),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -286,7 +286,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Durable 30cm plastic ruler",
                         ProductImageUrl = "https://example.com/ruler.jpg",
                         Price = 1.50f,
-                        IsActive = true,
+                        IsActive = false,
                         UploadDate = new DateTime(2023, 4, 1),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -300,7 +300,7 @@ namespace GoodsExchange.Data.Extensions
                         Description = "Set of 4 fluorescent highlighters",
                         ProductImageUrl = "https://example.com/highlighter-set.jpg",
                         Price = 3.99f,
-                        IsActive = true,
+                        IsActive = false,
                         UploadDate = new DateTime(2023, 6, 15),
                         UserUploadId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         IsApproved = true,
@@ -334,8 +334,8 @@ namespace GoodsExchange.Data.Extensions
                         SenderId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
                         ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         ProductId = new Guid("EF26CAEC-CEBE-47CC-8E2F-BAECBF5047FC"),
-                        IsApprove = false,
-                        IsActive = true
+                        IsApprove = true,
+                        IsActive = false
                     },
                     new Report
                     {
@@ -356,8 +356,8 @@ namespace GoodsExchange.Data.Extensions
                         SenderId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         ReceiverId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         ProductId = new Guid("864A10B2-8045-469D-A4F3-D52433195FA5"),
-                        IsApprove = false,
-                        IsActive = true
+                        IsApprove = true,
+                        IsActive = false
                     },
                     new Report
                     {
@@ -378,8 +378,8 @@ namespace GoodsExchange.Data.Extensions
                         SenderId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         ReceiverId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
                         ProductId = new Guid("77E9BB4D-286E-4F0D-AB61-FAC48C135CAB"),
-                        IsApprove = false,
-                        IsActive = true
+                        IsApprove = true,
+                        IsActive = false
                     },
                     new Report
                     {
@@ -400,8 +400,8 @@ namespace GoodsExchange.Data.Extensions
                         SenderId = new Guid("D6446689-2743-460B-82C3-D25B21F87B13"),
                         ReceiverId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         ProductId = new Guid("79E9860D-EFDC-43B6-8CA2-B077798F62EA"),
-                        IsApprove = false,
-                        IsActive = true
+                        IsApprove = true,
+                        IsActive = false
                     },
                     new Report
                     {
@@ -422,8 +422,8 @@ namespace GoodsExchange.Data.Extensions
                         SenderId = new Guid("50248CA1-B632-4E16-B1A4-9AADD8E08E7C"),
                         ReceiverId = new Guid("99D274E6-FA23-4D1C-8F8A-097B3886CAAD"),
                         ProductId = new Guid("D6AFE29B-0A86-4E4F-B29D-28571E906767"),
-                        IsApprove = false,
-                        IsActive = true
+                        IsApprove = true,
+                        IsActive = false
                     }
                 );
             #endregion
