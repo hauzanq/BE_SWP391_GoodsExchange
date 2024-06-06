@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240606061714_InitialDatabase")]
+    [Migration("20240606071128_InitialDatabase")]
     partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,7 +68,7 @@ namespace GoodsExchange.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ApprovedDate")
+                    b.Property<DateTime>("ApprovedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CategoryId")
@@ -335,7 +335,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ReportId = new Guid("5d87ec5f-6e14-42c3-becc-9ee9c0c134cb"),
+                            ReportId = new Guid("bfcfd760-2ba4-4774-99aa-00acf8c900c0"),
                             CreateDate = new DateTime(2023, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -346,7 +346,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("30315164-878c-4731-8eeb-6be62264ef1b"),
+                            ReportId = new Guid("c4a32b91-9b8a-49ba-b768-2479c6497a2a"),
                             CreateDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -357,7 +357,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("6002084a-349c-4ea8-a59f-e2498db04c6a"),
+                            ReportId = new Guid("82091caa-7314-469e-b12d-5db8306e5d00"),
                             CreateDate = new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -368,7 +368,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("dacdacd9-3cb2-4274-b45d-4694d4e40143"),
+                            ReportId = new Guid("c12606a3-7a6e-4270-b384-53c595d1b862"),
                             CreateDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -379,7 +379,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("d4521d9f-b68b-479b-88a3-931e28cc7c4d"),
+                            ReportId = new Guid("085f0d3c-1a6d-4eea-a21e-7c03534ac004"),
                             CreateDate = new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -390,7 +390,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("409cf3bf-e263-4e84-9ec2-436b64e75dd5"),
+                            ReportId = new Guid("18cca700-284c-4536-ba85-2499fd3fe7d1"),
                             CreateDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -401,7 +401,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("ba393b39-7e95-4688-913b-279d210cff7c"),
+                            ReportId = new Guid("14cc71ab-0c5f-4191-974a-5c0dd60e0e7c"),
                             CreateDate = new DateTime(2023, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -412,7 +412,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("e49a4ad4-bdd2-4447-8663-fab6b3880039"),
+                            ReportId = new Guid("15d7971e-e5ff-4054-9433-b1601991eb71"),
                             CreateDate = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -423,7 +423,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("b720f88c-9b4f-479f-8f42-b0b2a3836ef2"),
+                            ReportId = new Guid("ece0382a-7a69-4515-9981-d7bc9add93a0"),
                             CreateDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -434,7 +434,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("c66fb556-5510-49a1-b2b1-515a2e7f72ee"),
+                            ReportId = new Guid("46a2e50f-51eb-4f27-b4f4-7930af9b1d45"),
                             CreateDate = new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,

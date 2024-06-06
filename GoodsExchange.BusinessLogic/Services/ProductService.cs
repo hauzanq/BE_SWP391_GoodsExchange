@@ -70,7 +70,6 @@ namespace GoodsExchange.BusinessLogic.Services
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
                 IsApproved = false,
-
                 CategoryId = category.CategoryId
             };
             await _context.Products.AddAsync(product);
