@@ -116,7 +116,7 @@ namespace GoodsExchange.BusinessLogic.Services
         }
         public async Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel paging, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false)
         {
-            var query = _context.Products.Where(p => p.UserUpload.IsActive == true).AsQueryable();
+            var query = _context.Products.Where(p => p.UserUpload.IsActive == true && p.IsApproved == true).AsQueryable();
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -155,6 +155,7 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 query = query.Where(p => p.ApprovedDate <= model.EndApprovedDate);
             }
+            
 
             if (!string.IsNullOrEmpty(model.CategoryName))
             {
