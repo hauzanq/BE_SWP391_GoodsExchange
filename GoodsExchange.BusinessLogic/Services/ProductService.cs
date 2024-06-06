@@ -299,7 +299,8 @@ namespace GoodsExchange.BusinessLogic.Services
                 ProductImageUrl = product.ProductImageUrl,
                 ApprovedDate = product.ApprovedDate,
 
-                UserUpload = user.UserName,
+                UserUploadId = user.UserId,
+                UserUpload = user.FirstName + " " + user.LastName,
                 UserImageUrl = user.UserImageUrl,
                 NumberOfRatings = _ratingService.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
                 AverageNumberStars = _ratingService.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
