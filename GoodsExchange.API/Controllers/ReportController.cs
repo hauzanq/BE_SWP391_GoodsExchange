@@ -19,7 +19,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("send")]
+        [Route("sendreport")]
         [Authorize]
         public async Task<IActionResult> SendReport(CreateReportRequestModel request)
         {
@@ -41,14 +41,14 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging)
+        public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging, [FromQuery] ReportsRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _reportService.GetAll(paging);
+            var result = await _reportService.GetAll(paging, request);
 
             return Ok(result);
         }
@@ -67,7 +67,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("{id}")]
+        [Route("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         public async Task<IActionResult> ApproveReport(Guid id)
         {

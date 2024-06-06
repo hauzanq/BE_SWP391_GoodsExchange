@@ -70,7 +70,9 @@ namespace GoodsExchange.BusinessLogic.Services
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
                 IsApproved = false,
+
                 ApprovedDate = null,
+
                 CategoryId = category.CategoryId
             };
             await _context.Products.AddAsync(product);
@@ -206,6 +208,7 @@ namespace GoodsExchange.BusinessLogic.Services
                                     ProductImageUrl = product.ProductImageUrl,
                                     Price = product.Price,
                                     IsActive = product.IsActive,
+                                    IsApproved = product.IsApproved,
                                     UserUpload = _context.Users.FirstOrDefault(u => u.UserId == product.UserUploadId).UserName,
                                     UploadDate = product.UploadDate,
                                     ApprovedDate = product.ApprovedDate,
