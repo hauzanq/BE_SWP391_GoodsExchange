@@ -33,6 +33,7 @@ namespace GoodsExchange.API.Controllers
 
             return Ok(token);
         }
+        
 
         [HttpPost]
         [Route("register")]
