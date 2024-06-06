@@ -27,11 +27,12 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(p => p.IsActive).IsRequired();
 
-            builder.HasMany(p=>p.Reports).WithOne(r=>r.Product).HasForeignKey(r=>r.ProductId);  
 
-            builder.HasOne(p=>p.Category).WithMany(c=>c.Products).HasForeignKey(p=>p.CategoryId);
+            builder.HasMany(p => p.Reports).WithOne(r => r.Product).HasForeignKey(r => r.ProductId);
 
-            builder.HasOne(p=>p.UserUpload).WithMany(u=>u.Products).HasForeignKey(p=>p.UserUploadId);
+            builder.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
+
+            builder.HasOne(p => p.UserUpload).WithMany(u => u.Products).HasForeignKey(p => p.UserUploadId);
         }
     }
 }
