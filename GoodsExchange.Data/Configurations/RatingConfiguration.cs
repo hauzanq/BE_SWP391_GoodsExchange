@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.Data.Configurations
 {
-    public class RatingConfiguration : IEntityTypeConfiguration<Rate>
+    public class RatingConfiguration : IEntityTypeConfiguration<Rating>
     {
-        public void Configure(EntityTypeBuilder<Rate> builder)
+        public void Configure(EntityTypeBuilder<Rating> builder)
         {
             builder.ToTable("Ratings");
 
@@ -23,11 +23,11 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(r => r.CreateDate).HasColumnType("datetime");
 
-            builder.HasOne(u=>u.RatingGiven).WithMany(r=>r.RatingsGiven).HasForeignKey(u => u.RatingUserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(u=>u.Sender).WithMany(r=>r.RatingsGiven).HasForeignKey(u => u.SenderId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(u=>u.RatingReceived).WithMany(r=>r.RatingsReceived).HasForeignKey(u => u.TargetUserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(u=>u.Receiver).WithMany(r=>r.RatingsReceived).HasForeignKey(u => u.ReceiverId).OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(r => r.Product).WithOne(p => p.Rate).HasForeignKey<Rate>(r =>r.ProductId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(r => r.Product).WithOne(p => p.Rate).HasForeignKey<Rating>(r =>r.ProductId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -67,7 +67,7 @@ namespace GoodsExchange.Data.Migrations
                     UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserUploadId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsApproved = table.Column<bool>(type: "bit", nullable: false),
-                    ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApprovedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -119,8 +119,8 @@ namespace GoodsExchange.Data.Migrations
                     NumberStars = table.Column<int>(type: "int", nullable: false),
                     Feedback = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    RatingUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TargetUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReceiverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -132,13 +132,13 @@ namespace GoodsExchange.Data.Migrations
                         principalTable: "Products",
                         principalColumn: "ProductId");
                     table.ForeignKey(
-                        name: "FK_Ratings_Users_RatingUserId",
-                        column: x => x.RatingUserId,
+                        name: "FK_Ratings_Users_ReceiverId",
+                        column: x => x.ReceiverId,
                         principalTable: "Users",
                         principalColumn: "UserId");
                     table.ForeignKey(
-                        name: "FK_Ratings_Users_TargetUserId",
-                        column: x => x.TargetUserId,
+                        name: "FK_Ratings_Users_SenderId",
+                        column: x => x.SenderId,
                         principalTable: "Users",
                         principalColumn: "UserId");
                 });
@@ -153,8 +153,8 @@ namespace GoodsExchange.Data.Migrations
                     SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ReceiverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsApprove = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    IsApprove = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -215,16 +215,16 @@ namespace GoodsExchange.Data.Migrations
                 columns: new[] { "ProductId", "ApprovedDate", "CategoryId", "Description", "IsActive", "IsApproved", "Price", "ProductImageUrl", "ProductName", "UploadDate", "UserUploadId" },
                 values: new object[,]
                 {
-                    { new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3"), new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"), "Scientific calculator with graphing capabilities", true, true, 59.99f, "https://example.com/graphing-calculator.jpg", "Graphing Calculator", new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab"), new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"), "High school-level chemistry textbook", true, true, 29.99f, "https://example.com/chemistry-textbook.jpg", "Chemistry Textbook", new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea"), new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"), "High-performance tablet for educational use", true, true, 299.99f, "https://example.com/tablet-computer.jpg", "Tablet Computer", new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"), new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"), "A5 size sketchbook with acid-free pages", true, true, 12.99f, "https://example.com/sketchbook.jpg", "Sketchbook", new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767"), new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Set of 4 fluorescent highlighters", true, true, 3.99f, "https://example.com/highlighter-set.jpg", "Highlighter Set", new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("d96ccbb3-39c2-4d9e-b829-1705216664fa"), new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"), "Grade 7 mathematics practice workbook", true, true, 14.99f, "https://example.com/math-workbook.jpg", "Mathematics Workbook", new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de"), new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"), "Set of 24 high-quality colored pencils", true, true, 9.99f, "https://example.com/colored-pencils.jpg", "Colored Pencils", new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce"), new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Durable 30cm plastic ruler", true, true, 1.5f, "https://example.com/ruler.jpg", "Ruler", new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219"), new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Premium ballpoint pen for everyday use", true, true, 2.99f, "https://example.com/ballpoint-pen.jpg", "Ballpoint Pen", new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc"), new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Durable mechanical pencil with 0.5mm lead", true, true, 4.5f, "https://example.com/mechanical-pencil.jpg", "Mechanical Pencil", new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") }
+                    { new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3"), new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"), "Scientific calculator with graphing capabilities", false, true, 59.99f, "https://example.com/graphing-calculator.jpg", "Graphing Calculator", new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab"), new DateTime(2023, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"), "High school-level chemistry textbook", true, false, 29.99f, "https://example.com/chemistry-textbook.jpg", "Chemistry Textbook", new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea"), new DateTime(2023, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("e0b58109-b173-442a-86d5-972e0bc3e093"), "High-performance tablet for educational use", false, true, 299.99f, "https://example.com/tablet-computer.jpg", "Tablet Computer", new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"), new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"), "A5 size sketchbook with acid-free pages", true, false, 12.99f, "https://example.com/sketchbook.jpg", "Sketchbook", new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767"), new DateTime(2023, 6, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Set of 4 fluorescent highlighters", false, true, 3.99f, "https://example.com/highlighter-set.jpg", "Highlighter Set", new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("d96ccbb3-39c2-4d9e-b829-1705216664fa"), new DateTime(2023, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("f0fde948-4e6d-4412-a417-3eac5f927d44"), "Grade 7 mathematics practice workbook", false, true, 14.99f, "https://example.com/math-workbook.jpg", "Mathematics Workbook", new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de"), new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("ce74fc86-9cdf-4805-960c-e4647f21f6cf"), "Set of 24 high-quality colored pencils", true, false, 9.99f, "https://example.com/colored-pencils.jpg", "Colored Pencils", new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce"), new DateTime(2023, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Durable 30cm plastic ruler", false, true, 1.5f, "https://example.com/ruler.jpg", "Ruler", new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219"), new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Premium ballpoint pen for everyday use", true, false, 2.99f, "https://example.com/ballpoint-pen.jpg", "Ballpoint Pen", new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc"), new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("94d367d0-61d1-4979-ba88-99b2f83fe9eb"), "Durable mechanical pencil with 0.5mm lead", true, false, 4.5f, "https://example.com/mechanical-pencil.jpg", "Mechanical Pencil", new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") }
                 });
 
             migrationBuilder.InsertData(
@@ -241,19 +241,19 @@ namespace GoodsExchange.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Reports",
-                columns: new[] { "ReportId", "CreateDate", "IsActive", "ProductId", "Reason", "ReceiverId", "SenderId" },
+                columns: new[] { "ReportId", "CreateDate", "IsActive", "IsApprove", "ProductId", "Reason", "ReceiverId", "SenderId" },
                 values: new object[,]
                 {
-                    { new Guid("34c3914f-8f19-4e3e-91de-eb662a49abe0"), new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"), "Misleading information", new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"), new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c") },
-                    { new Guid("3516a591-6fc7-4f06-af6d-d22b592d3b3a"), new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de"), "Copyright infringement", new Guid("d6446689-2743-460b-82c3-d25b21f87b13"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("3aed3257-a4e3-491d-a679-f18d2af5a08a"), new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc"), "Inappropriate content", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("d6446689-2743-460b-82c3-d25b21f87b13") },
-                    { new Guid("7df1a416-b856-4477-851c-e96fbc04aa0c"), new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab"), "Illegal activity", new Guid("d6446689-2743-460b-82c3-d25b21f87b13"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("87822d6f-2fcd-4d3b-a6d9-4df3e4af4dc6"), new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767"), "Violation of privacy", new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"), new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c") },
-                    { new Guid("937283db-8b5a-496d-b79d-4f052be09327"), new DateTime(2023, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219"), "Spam content", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("b6c5905b-f7df-48ef-9d27-adf314089ed7"), new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea"), "Harassment", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("d6446689-2743-460b-82c3-d25b21f87b13") },
-                    { new Guid("c437e6f0-9273-40ac-9169-a65d14071b8c"), new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce"), "Fraud", new Guid("d6446689-2743-460b-82c3-d25b21f87b13"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
-                    { new Guid("e6f7b0e1-a386-450a-8990-44a17a53264d"), new DateTime(2023, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3"), "Violation of terms of service", new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"), new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c") },
-                    { new Guid("ea0c8f8f-f249-43b4-b363-490dd233d245"), new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), true, new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"), "Hate speech", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("d6446689-2743-460b-82c3-d25b21f87b13") }
+                    { new Guid("30315164-878c-4731-8eeb-6be62264ef1b"), new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, true, new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc"), "Inappropriate content", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("d6446689-2743-460b-82c3-d25b21f87b13") },
+                    { new Guid("409cf3bf-e263-4e84-9ec2-436b64e75dd5"), new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, true, new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab"), "Illegal activity", new Guid("d6446689-2743-460b-82c3-d25b21f87b13"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("5d87ec5f-6e14-42c3-becc-9ee9c0c134cb"), new DateTime(2023, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219"), "Spam content", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("6002084a-349c-4ea8-a59f-e2498db04c6a"), new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de"), "Copyright infringement", new Guid("d6446689-2743-460b-82c3-d25b21f87b13"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("b720f88c-9b4f-479f-8f42-b0b2a3836ef2"), new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce"), "Fraud", new Guid("d6446689-2743-460b-82c3-d25b21f87b13"), new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad") },
+                    { new Guid("ba393b39-7e95-4688-913b-279d210cff7c"), new DateTime(2023, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3"), "Violation of terms of service", new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"), new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c") },
+                    { new Guid("c66fb556-5510-49a1-b2b1-515a2e7f72ee"), new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, true, new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767"), "Violation of privacy", new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"), new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c") },
+                    { new Guid("d4521d9f-b68b-479b-88a3-931e28cc7c4d"), new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"), "Hate speech", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("d6446689-2743-460b-82c3-d25b21f87b13") },
+                    { new Guid("dacdacd9-3cb2-4274-b45d-4694d4e40143"), new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, true, new Guid("864a10b2-8045-469d-a4f3-d52433195fa5"), "Misleading information", new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad"), new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c") },
+                    { new Guid("e49a4ad4-bdd2-4447-8663-fab6b3880039"), new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, true, new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea"), "Harassment", new Guid("50248ca1-b632-4e16-b1a4-9aadd8e08e7c"), new Guid("d6446689-2743-460b-82c3-d25b21f87b13") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -273,14 +273,14 @@ namespace GoodsExchange.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_RatingUserId",
+                name: "IX_Ratings_ReceiverId",
                 table: "Ratings",
-                column: "RatingUserId");
+                column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_TargetUserId",
+                name: "IX_Ratings_SenderId",
                 table: "Ratings",
-                column: "TargetUserId");
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reports_ProductId",
