@@ -12,7 +12,7 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Product
         public float Price { get; set; }
         public string Description { get; set; }
         public string ProductImageUrl { get; set; }
-        public DateTime ApprovedDate { get; set; }
+        public DateTime? ApprovedDate { get; set; }
         public string UserUpload { get; set; }
         public string UserImageUrl { get; set; }
         public int NumberOfRatings { get; set; }
