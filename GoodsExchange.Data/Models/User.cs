@@ -20,8 +20,8 @@ namespace GoodsExchange.Data.Models
         public string Password { get; set; }
         public bool IsActive { get; set; }
         public List<UserRole> UserRoles { get; set; }
-        public List<Rate> RatingsGiven { get; set; }
-        public List<Rate> RatingsReceived { get; set; }
+        public List<Rating> RatingsGiven { get; set; }
+        public List<Rating> RatingsReceived { get; set; }
         public List<Report> ReportsMade { get; set; }
         public List<Report> ReportsReceived { get; set; }
         public List<Product> Products { get; set; }
