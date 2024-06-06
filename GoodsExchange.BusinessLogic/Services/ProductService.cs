@@ -71,8 +71,6 @@ namespace GoodsExchange.BusinessLogic.Services
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
                 IsApproved = false,
 
-                ApprovedDate = null,
-
                 CategoryId = category.CategoryId
             };
             await _context.Products.AddAsync(product);
