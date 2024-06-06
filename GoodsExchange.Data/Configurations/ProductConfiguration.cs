@@ -27,6 +27,11 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(p => p.IsActive).IsRequired();
 
+            builder.Property(p => p.UploadDate).HasColumnType("datetime2");
+
+            builder.Property(p => p.IsApproved).IsRequired();
+
+            builder.Property(p => p.ApprovedDate).HasColumnType("datetime2");
 
             builder.HasMany(p => p.Reports).WithOne(r => r.Product).HasForeignKey(r => r.ProductId);
 
