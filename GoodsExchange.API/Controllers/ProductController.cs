@@ -133,5 +133,22 @@ namespace GoodsExchange.API.Controllers
             }
             return Ok(result);
         }
+
+
+        [HttpPatch]
+        [Route("deny/{id}")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> DenyProduct(Guid id)
+        {
+            var result = await _productService.DenyProduct(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+
+
     }
 }
