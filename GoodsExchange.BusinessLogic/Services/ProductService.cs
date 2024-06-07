@@ -18,6 +18,8 @@ namespace GoodsExchange.BusinessLogic.Services
         Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id);
         Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
         Task<ApiResult<bool>> ApproveProduct(Guid id);
+
+        Task<ApiResult<bool>> DenyProduct(Guid id);
     }
 
     public class ProductService : IProductService
@@ -46,6 +48,21 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<bool>(true);
         }
 
+        //DenyProduct
+        public async Task<ApiResult<bool>> DenyProduct(Guid id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return new ApiErrorResult<bool>("Product does not exist ");
+            }
+            product.IsApproved = false;
+            product.ApprovedDate = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
+        }
         public async Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request)
         {
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == request.ProductName);
@@ -188,6 +205,8 @@ namespace GoodsExchange.BusinessLogic.Services
 
             if (seller == true)
             {
+                query = _context.Products.Where(p => p.UserUpload.IsActive == true).AsQueryable();
+
                 query = query.Where(p => p.UserUploadId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             }
 
@@ -309,5 +328,7 @@ namespace GoodsExchange.BusinessLogic.Services
 
             return new ApiSuccessResult<ProductDetailsViewModel>(result);
         }
+
+        
     }
 }
