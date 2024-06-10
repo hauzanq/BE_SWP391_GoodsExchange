@@ -12,9 +12,11 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasKey(r => r.ReportId);
 
-            builder.Property(r => r.ReportId).ValueGeneratedOnAdd();
-
             builder.Property(r => r.Reason).IsRequired().HasMaxLength(255);
+            
+            builder.Property(r => r.IsApprove).IsRequired().HasDefaultValue(false);
+
+            builder.Property(r => r.IsActive).IsRequired().HasDefaultValue(true);
 
             builder.HasOne(u => u.ReportMade).WithMany(r => r.ReportsMade).HasForeignKey(u => u.ReportingUserId).OnDelete(DeleteBehavior.NoAction);
 
