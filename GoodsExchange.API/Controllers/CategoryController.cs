@@ -56,6 +56,10 @@ namespace GoodsExchange.API.Controllers
         public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
         {
             var result = await _categoryService.GetById(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
             return Ok(result);
         }
 
