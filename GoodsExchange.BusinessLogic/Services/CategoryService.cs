@@ -98,10 +98,10 @@ namespace GoodsExchange.BusinessLogic.Services
                 ProductID = product.ProductId,
                 ProductName = product.ProductName,
                 ProductImageUrl = product.ProductImageUrl,
-                Description = product.Description,
+                //Description = product.Description,
                 Price = product.Price,
                 ApprovedDate = product.ApprovedDate,
-                UserUploadId = product.UserUploadId,
+                //UserUploadId = product.UserUploadId,
 
             };
             return new ApiSuccessResult<CategoriesDetailViewModel>(result);
