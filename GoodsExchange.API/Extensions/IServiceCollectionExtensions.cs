@@ -89,7 +89,7 @@ namespace GoodsExchange.API.Extensions
             services.AddScoped<IReportService, ReportService>();
 
             services.AddScoped<IRoleService, RoleService>();
-
+            
 
             return services;
         }
