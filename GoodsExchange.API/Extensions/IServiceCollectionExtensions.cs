@@ -1,4 +1,5 @@
-﻿using GoodsExchange.BusinessLogic.Services;
+﻿using GoodsExchange.BusinessLogic.Services.Implementation;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -28,9 +29,7 @@ namespace GoodsExchange.API.Extensions
                     ClockSkew = TimeSpan.Zero,
                     ValidIssuer = configuration["JWTAuthentication:Issuer"],
                     ValidAudience = configuration["JWTAuthentication:Issuer"],
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTAuthentication:Key"]))
-
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTAuthentication:Key"]))
                 };
             });
             return services;
@@ -76,9 +75,11 @@ namespace GoodsExchange.API.Extensions
 
         public static IServiceCollection RegisterService(this IServiceCollection services)
         {
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IServiceWrapper, ServiceWrapper>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<ICategoryService, CategoryService>();
 
@@ -90,7 +91,6 @@ namespace GoodsExchange.API.Extensions
 
             services.AddScoped<IRoleService, RoleService>();
             
-
             return services;
         }
     }

@@ -1,6 +1,4 @@
 ﻿using GoodsExchange.API.Extensions;
-using GoodsExchange.BusinessLogic.Services;
-using GoodsExchange.BusinessLogic.Services.Mail;
 
 namespace GoodsExchange.API
 {
