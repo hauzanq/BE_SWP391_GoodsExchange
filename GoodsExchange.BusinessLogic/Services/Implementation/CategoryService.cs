@@ -1,21 +1,12 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Category;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Category;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
-namespace GoodsExchange.BusinessLogic.Services
+namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
-
-    public interface ICategoryService
-    {
-        Task<ApiResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate);
-        Task<ApiResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
-        Task<ApiResult<bool>> DeleteCategory(Guid id);
-        Task<ApiResult<List<CategoryViewModel>>> GetAll();
-        Task<ApiResult<CategoriesDetailViewModel>>GetById(Guid idTmp);
-    }
 
     public class CategoryService : ICategoryService
     {
@@ -56,8 +47,8 @@ namespace GoodsExchange.BusinessLogic.Services
         public async Task<ApiResult<bool>> DeleteCategory(Guid id)
         {
             var existedCategory = await _dbContext.Categories
-                                              //    .Include(c => c.Products)
-                                                  .Where(c=> c.CategoryId.Equals(id)).FirstOrDefaultAsync();
+                                                  //    .Include(c => c.Products)
+                                                  .Where(c => c.CategoryId.Equals(id)).FirstOrDefaultAsync();
             if (existedCategory == null)
             {
                 return new ApiErrorResult<bool>("Categories doesn't existed");
@@ -82,14 +73,14 @@ namespace GoodsExchange.BusinessLogic.Services
 
 
 
-        public async Task<ApiResult<CategoriesDetailViewModel>>GetById(Guid idTmp)
+        public async Task<ApiResult<CategoriesDetailViewModel>> GetById(Guid idTmp)
         {
-           var category = await _dbContext.Categories.FindAsync(idTmp);
-            if(category == null)
+            var category = await _dbContext.Categories.FindAsync(idTmp);
+            if (category == null)
             {
                 return new ApiErrorResult<CategoriesDetailViewModel>("Cayegories doesm't existed ");
             }
-            var product = await _dbContext.Products.FirstOrDefaultAsync(p=> p.CategoryId == category.CategoryId);
+            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.CategoryId == category.CategoryId);
 
             var result = new CategoriesDetailViewModel()
             {
@@ -110,23 +101,23 @@ namespace GoodsExchange.BusinessLogic.Services
         public async Task<ApiResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
         {
             var categoriesExisted = await _dbContext.Categories.FindAsync(categoryUpdate.CategoryId);
-            if(categoriesExisted == null)
+            if (categoriesExisted == null)
             {
                 return new ApiErrorResult<CategoryViewModel>("Categories doesn't existed");
             }
-            
+
             categoriesExisted.CategoryName = categoryUpdate.CategoryName;
             await _dbContext.SaveChangesAsync();
             var result = new CategoryViewModel()
             {
-                
+
                 CategoryName = categoryUpdate.CategoryName,
             };
             return new ApiSuccessResult<CategoryViewModel>(result);
 
-            
 
-                        
+
+
         }
     }
 
