@@ -1,17 +1,26 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Email;
-using GoodsExchange.BusinessLogic.Services.Interface;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GoodsExchange.BusinessLogic.Services.Implementation
+namespace GoodsExchange.BusinessLogic.Services
 {
-    public class EmailService : IEmailService
+    public interface IEmailService
+    {
+        Task<ApiResult<bool>> SendEmailAsync(EmailRequestModel request);
+    }
+    public  class EmailService : IEmailService
     {
         private readonly EmailSettings _emailSettings;
-        public EmailService(IOptions<EmailSettings> emailSetting)
-        {
+        public EmailService(IOptions<EmailSettings> emailSetting) { 
             _emailSettings = emailSetting.Value;
         }
 

@@ -1,7 +1,7 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
-using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.BusinessLogic.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,7 +45,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetAll(request, search, model);
+            var result = await _productService.GetProductsAsync(request, search, model);
             return Ok(result);
         }
 
@@ -59,7 +59,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetAll(request, search, model, true);
+            var result = await _productService.GetProductsAsync(request, search, model, true);
             return Ok(result);
         }
 
@@ -74,10 +74,6 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _productService.GetById(id);
-            if (!result.IsSuccessed)
-            {
-                return NotFound();
-            }
             return Ok(result);
         }
 
@@ -126,16 +122,33 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("review/{id}")]
+        [Route("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> ReviewProduct(Guid id, bool status)
+        public async Task<IActionResult> ApproveProduct(Guid id)
         {
-            var result = await _productService.ReviewProduct(id, status);
+            var result = await _productService.ApproveProduct(id);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
             }
             return Ok(result);
         }
+
+
+        [HttpPatch]
+        [Route("deny/{id}")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> DenyProduct(Guid id)
+        {
+            var result = await _productService.DenyProduct(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+
+
     }
 }

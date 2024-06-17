@@ -1,37 +1,64 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
-using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Product;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodsExchange.BusinessLogic.Services.Implementation
+namespace GoodsExchange.BusinessLogic.Services
 {
+    public interface IProductService
+    {
+        Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
+        Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
+        Task<ApiResult<bool>> DeleteProduct(Guid id);
+        Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false);
+        Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id);
+        Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
+        Task<ApiResult<bool>> ApproveProduct(Guid id);
+
+        Task<ApiResult<bool>> DenyProduct(Guid id);
+    }
+
     public class ProductService : IProductService
     {
         private readonly GoodsExchangeDbContext _context;
+        private readonly IRatingService _ratingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IServiceWrapper _serviceWrapper;
-
-        public ProductService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IServiceWrapper serviceWrapper)
+        public ProductService(GoodsExchangeDbContext context, IRatingService ratingService, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _ratingService = ratingService;
             _httpContextAccessor = httpContextAccessor;
-            _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ApiResult<bool>> ReviewProduct(Guid id, bool status)
+        public async Task<ApiResult<bool>> ApproveProduct(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
                 return new ApiErrorResult<bool>("Product does not exist.");
             }
-            product.IsApproved = status;
+            product.IsApproved = true;
             product.ApprovedDate = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
+        }
+
+        //DenyProduct
+        public async Task<ApiResult<bool>> DenyProduct(Guid id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return new ApiErrorResult<bool>("Product does not exist ");
+            }
+            product.IsApproved = false;
+            product.ApprovedDate = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
             return new ApiSuccessResult<bool>(true);
@@ -121,7 +148,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
-        public async Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false)
+        public async Task<PageResult<ProductViewModel>> GetProductsAsync(PagingRequestModel paging, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false)
         {
             var query = _context.Products.Where(p => p.UserUpload.IsActive == true && p.IsApproved == true).AsQueryable();
 
@@ -249,11 +276,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 return new ApiErrorResult<ProductViewModel>("Product name already exists.");
             }
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == request.CategoryId);
-            if (category == null)
-            {
-                return new ApiErrorResult<ProductViewModel>("Category does not exists.");
-            }
 
 
             product.ProductName = request.ProductName;
@@ -313,16 +335,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserUploadId = user.UserId,
                 UserUpload = user.FirstName + " " + user.LastName,
                 UserImageUrl = user.UserImageUrl,
-                //NumberOfRatings = _ratingService.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
-                NumberOfRatings = _serviceWrapper.RatingServices.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
-                //AverageNumberStars = _ratingService.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
-                AverageNumberStars = _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
+                NumberOfRatings = _ratingService.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
+                AverageNumberStars = _ratingService.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
                 UserPhoneNumber = user.PhoneNumber
             };
 
             return new ApiSuccessResult<ProductDetailsViewModel>(result);
         }
 
-
+        
     }
 }

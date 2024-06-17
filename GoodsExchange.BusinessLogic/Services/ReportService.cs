@@ -2,26 +2,31 @@ using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
-using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Report;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodsExchange.BusinessLogic.Services.Implementation
+namespace GoodsExchange.BusinessLogic.Services
 {
+
+    public interface IReportService
+    {
+        Task<ApiResult<ReportViewModel>> SendReport(CreateReportRequestModel request);
+        Task<ApiResult<bool>> ApproveReport(Guid id);
+        Task<PageResult<ReportViewModel>> GetAll(PagingRequestModel paging, ReportsRequestModel request);
+        Task<ApiResult<ReportViewModel>> GetById(Guid id);
+    }
+
     public class ReportService : IReportService
     {
         private readonly GoodsExchangeDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IServiceWrapper _serviceWrapper;
-
-        public ReportService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IServiceWrapper serviceWrapper)
+        public ReportService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
-            _serviceWrapper = serviceWrapper;
         }
 
         public async Task<ApiResult<bool>> ApproveReport(Guid id)
@@ -35,57 +40,23 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             report.IsApprove = true;
             report.IsActive = false;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();  
 
             return new ApiSuccessResult<bool>(true);
         }
-
-        #region For SendReport
-        private async Task<bool> UserExists(Guid id)
-        {
-            //return (await _userService.GetById(id)).Data != null;
-            return (await _serviceWrapper.UserServices.GetById(id)).Data != null;
-        }
-        private async Task<bool> HasPermissionToReport(Guid from, Guid to)
-        {
-            var receiver = await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).FirstOrDefaultAsync(u => u.UserId == to);
-            if (receiver.UserId == from)
-            {
-                return false;
-            }
-            var roles = receiver.UserRoles.Select(u => u.Role.RoleName).ToList();
-            if (roles.Any(r => r.Contains(SystemConstant.Roles.Moderator) || r.Contains(SystemConstant.Roles.Administrator)))
-            {
-                return false;
-            }
-            return true;
-        }
-        private async Task<bool> ProductExists(Guid id)
-        {
-            //return (await _productService.GetById(id)).Data != null;
-            return (await _serviceWrapper.ProductServices.GetById(id)).Data != null;
-        }
-        #endregion
 
         public async Task<ApiResult<ReportViewModel>> SendReport(CreateReportRequestModel request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
-            if (!await UserExists(request.ReceiverId))
+            var reportReceived = await _context.Users.FirstOrDefaultAsync(u => u.UserId == request.ReceiverId);
+            if (reportReceived.UserRoles.Any(ur =>
+                ur.User.UserId == user.UserId
+            || ur.Role.RoleName == SystemConstant.Roles.Administrator
+            || ur.Role.RoleName == SystemConstant.Roles.Moderator))
             {
-                return new ApiErrorResult<ReportViewModel>("The report receiver does not exist.");
+                return new ApiErrorResult<ReportViewModel>("You can not use this user.");
             }
-
-            if (!await HasPermissionToReport(user.UserId, request.ReceiverId))
-            {
-                return new ApiErrorResult<ReportViewModel>("You can not report this user.");
-            }
-
-            if (!await ProductExists(request.ProductId))
-            {
-                return new ApiErrorResult<ReportViewModel>("This product does not exist.");
-            }
-
 
             var report = new Report()
             {
@@ -147,7 +118,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var data = query.Select(report => new ReportViewModel()
             {
-                ReportMade = _context.Users.FirstOrDefault(r => r.UserId == report.SenderId).UserName,
+                ReportMade = _context.Users.FirstOrDefault(r=>r.UserId == report.SenderId).UserName,
                 ReportReceived = _context.Users.FirstOrDefault(u => u.UserId == report.ReceiverId).UserName,
                 ProductId = _context.Products.FirstOrDefault(p => p.ProductId == report.ProductId).ProductId,
                 ProductName = _context.Products.FirstOrDefault(p => p.ProductId == report.ProductId).ProductName,

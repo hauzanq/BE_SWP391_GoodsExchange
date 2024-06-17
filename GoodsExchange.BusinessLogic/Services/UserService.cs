@@ -2,7 +2,6 @@
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.User;
-using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.User;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
@@ -14,20 +13,33 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace GoodsExchange.BusinessLogic.Services.Implementation
+namespace GoodsExchange.BusinessLogic.Services
 {
+
+    public interface IUserService
+    {
+        Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request);
+        Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request);
+        Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request);
+        Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status);
+        Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model);
+        Task<ApiResult<UserProfileViewModel>> GetById(Guid id);
+        Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request);
+        Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request);
+    }
+
     public class UserService : IUserService
     {
         private readonly GoodsExchangeDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
-        private readonly IServiceWrapper _serviceWrapper;
-        public UserService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IServiceWrapper serviceWrapper)
+        private readonly IRoleService _roleService;
+        public UserService(GoodsExchangeDbContext context, IRoleService roleService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _roleService = roleService;
             _configuration = configuration;
-            _serviceWrapper = serviceWrapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status)
@@ -57,7 +69,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return new ApiErrorResult<LoginViewModel>("User account is inactive");
             }
 
-            var roles = await _serviceWrapper.RoleServices.GetRolesOfUser(user.UserId);
+            var roles = await _roleService.GetRolesOfUser(user.UserId);
 
             var userClaims = new[]
             {
@@ -83,14 +95,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<LoginViewModel>(new LoginViewModel()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Roles = _serviceWrapper.RoleServices.GetRolesOfUser(user.UserId).Result
+                Roles = _roleService.GetRolesOfUser(user.UserId).Result
             });
         }
 
         public async Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            if (request.UserName != user.UserName)
+            if (request.UserName != user.UserName )
             {
                 return new ApiErrorResult<string>("UserName is incorrect.");
             }
@@ -111,7 +123,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<string>("Change password successfully.");
 
         }
-
+        
         public Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request)
         {
             throw new NotImplementedException();
@@ -119,7 +131,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model)
         {
-            var query = _context.Users.Include(u => u.UserRoles).AsQueryable().Where(u => u.UserRoles.Any(ur => ur.Role.RoleName == SystemConstant.Roles.Moderator));
+            var query = _context.Users.Include(u => u.UserRoles).AsQueryable().Where(u=>u.UserRoles.Any(ur=>ur.Role.RoleName == SystemConstant.Roles.Moderator));
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -229,8 +241,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return new ApiErrorResult<UserProfileViewModel>("Email available.");
             }
 
-            var buyer = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer);
-            var seller = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Seller);
+            var buyer = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer);
+            var seller = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller);
 
             var user = new User()
             {
@@ -245,8 +257,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 IsActive = true,
                 UserRoles = new List<UserRole>
                 {
-                    new UserRole { RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
-                    new UserRole { RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
+                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
+                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
                 }
             };
 
@@ -282,7 +294,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return new ApiErrorResult<UserProfileViewModel>("Email available.");
             }
 
-
+            
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = request.Email;
