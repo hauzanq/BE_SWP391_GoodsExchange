@@ -239,7 +239,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Email = request.Email,
                 DateOfBirth = request.DateOfBirth,
                 PhoneNumber = request.PhoneNumber,
-                UserImageUrl = request.UserImageUrl,
+                UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName,request.Image),
                 UserName = request.UserName,
                 Password = request.Password,
                 IsActive = true,
@@ -288,6 +288,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             user.Email = request.Email;
             user.DateOfBirth = request.DateOfBirth;
             user.PhoneNumber = request.PhoneNumber;
+            user.UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image);
             user.UserName = request.UserName;
             user.Password = request.Password;
 

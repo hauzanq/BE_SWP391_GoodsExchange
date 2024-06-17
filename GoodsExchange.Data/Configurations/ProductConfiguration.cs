@@ -21,8 +21,6 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(p => p.Description).HasMaxLength(500).IsRequired();
 
-            builder.Property(p => p.ProductImageUrl).HasMaxLength(500).IsRequired();
-
             builder.Property(p => p.Price).IsRequired();
 
             builder.Property(p => p.IsActive).IsRequired();
@@ -38,6 +36,8 @@ namespace GoodsExchange.Data.Configurations
             builder.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
 
             builder.HasOne(p => p.UserUpload).WithMany(u => u.Products).HasForeignKey(p => p.UserUploadId);
+
+            builder.HasMany(p => p.ProductImages).WithOne(pi=>pi.Product).HasForeignKey(p => p.ProductId);
         }
     }
 }

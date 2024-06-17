@@ -22,7 +22,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("create")]
         [Authorize(Roles = SystemConstant.Roles.Seller)]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequestModel request)
+        public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequestModel request)
         {
             if (!ModelState.IsValid)
             {

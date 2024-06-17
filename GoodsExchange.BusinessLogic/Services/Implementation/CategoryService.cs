@@ -88,7 +88,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CategoryName = category.CategoryName,
                 ProductID = product.ProductId,
                 ProductName = product.ProductName,
-                ProductImageUrl = product.ProductImageUrl,
+                //ProductImageUrl = product.ProductImageUrl,
                 Description = product.Description,
                 Price = product.Price,
                 ApprovedDate = product.ApprovedDate,

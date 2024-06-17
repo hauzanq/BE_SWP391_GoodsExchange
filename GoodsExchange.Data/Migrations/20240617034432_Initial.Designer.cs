@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240606071128_InitialDatabase")]
-    partial class InitialDatabase
+    [Migration("20240617034432_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,11 +88,6 @@ namespace GoodsExchange.Data.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
-                    b.Property<string>("ProductImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -122,7 +117,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = true,
                             IsApproved = false,
                             Price = 2.99f,
-                            ProductImageUrl = "https://example.com/ballpoint-pen.jpg",
                             ProductName = "Ballpoint Pen",
                             UploadDate = new DateTime(2023, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -136,7 +130,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = true,
                             IsApproved = false,
                             Price = 4.5f,
-                            ProductImageUrl = "https://example.com/mechanical-pencil.jpg",
                             ProductName = "Mechanical Pencil",
                             UploadDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -150,7 +143,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = true,
                             IsApproved = false,
                             Price = 9.99f,
-                            ProductImageUrl = "https://example.com/colored-pencils.jpg",
                             ProductName = "Colored Pencils",
                             UploadDate = new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -164,7 +156,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = true,
                             IsApproved = false,
                             Price = 12.99f,
-                            ProductImageUrl = "https://example.com/sketchbook.jpg",
                             ProductName = "Sketchbook",
                             UploadDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -178,7 +169,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = true,
                             IsApproved = false,
                             Price = 29.99f,
-                            ProductImageUrl = "https://example.com/chemistry-textbook.jpg",
                             ProductName = "Chemistry Textbook",
                             UploadDate = new DateTime(2023, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -192,7 +182,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = false,
                             IsApproved = true,
                             Price = 14.99f,
-                            ProductImageUrl = "https://example.com/math-workbook.jpg",
                             ProductName = "Mathematics Workbook",
                             UploadDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -206,7 +195,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = false,
                             IsApproved = true,
                             Price = 59.99f,
-                            ProductImageUrl = "https://example.com/graphing-calculator.jpg",
                             ProductName = "Graphing Calculator",
                             UploadDate = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -220,7 +208,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = false,
                             IsApproved = true,
                             Price = 299.99f,
-                            ProductImageUrl = "https://example.com/tablet-computer.jpg",
                             ProductName = "Tablet Computer",
                             UploadDate = new DateTime(2023, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -234,7 +221,6 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = false,
                             IsApproved = true,
                             Price = 1.5f,
-                            ProductImageUrl = "https://example.com/ruler.jpg",
                             ProductName = "Ruler",
                             UploadDate = new DateTime(2023, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
@@ -248,10 +234,131 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = false,
                             IsApproved = true,
                             Price = 3.99f,
-                            ProductImageUrl = "https://example.com/highlighter-set.jpg",
                             ProductName = "Highlighter Set",
                             UploadDate = new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserUploadId = new Guid("99d274e6-fa23-4d1c-8f8a-097b3886caad")
+                        });
+                });
+
+            modelBuilder.Entity("GoodsExchange.Data.Models.ProductImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImage");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("10ee7295-86ab-4d60-85c2-69184f77db09"),
+                            Caption = "Product Image 1",
+                            DateCreated = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 524288L,
+                            ImagePath = "https://example.com/product-image-1.jpg",
+                            ProductId = new Guid("eee1a0c9-77c3-4fc1-b6a2-da34cf31c219")
+                        },
+                        new
+                        {
+                            Id = new Guid("6cef5ae9-f514-47e8-a44d-d22f821cc87f"),
+                            Caption = "Product Image 2",
+                            DateCreated = new DateTime(2023, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 489472L,
+                            ImagePath = "https://example.com/product-image-2.jpg",
+                            ProductId = new Guid("ef26caec-cebe-47cc-8e2f-baecbf5047fc")
+                        },
+                        new
+                        {
+                            Id = new Guid("673e0857-d289-4e81-9f3a-e182768c614e"),
+                            Caption = "Product Image 3",
+                            DateCreated = new DateTime(2023, 5, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 398336L,
+                            ImagePath = "https://example.com/product-image-3.jpg",
+                            ProductId = new Guid("dc3e969c-5a30-4028-8a96-db3f0dcd53de")
+                        },
+                        new
+                        {
+                            Id = new Guid("797b9709-bfad-4b97-b809-ff4e4bc4645e"),
+                            Caption = "Product Image 4",
+                            DateCreated = new DateTime(2023, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 411648L,
+                            ImagePath = "https://example.com/product-image-4.jpg",
+                            ProductId = new Guid("864a10b2-8045-469d-a4f3-d52433195fa5")
+                        },
+                        new
+                        {
+                            Id = new Guid("a12f506c-360c-4f56-8570-703bc90f9563"),
+                            Caption = "Product Image 5",
+                            DateCreated = new DateTime(2023, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 626688L,
+                            ImagePath = "https://example.com/product-image-5.jpg",
+                            ProductId = new Guid("77e9bb4d-286e-4f0d-ab61-fac48c135cab")
+                        },
+                        new
+                        {
+                            Id = new Guid("d4570d05-5d3d-4838-b8ac-306098648d2f"),
+                            Caption = "Product Image 6",
+                            DateCreated = new DateTime(2023, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 489472L,
+                            ImagePath = "https://example.com/product-image-6.jpg",
+                            ProductId = new Guid("d96ccbb3-39c2-4d9e-b829-1705216664fa")
+                        },
+                        new
+                        {
+                            Id = new Guid("46b98cfe-34b3-43c1-aae3-d6761261e4e4"),
+                            Caption = "Product Image 7",
+                            DateCreated = new DateTime(2023, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 398336L,
+                            ImagePath = "https://example.com/product-image-7.jpg",
+                            ProductId = new Guid("6ede9679-64bd-48af-a1ef-b04f55ee8fa3")
+                        },
+                        new
+                        {
+                            Id = new Guid("3feb6d01-9304-4f62-b167-66a691631250"),
+                            Caption = "Product Image 8",
+                            DateCreated = new DateTime(2023, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 411648L,
+                            ImagePath = "https://example.com/product-image-8.jpg",
+                            ProductId = new Guid("79e9860d-efdc-43b6-8ca2-b077798f62ea")
+                        },
+                        new
+                        {
+                            Id = new Guid("4dfc8842-da3e-461f-a795-f9360244694e"),
+                            Caption = "Product Image 9",
+                            DateCreated = new DateTime(2023, 5, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 626688L,
+                            ImagePath = "https://example.com/product-image-9.jpg",
+                            ProductId = new Guid("ec851619-5b2f-4a01-b2c8-ea4ec62c85ce")
+                        },
+                        new
+                        {
+                            Id = new Guid("a7583394-592b-46e5-b015-81eb6df2fb0b"),
+                            Caption = "Product Image 10",
+                            DateCreated = new DateTime(2023, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FileSize = 489472L,
+                            ImagePath = "https://example.com/product-image-10.jpg",
+                            ProductId = new Guid("d6afe29b-0a86-4e4f-b29d-28571e906767")
                         });
                 });
 
@@ -335,7 +442,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ReportId = new Guid("bfcfd760-2ba4-4774-99aa-00acf8c900c0"),
+                            ReportId = new Guid("2e4ed76c-d3af-48fd-9b1d-75cd244d6996"),
                             CreateDate = new DateTime(2023, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -346,7 +453,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("c4a32b91-9b8a-49ba-b768-2479c6497a2a"),
+                            ReportId = new Guid("e1877b18-1cbc-496f-b154-62505927c923"),
                             CreateDate = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -357,7 +464,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("82091caa-7314-469e-b12d-5db8306e5d00"),
+                            ReportId = new Guid("9f50ce34-c0ee-41ad-96cf-2503a7a5ff47"),
                             CreateDate = new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -368,7 +475,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("c12606a3-7a6e-4270-b384-53c595d1b862"),
+                            ReportId = new Guid("6b8ca2ad-2157-47fd-a1d0-820fc430b9f7"),
                             CreateDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -379,7 +486,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("085f0d3c-1a6d-4eea-a21e-7c03534ac004"),
+                            ReportId = new Guid("c47d8893-ab29-4600-baf3-2895602ba5ad"),
                             CreateDate = new DateTime(2023, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -390,7 +497,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("18cca700-284c-4536-ba85-2499fd3fe7d1"),
+                            ReportId = new Guid("9b1d8b49-2d3a-4577-901f-39eba072cd6a"),
                             CreateDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -401,7 +508,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("14cc71ab-0c5f-4191-974a-5c0dd60e0e7c"),
+                            ReportId = new Guid("91cda9f8-f25d-493e-b020-23f343a74123"),
                             CreateDate = new DateTime(2023, 11, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -412,7 +519,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("15d7971e-e5ff-4054-9433-b1601991eb71"),
+                            ReportId = new Guid("cecf8840-3868-4163-8ca7-682fd6bd00ec"),
                             CreateDate = new DateTime(2023, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -423,7 +530,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("ece0382a-7a69-4515-9981-d7bc9add93a0"),
+                            ReportId = new Guid("6d874d0d-ba17-49d3-a986-5dd410d9532f"),
                             CreateDate = new DateTime(2023, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = true,
                             IsApprove = false,
@@ -434,7 +541,7 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            ReportId = new Guid("46a2e50f-51eb-4f27-b4f4-7930af9b1d45"),
+                            ReportId = new Guid("bcbd9946-17e7-4ccc-9336-11896c5548b9"),
                             CreateDate = new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsActive = false,
                             IsApprove = true,
@@ -671,6 +778,17 @@ namespace GoodsExchange.Data.Migrations
                     b.Navigation("UserUpload");
                 });
 
+            modelBuilder.Entity("GoodsExchange.Data.Models.ProductImage", b =>
+                {
+                    b.HasOne("GoodsExchange.Data.Models.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("GoodsExchange.Data.Models.Rating", b =>
                 {
                     b.HasOne("GoodsExchange.Data.Models.Product", "Product")
@@ -751,6 +869,8 @@ namespace GoodsExchange.Data.Migrations
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
                 {
+                    b.Navigation("ProductImages");
+
                     b.Navigation("Rate")
                         .IsRequired();
 
