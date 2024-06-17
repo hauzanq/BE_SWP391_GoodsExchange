@@ -33,12 +33,12 @@ namespace GoodsExchange.API.Controllers
 
             return Ok(token);
         }
-        
+
 
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterRequestModel request)
+        public async Task<IActionResult> Register([FromForm] RegisterRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -56,7 +56,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPut]
         [Route("update-account")]
         [Authorize]
-        public async Task<IActionResult> UpdateUser(UpdateUserRequestModel request)
+        public async Task<IActionResult> UpdateUser([FromForm]UpdateUserRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -74,14 +74,14 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> ChangeUserStatus(Guid id,bool status)
+        public async Task<IActionResult> ChangeUserStatus(Guid id, bool status)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.ChangeUserStatus(id,status);
+            var result = await _userService.ChangeUserStatus(id, status);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

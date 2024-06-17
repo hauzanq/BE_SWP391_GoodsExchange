@@ -117,5 +117,18 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return _userService;
             }
         }
+
+        private IFirebaseStorageService _firebaseStorageService;
+        public IFirebaseStorageService FirebaseStorageServices
+        {
+            get
+            {
+                if (_firebaseStorageService is null)
+                {
+                    _firebaseStorageService = new FirebaseStorageService(_configuration);
+                }
+                return _firebaseStorageService;
+            }
+        }
     }
 }

@@ -65,9 +65,7 @@ namespace GoodsExchange.API.Extensions
             {
                 options.AddPolicy("AllowReactApp", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
             return services;
@@ -76,6 +74,8 @@ namespace GoodsExchange.API.Extensions
         public static IServiceCollection RegisterService(this IServiceCollection services)
         {
             services.AddScoped<IServiceWrapper, ServiceWrapper>();
+
+            services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             

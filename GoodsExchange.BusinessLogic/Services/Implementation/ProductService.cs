@@ -36,8 +36,27 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
+
+        private async Task<List<ProductImage>> AddListImages(string sellerName, CreateProductRequestModel request)
+        {
+            List<ProductImage> images = new List<ProductImage>();
+            foreach (var image in request.Images)
+            {
+                var img = new ProductImage()
+                {
+                    Caption = image.FileName,
+                    DateCreated = DateTime.Now,
+                    FileSize = image.Length,
+                    ImagePath = await _serviceWrapper.FirebaseStorageServices.UploadProductImage(sellerName, request.ProductName, image),
+                };
+                images.Add(img);
+            }
+            return images;
+        }
         public async Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request)
         {
+            var seller = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == request.ProductName);
             if (existingProduct != null)
             {
@@ -54,13 +73,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 ProductName = request.ProductName,
                 Description = request.Description,
-                ProductImageUrl = request.ProductImageUrl,
                 Price = request.Price,
                 IsActive = true,
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
                 IsApproved = false,
-                CategoryId = category.CategoryId
+                CategoryId = category.CategoryId,
+                ProductImages = await AddListImages(seller.FirstName + " " + seller.LastName, request)
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
@@ -72,7 +91,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
-                ProductImageUrl = product.ProductImageUrl,
                 Price = product.Price,
                 IsActive = product.IsActive,
                 UserUpload = user.UserName,
@@ -193,7 +211,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     ProductId = product.ProductId,
                                     ProductName = product.ProductName,
                                     Description = product.Description,
-                                    ProductImageUrl = product.ProductImageUrl,
                                     Price = product.Price,
                                     IsActive = product.IsActive,
                                     IsApproved = product.IsApproved,
@@ -241,7 +258,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             product.ProductName = request.ProductName;
             product.Description = request.Description;
-            product.ProductImageUrl = request.ProductImageUrl;
             product.Price = request.Price.Value;
             product.CategoryId = request.CategoryId.Value;
 
@@ -252,7 +268,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
-                ProductImageUrl = product.ProductImageUrl,
                 Price = product.Price,
                 IsActive = product.IsActive,
                 UserUpload = _context.Users.FirstOrDefault(u => u.UserId == product.UserUploadId).UserName,
@@ -293,7 +308,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductName = product.ProductName,
                 Price = product.Price,
                 Description = product.Description,
-                ProductImageUrl = product.ProductImageUrl,
                 ApprovedDate = product.ApprovedDate,
 
                 UserUploadId = user.UserId,
