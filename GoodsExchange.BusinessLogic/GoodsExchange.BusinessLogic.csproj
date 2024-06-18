@@ -24,4 +24,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\GoodsExchange.Data\GoodsExchange.Data.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="RequestModels\Role\" />
+	</ItemGroup>
 </Project>

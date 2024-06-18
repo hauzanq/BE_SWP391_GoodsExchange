@@ -99,7 +99,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_roleService is null)
                 {
-                    _roleService = new RoleService(_context);
+                    _roleService = new RoleService(_context, this);
                 }
                 return _roleService;
             }

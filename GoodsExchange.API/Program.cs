@@ -1,6 +1,4 @@
 ﻿using GoodsExchange.API.Extensions;
-using GoodsExchange.BusinessLogic.Services;
-using GoodsExchange.BusinessLogic.Services.Mail;
 
 namespace GoodsExchange.API
 {
@@ -20,7 +18,6 @@ namespace GoodsExchange.API
 
             var app = builder.Build();
 
-            //var webRootPath = IeZ.WebRootPath;
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

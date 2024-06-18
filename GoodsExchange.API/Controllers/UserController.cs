@@ -1,7 +1,7 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.User;
-using GoodsExchange.BusinessLogic.Services;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,7 +63,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.UpdateUser(request);
+            var result = await _userService.UpdateUserAsync(request);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -81,7 +81,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.ChangeUserStatus(id, status);
+            var result = await _userService.ChangeUserStatusAsync(id, status);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -94,7 +94,7 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
         public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] SearchRequestModel search, [FromQuery] GetUserRequestModel model)
         {
-            var result = await _userService.GetAll(paging, search, model);
+            var result = await _userService.GetAllUsersAsync(paging, search, model);
             return Ok(result);
         }
     }

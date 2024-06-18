@@ -1,4 +1,5 @@
-﻿using GoodsExchange.BusinessLogic.Services;
+﻿using GoodsExchange.BusinessLogic.Services.Implementation;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
