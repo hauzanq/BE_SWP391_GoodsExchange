@@ -1,4 +1,4 @@
-using GoodsExchange.BusinessLogic.Services;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodsExchange.API.Controllers

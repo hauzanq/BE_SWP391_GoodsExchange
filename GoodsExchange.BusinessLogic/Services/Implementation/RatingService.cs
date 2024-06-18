@@ -1,30 +1,25 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Rating;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Rating;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodsExchange.BusinessLogic.Services
+namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
-
-    public interface IRatingService
-    {
-        Task<int> CountNumberRatingOfUser(Guid id);
-        Task<float> CountAverageNumberStarsOfUser(Guid id);
-        Task<ApiResult<RatingViewModel>> SendRating(CreateRatingRequestModel request);
-        Task<ApiResult<RatingViewModel>> GetById(Guid id);
-    }
-
     public class RatingService : IRatingService
     {
         private readonly GoodsExchangeDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public RatingService(GoodsExchangeDbContext context)
+        private readonly IServiceWrapper _serviceWrapper;
+        public RatingService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IServiceWrapper serviceWrapper)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+            _serviceWrapper = serviceWrapper;
         }
 
         public async Task<float> CountAverageNumberStarsOfUser(Guid id)
@@ -67,10 +62,24 @@ namespace GoodsExchange.BusinessLogic.Services
             };
             return new ApiSuccessResult<RatingViewModel>(result);
         }
-
         public async Task<ApiResult<RatingViewModel>> SendRating(CreateRatingRequestModel request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
+            if (await _serviceWrapper.UserServices.GetUserAsync(request.ReceiverId) == null)
+            {
+                return new ApiErrorResult<RatingViewModel>("This user does not exist.");
+            }
+
+            if (!(await _serviceWrapper.RoleServices.HasPermissionToReportAndRating(user.UserId, request.ReceiverId)))
+            {
+                return new ApiErrorResult<RatingViewModel>("You can not rate this user.");
+            }
+
+            if (await _serviceWrapper.ProductServices.GetProductAsync(request.ProductId) == null)
+            {
+                return new ApiErrorResult<RatingViewModel>("This product does not exist.");
+            }
 
             var rating = new Rating()
             {
@@ -88,13 +97,13 @@ namespace GoodsExchange.BusinessLogic.Services
             var result = new RatingViewModel()
             {
                 RatingId = rating.RatingId,
-                CreateDate  = rating.CreateDate,
-                Feedback    = rating.Feedback,
-                NumberStars= rating.NumberStars,
-                ProductId= rating.ProductId,
-                ProductName = _context.Products.FirstOrDefault(p=>p.ProductId == rating.ProductId).ProductName,
-                Sender = _context.Users.FirstOrDefault(u=>u.UserId == rating.SenderId).UserName,
-                Receiver = _context.Users.FirstOrDefault(u=>u.UserId == rating.ReceiverId).UserName,
+                CreateDate = rating.CreateDate,
+                Feedback = rating.Feedback,
+                NumberStars = rating.NumberStars,
+                ProductId = rating.ProductId,
+                ProductName = _context.Products.FirstOrDefault(p => p.ProductId == rating.ProductId).ProductName,
+                Sender = _context.Users.FirstOrDefault(u => u.UserId == rating.SenderId).UserName,
+                Receiver = _context.Users.FirstOrDefault(u => u.UserId == rating.ReceiverId).UserName,
             };
             return new ApiSuccessResult<RatingViewModel>(result);
         }

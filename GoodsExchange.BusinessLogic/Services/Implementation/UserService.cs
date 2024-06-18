@@ -2,6 +2,7 @@
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.User;
+using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.User;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
@@ -13,36 +14,31 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace GoodsExchange.BusinessLogic.Services
+namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
-
-    public interface IUserService
-    {
-        Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request);
-        Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request);
-        Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request);
-        Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status);
-        Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model);
-        Task<ApiResult<UserProfileViewModel>> GetById(Guid id);
-        Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request);
-        Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request);
-    }
-
     public class UserService : IUserService
     {
         private readonly GoodsExchangeDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
-        private readonly IRoleService _roleService;
-        public UserService(GoodsExchangeDbContext context, IRoleService roleService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        private readonly IServiceWrapper _serviceWrapper;
+        public UserService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IServiceWrapper serviceWrapper)
         {
             _context = context;
-            _roleService = roleService;
-            _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+            _serviceWrapper = serviceWrapper;
         }
-
-        public async Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status)
+        public async Task<User> GetUserAsync(Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+        public async Task<ApiResult<bool>> ChangeUserStatusAsync(Guid id, bool status)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -69,7 +65,7 @@ namespace GoodsExchange.BusinessLogic.Services
                 return new ApiErrorResult<LoginViewModel>("User account is inactive");
             }
 
-            var roles = await _roleService.GetRolesOfUser(user.UserId);
+            var roles = await _serviceWrapper.RoleServices.GetRolesOfUser(user.UserId);
 
             var userClaims = new[]
             {
@@ -95,14 +91,14 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<LoginViewModel>(new LoginViewModel()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Roles = _roleService.GetRolesOfUser(user.UserId).Result
+                Roles = _serviceWrapper.RoleServices.GetRolesOfUser(user.UserId).Result
             });
         }
 
-        public async Task<ApiResult<string>> ChangePassword(ChangePasswordRequestModel request)
+        public async Task<ApiResult<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            if (request.UserName != user.UserName )
+            if (request.UserName != user.UserName)
             {
                 return new ApiErrorResult<string>("UserName is incorrect.");
             }
@@ -123,15 +119,15 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<string>("Change password successfully.");
 
         }
-        
-        public Task<ApiResult<string>> ForgotPassword(ChangePasswordRequestModel request)
+
+        public Task<ApiResult<string>> ForgotPasswordAsync(ChangePasswordRequestModel request)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<PageResult<AdminUserViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model)
+        public async Task<PageResult<AdminUserViewModel>> GetAllUsersAsync(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model)
         {
-            var query = _context.Users.Include(u => u.UserRoles).AsQueryable().Where(u=>u.UserRoles.Any(ur=>ur.Role.RoleName == SystemConstant.Roles.Moderator));
+            var query = _context.Users.Include(u => u.UserRoles).AsQueryable().Where(u => u.UserRoles.Any(ur => ur.Role.RoleName == SystemConstant.Roles.Moderator));
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -206,7 +202,7 @@ namespace GoodsExchange.BusinessLogic.Services
             return result;
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> GetById(Guid id)
+        public async Task<ApiResult<UserProfileViewModel>> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -241,8 +237,8 @@ namespace GoodsExchange.BusinessLogic.Services
                 return new ApiErrorResult<UserProfileViewModel>("Email available.");
             }
 
-            var buyer = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer);
-            var seller = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller);
+            var buyer = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer);
+            var seller = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Seller);
 
             var user = new User()
             {
@@ -251,14 +247,14 @@ namespace GoodsExchange.BusinessLogic.Services
                 Email = request.Email,
                 DateOfBirth = request.DateOfBirth,
                 PhoneNumber = request.PhoneNumber,
-                UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName,request.Image),
+                UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image),
                 UserName = request.UserName,
                 Password = request.Password,
                 IsActive = true,
                 UserRoles = new List<UserRole>
                 {
-                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
-                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
+                    new UserRole { RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
+                    new UserRole { RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
                 }
             };
 
@@ -279,7 +275,7 @@ namespace GoodsExchange.BusinessLogic.Services
             return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> UpdateUser(UpdateUserRequestModel request)
+        public async Task<ApiResult<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
@@ -293,8 +289,6 @@ namespace GoodsExchange.BusinessLogic.Services
             {
                 return new ApiErrorResult<UserProfileViewModel>("Email available.");
             }
-
-            
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = request.Email;
