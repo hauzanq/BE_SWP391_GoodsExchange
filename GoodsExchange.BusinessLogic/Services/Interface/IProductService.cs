@@ -10,7 +10,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
         Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
         Task<ApiResult<bool>> DeleteProduct(Guid id);
-        Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false);
+        Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false, bool moderator= false);
         Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id);
         Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
         Task<ApiResult<bool>> ReviewProduct(Guid id, bool status);

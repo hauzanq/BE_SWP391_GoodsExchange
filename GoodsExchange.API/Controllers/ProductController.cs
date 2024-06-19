@@ -39,7 +39,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("all")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        public async Task<IActionResult> GetProductForBuyer([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,20 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetAll(request, search, model, true);
+            var result = await _productService.GetAll(request, search, model, true, false);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("moderator/all")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> GetProductForModerator([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _productService.GetAll(request, search, model, false, true);
             return Ok(result);
         }
 
@@ -124,9 +137,9 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("review/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> ApproveProduct(Guid id,bool status)
+        public async Task<IActionResult> ApproveProduct(Guid id, bool status)
         {
-            var result = await _productService.ReviewProduct(id,status);
+            var result = await _productService.ReviewProduct(id, status);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);

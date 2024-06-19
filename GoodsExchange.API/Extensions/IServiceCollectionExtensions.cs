@@ -75,6 +75,8 @@ namespace GoodsExchange.API.Extensions
 
         public static IServiceCollection RegisterService(this IServiceCollection services)
         {
+            services.AddScoped<IServiceWrapper, ServiceWrapper>();
+            
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();

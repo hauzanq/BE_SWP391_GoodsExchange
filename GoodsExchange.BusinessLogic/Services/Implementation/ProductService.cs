@@ -119,7 +119,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
-        public async Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel paging, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false)
+        public async Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false, bool moderator = false)
         {
             var query = _context.Products.Where(p => p.UserUpload.IsActive == true && p.IsApproved == true).AsQueryable();
 
@@ -199,11 +199,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 query = query.Where(p => p.UserUploadId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             }
 
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / paging.PageSize);
+            if (moderator == true)
+            {
+                query = _context.Products.Where(p => p.UserUpload.IsActive == true && p.IsApproved == false).AsQueryable();
+            }
 
-            var data = await query.Skip((paging.PageIndex - 1) * paging.PageSize)
-                                .Take(paging.PageSize)
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                                .Take(request.PageSize)
                                 .Select(product => new ProductViewModel()
                                 {
                                     ProductId = product.ProductId,
@@ -223,7 +228,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 Items = data,
                 TotalPage = totalPages,
-                CurrentPage = paging.PageIndex
+                CurrentPage = request.PageIndex
             };
             return result;
         }
