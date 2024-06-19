@@ -94,6 +94,10 @@ namespace GoodsExchange.API.Extensions
             services.AddScoped<IReportService, ReportService>();
 
             services.AddScoped<IRoleService, RoleService>();
+          
+           services.AddTransient<IEmailService, EmailService>();
+
+            services.AddScoped<IEmailTemplateHelper,EmailHelperService>();
             
 
             return services;

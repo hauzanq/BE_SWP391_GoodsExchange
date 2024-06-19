@@ -1,6 +1,7 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.Data.Context;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -40,13 +41,15 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
 
         private IEmailService _emailService;
+        private  IEmailTemplateHelper _emailTemplateHelper;
+        private IWebHostEnvironment _webHostEnvironment;
         public IEmailService EmailServices
         {
             get
             {
                 if (_emailService is null)
                 {
-                    _emailService = new EmailService(_emailSettings);
+                    _emailService = new EmailService(_emailSettings,_emailTemplateHelper,_webHostEnvironment);
                 }
                 return _emailService;
             }
@@ -106,13 +109,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
 
         private IUserService _userService;
+
         public IUserService UserServices
         {
             get
             {
                 if (_userService is null)
                 {
-                    _userService = new UserService(_context,_httpContextAccessor,_configuration,this);
+                    _userService = new UserService(_context,_httpContextAccessor,_configuration,this,_emailService);
                 }
                 return _userService;
             }

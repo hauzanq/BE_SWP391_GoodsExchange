@@ -22,12 +22,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IServiceWrapper _serviceWrapper;
-        public UserService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IServiceWrapper serviceWrapper)
+        private readonly IEmailService _emailService;
+        public UserService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IServiceWrapper serviceWrapper, IEmailService emailService)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
             _serviceWrapper = serviceWrapper;
+            _emailService = emailService;
         }
         public async Task<User> GetUserAsync(Guid userId)
         {
@@ -258,6 +260,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 }
             };
 
+            var token = GenerateEmailVerificationToken(user.Email);
+
+            await _emailService.SendEmailToRegisterAsync(user.Email, token);
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -302,5 +307,41 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<UserProfileViewModel>();
         }
+
+        public string GenerateEmailVerificationToken(string email)
+        {
+            var key = _configuration["JWTAuthentication:Key"];
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("JWTAuthentication:Key is not configured.");
+            }
+
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+            if (keyBytes.Length < 32)
+            {
+                throw new ArgumentException("The key size must be at least 256 bits (32 bytes). Please use a longer key.");
+            }
+
+            var securityKey = new SymmetricSecurityKey(keyBytes);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            }),
+                Expires = DateTime.UtcNow.AddHours(3),
+                Issuer = _configuration["JWTAuthentication:Issuer"],
+                Audience = _configuration["JWTAuthentication:Audience"],
+                SigningCredentials = credentials
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
     }
 }

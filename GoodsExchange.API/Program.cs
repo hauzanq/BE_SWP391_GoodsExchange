@@ -1,4 +1,5 @@
 ﻿using GoodsExchange.API.Extensions;
+using GoodsExchange.BusinessLogic.Common;
 
 namespace GoodsExchange.API
 {
@@ -16,6 +17,7 @@ namespace GoodsExchange.API
                             .RegisterService()
                             .AddCorsConfigurations();
 
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

@@ -2,6 +2,7 @@
 using GoodsExchange.BusinessLogic.RequestModels.Email;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using MailKit.Security;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -10,26 +11,31 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _emailSettings;
-        public EmailService(IOptions<EmailSettings> emailSetting)
+        private readonly IEmailTemplateHelper _emailTemplateHelper;
+        private readonly string _webHostEnvironment;
+        public EmailService(IOptions<EmailSettings> emailSetting, IEmailTemplateHelper emailTemplateHelper,IWebHostEnvironment webHostEnvironment)
         {
             _emailSettings = emailSetting.Value;
+            _emailTemplateHelper = emailTemplateHelper;
+            _webHostEnvironment = webHostEnvironment.WebRootPath;
         }
 
-        public async Task<ApiResult<bool>> SendEmailAsync(EmailRequestModel emailRequest)
+        public async Task<ApiResult<bool>> SendEmailAsync(string to, string subject, string content)
         {
             try
             {
                 //Setup Email 
                 var email = new MimeMessage();
                 email.Sender = MailboxAddress.Parse(_emailSettings.Email);
-                email.To.Add(MailboxAddress.Parse(emailRequest.ToEmail));
-                email.Subject = emailRequest.Subject;
+                email.To.Add(MailboxAddress.Parse(to));
+                email.Subject = subject;
 
                 var builder = new BodyBuilder();
 
                 //Setup Email Body  
-                builder.HtmlBody = emailRequest.Body;
+                builder.HtmlBody = content;
                 email.Body = builder.ToMessageBody();
+
 
                 // Set up Identity with server smtp
                 using var smtp = new MailKit.Net.Smtp.SmtpClient();
@@ -45,6 +51,18 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 return new ApiErrorResult<bool>(ex.Message);
             }
+        }
+
+        public async  Task SendEmailToRegisterAsync(string to, string token)
+        {
+            string content = _emailTemplateHelper.REGISTER_TEMPLATE(_webHostEnvironment);
+            var verificationLink = $"http://localhost:5000/api/v1/users/verifyemail?email={to}&token={token}";
+            content = content.Replace("{{Email}}", to);
+            content = content.Replace("{{token}}", verificationLink);
+
+
+            await SendEmailAsync(to, "Fgoodexchange send confirm Registration Account", content);
+
         }
     }
 }

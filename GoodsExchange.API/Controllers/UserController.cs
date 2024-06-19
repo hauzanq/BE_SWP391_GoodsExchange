@@ -2,8 +2,13 @@ using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.User;
 using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace GoodsExchange.API.Controllers
 {
@@ -13,10 +18,12 @@ namespace GoodsExchange.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -56,7 +63,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPut]
         [Route("update-account")]
         [Authorize]
-        public async Task<IActionResult> UpdateUser([FromForm]UpdateUserRequestModel request)
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -97,5 +104,59 @@ namespace GoodsExchange.API.Controllers
             var result = await _userService.GetAllUsersAsync(paging, search, model);
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("verifyemail")]
+        public IActionResult VerifyEmail(string email, string token)
+        {
+            var key = Encoding.UTF8.GetBytes(_configuration["JWTAuthentication:Key"]);
+            var securityKey = new SymmetricSecurityKey(key);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = false, 
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = securityKey
+                }, out SecurityToken validatedToken);
+
+                var tokenEmail = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (tokenEmail != email)
+                {
+                    return BadRequest("Invalid token.");
+                }
+
+                using (var context = new GoodsExchangeDbContext())
+                {
+                    var user = context.Users.SingleOrDefault(u => u.Email == email);
+
+                    if (user == null)
+                    {
+                        return BadRequest("User not found.");
+                    }
+
+                    user.EmailConfirm = true;
+                    context.SaveChanges();
+                    return Ok("Email verified successfully.");
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
+        }
+
+
+
+
+
+
+
+
     }
 }
