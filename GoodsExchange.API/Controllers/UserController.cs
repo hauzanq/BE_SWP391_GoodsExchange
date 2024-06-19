@@ -2,8 +2,17 @@ using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.User;
 using GoodsExchange.BusinessLogic.Services;
+using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using GoodsExchange.BusinessLogic.Services.Emails;
+using System.Net.WebSockets;
+using GoodsExchange.Data.Models;
 
 namespace GoodsExchange.API.Controllers
 {
@@ -13,10 +22,17 @@ namespace GoodsExchange.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
+        private readonly GoodsExchangeDbContext _context;
+        private readonly IEmailServices _emailServices;
 
-        public UserController(IUserService userService)
+
+        public UserController(IUserService userService, IConfiguration configuration, GoodsExchangeDbContext context, IEmailServices emailServices)
         {
             _userService = userService;
+            _configuration = configuration;
+            _context = context;
+            _emailServices = emailServices;
         }
 
         [HttpPost]
@@ -33,7 +49,7 @@ namespace GoodsExchange.API.Controllers
 
             return Ok(token);
         }
-        
+
 
         [HttpPost]
         [Route("register")]
@@ -74,14 +90,14 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> ChangeUserStatus(Guid id,bool status)
+        public async Task<IActionResult> ChangeUserStatus(Guid id, bool status)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.ChangeUserStatus(id,status);
+            var result = await _userService.ChangeUserStatus(id, status);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
@@ -97,5 +113,54 @@ namespace GoodsExchange.API.Controllers
             var result = await _userService.GetAll(paging, search, model);
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("verifyemail")]
+        public IActionResult VerifyEmail(string email,string token)
+        {
+            var Usertoken = _context.UserTokens.FirstOrDefault(u => u.Token.Equals(token));
+            if (Usertoken == null) {
+                return BadRequest("Token doesn't exist");
+            }
+            var user = _context.Users.FirstOrDefault(u=> u.Email == email);
+            if (user == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            user.EmailConfirm = true;
+            _context.Remove(Usertoken); // Optionally, remove the token after it's used.
+            _context.Update(user);
+            _context.SaveChanges();
+
+            return Ok(" vertified Email successfully , Welcome to FGoodExchangeFU of us . ");
+
+               
+        }
+
+        [HttpGet]
+        [Route("Reset-passsword")]
+        public IActionResult ResetPassword(string email)
+        {
+            using(var context = new GoodsExchangeDbContext()) { 
+            
+                var existedUser = context.Users.SingleOrDefault(x => x.Email == email);
+                if(existedUser == null)
+                {
+                    return BadRequest("User doesn't existed");
+                }
+                 
+                return null;
+            }
+        }
+
+
+     
+
+
+
+
+
+
+
     }
 }

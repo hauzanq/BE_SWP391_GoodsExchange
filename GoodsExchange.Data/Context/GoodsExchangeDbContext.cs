@@ -24,6 +24,8 @@ namespace GoodsExchange.Data.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<UserToken> UserTokens { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string root = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName;
@@ -45,6 +47,7 @@ namespace GoodsExchange.Data.Context
             modelBuilder.ApplyConfiguration(new RatingConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTokenConfiguration());
             modelBuilder.Seed();
         }
     }

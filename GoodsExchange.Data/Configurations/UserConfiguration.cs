@@ -34,6 +34,7 @@ namespace GoodsExchange.Data.Configurations
             builder.Property(u => u.IsActive).IsRequired();
 
             builder.HasMany(u => u.Products).WithOne(p => p.UserUpload).HasForeignKey(p => p.UserUploadId);
+            builder.HasMany(u => u.usertokens).WithOne().HasForeignKey(ut => ut.UserId);
 
         }
     }

@@ -19,6 +19,8 @@ namespace GoodsExchange.Data.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public bool IsActive { get; set; }
+        public List<UserToken>? usertokens { get; set; }
+
         public List<UserRole> UserRoles { get; set; }
         public List<Rating> RatingsGiven { get; set; }
         public List<Rating> RatingsReceived { get; set; }

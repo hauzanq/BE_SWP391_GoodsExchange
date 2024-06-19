@@ -1,6 +1,7 @@
 ﻿using GoodsExchange.API.Extensions;
+using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Services;
-using GoodsExchange.BusinessLogic.Services.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace GoodsExchange.API
 {
@@ -15,9 +16,10 @@ namespace GoodsExchange.API
             builder.Services.AddAuthenticationServicesConfigurations(builder.Configuration)
                             .AddSwaggerConfigurations()
                             .AddDbContextsWithConfigurations(builder.Configuration)
-                            .RegisterService()
-                            .AddCorsConfigurations();
+            .RegisterService()
+            .AddCorsConfigurations();
 
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             var app = builder.Build();
 
             //var webRootPath = IeZ.WebRootPath;

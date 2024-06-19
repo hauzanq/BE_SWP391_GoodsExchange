@@ -1,4 +1,5 @@
 ﻿using GoodsExchange.BusinessLogic.Services;
+using GoodsExchange.BusinessLogic.Services.Emails;
 using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -89,6 +90,8 @@ namespace GoodsExchange.API.Extensions
             services.AddScoped<IReportService, ReportService>();
 
             services.AddScoped<IRoleService, RoleService>();
+
+            services.AddTransient<IEmailServices, EmailServices>();
             
 
             return services;

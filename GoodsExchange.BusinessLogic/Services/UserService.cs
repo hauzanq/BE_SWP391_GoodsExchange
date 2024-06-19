@@ -2,6 +2,7 @@
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.User;
+using GoodsExchange.BusinessLogic.Services.Emails;
 using GoodsExchange.BusinessLogic.ViewModels.User;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
@@ -34,12 +35,14 @@ namespace GoodsExchange.BusinessLogic.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IRoleService _roleService;
-        public UserService(GoodsExchangeDbContext context, IRoleService roleService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        private readonly IEmailServices _emailService;
+        public UserService(GoodsExchangeDbContext context, IRoleService roleService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IEmailServices emailService)
         {
             _context = context;
             _roleService = roleService;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _emailService = emailService;
         }
 
         public async Task<ApiResult<bool>> ChangeUserStatus(Guid id, bool status)
@@ -256,15 +259,23 @@ namespace GoodsExchange.BusinessLogic.Services
                 Password = request.Password,
                 IsActive = true,
                 UserRoles = new List<UserRole>
-                {
-                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
-                    new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
-                }
+    {
+        new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
+        new UserRole { RoleId = await _roleService.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
+    }
             };
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            var token = GenerateToken(user.UserId);
+            await _emailService.SendEmailToRegisterAsync(user.Email, token.Token);
+            if(user.usertokens == null)
+            {
+                user.usertokens= new List<UserToken>();
 
+            }
+            user.usertokens.Add(token);
+            await _context.Users.AddAsync(user);
+
+            await _context.SaveChangesAsync();
             var result = new UserProfileViewModel()
             {
                 FirstName = user.FirstName,
@@ -307,5 +318,28 @@ namespace GoodsExchange.BusinessLogic.Services
 
             return new ApiSuccessResult<UserProfileViewModel>();
         }
+
+        
+
+
+ 
+
+        private UserToken GenerateToken(Guid userId)
+        {
+
+            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+
+            var userToken = new UserToken
+            {
+                UserId = userId,
+                Token = token,
+                ExpireDate = DateTime.Now.AddHours(24) // Token valid for 24 hours
+            };
+            return userToken;
+        }
+        
+
+
+
     }
 }
