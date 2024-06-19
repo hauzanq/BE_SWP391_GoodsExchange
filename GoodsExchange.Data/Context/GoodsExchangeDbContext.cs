@@ -10,7 +10,7 @@ namespace GoodsExchange.Data.Context
     {
         public GoodsExchangeDbContext()
         {
-                
+
         }
         public GoodsExchangeDbContext(DbContextOptions options) : base(options)
         {
@@ -26,14 +26,17 @@ namespace GoodsExchange.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string root = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName;
-            string apiDirectory = Path.Combine(root, "GoodsExchange.API");
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(apiDirectory)
-                .AddJsonFile("appsettings.Development.json")
-                .Build();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
+            if (!optionsBuilder.IsConfigured)
+            {
+                string root = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName;
+                string apiDirectory = Path.Combine(root, "GoodsExchange.API");
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(apiDirectory)
+                    .AddJsonFile("appsettings.Development.json")
+                    .Build();
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

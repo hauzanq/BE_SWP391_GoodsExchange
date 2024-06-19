@@ -65,9 +65,11 @@ namespace GoodsExchange.API.Extensions
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowReactApp", builder =>
+                options.AddPolicy("AllowCORS", builder =>
                 {
-                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
                 });
             });
             return services;

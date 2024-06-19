@@ -26,7 +26,7 @@ namespace GoodsExchange.API
 
             app.UseHttpsRedirection();
 
-            app.UseCors("AllowReactApp");
+            app.UseCors("AllowCORS");
 
             app.UseAuthentication();
             app.UseAuthorization();
