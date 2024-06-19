@@ -218,6 +218,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     IsActive = product.IsActive,
                                     IsApproved = product.IsApproved,
                                     UserUpload = _context.Users.FirstOrDefault(u => u.UserId == product.UserUploadId).UserName,
+                                    ProductImageUrl = _context.ProductImages.FirstOrDefault(u => u.ProductId == product.ProductId).ImagePath,
                                     UploadDate = product.UploadDate,
                                     ApprovedDate = product.ApprovedDate,
                                     CategoryName = _context.Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId).CategoryName
