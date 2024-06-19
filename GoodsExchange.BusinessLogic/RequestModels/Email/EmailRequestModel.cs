@@ -9,7 +9,7 @@ namespace GoodsExchange.BusinessLogic.RequestModels.Email
     /// <summary>
     /// SOME INFORMATION ABOUT GMAIL ToEmail.
     /// Subject : nội dung Title của một Email Thông thường 
-    /// Body : Render HTML/CSS to send content with popular and friendly for ToEmail
+    /// Body : Render HTML/CSS to send content with popular and friendly for ToEmail --> Content
     /// </summary>
     public class EmailRequestModel
     {
