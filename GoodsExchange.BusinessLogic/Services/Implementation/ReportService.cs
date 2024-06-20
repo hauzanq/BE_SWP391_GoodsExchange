@@ -81,6 +81,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var result = new ReportViewModel()
             {
+                ReportId = report.ReportId,
                 ReportMade = user.UserName,
                 ReportReceived = _serviceWrapper.UserServices.GetUserAsync(report.ReceiverId).Result.UserName,
                 ProductId = product.ProductId,
