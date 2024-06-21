@@ -60,6 +60,24 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _userService.GetUserByIdAsync(id);
+            if (!result.IsSuccessed)
+            {
+                return NotFound(result.Message);
+            }
+            return Ok(result);
+        }
+
         [HttpPut]
         [Route("update-account")]
         [Authorize]

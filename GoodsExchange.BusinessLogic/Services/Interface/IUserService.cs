@@ -15,6 +15,8 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ApiResult<UserProfileViewModel>> GetUserByIdAsync(Guid id);
         Task<ApiResult<string>> ChangePasswordAsync(ChangePasswordRequestModel request);
         Task<ApiResult<string>> ForgotPasswordAsync(ChangePasswordRequestModel request);
-        Task<User> GetUserAsync(Guid id);   
+        Task<User> GetUserByProductId(Guid id);
+        Task<User> GetUserAsync(Guid id);
+        Task<string> GetUserFullNameAsync(Guid id);
     }
 }

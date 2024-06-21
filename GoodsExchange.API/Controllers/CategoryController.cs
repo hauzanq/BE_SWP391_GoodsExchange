@@ -13,7 +13,6 @@ namespace GoodsExchange.API.Controllers
 
     public class CategoryController : ControllerBase
     {
-
         private ICategoryService _categoryService;
 
         public CategoryController(ICategoryService categoryService)
@@ -21,10 +20,8 @@ namespace GoodsExchange.API.Controllers
             _categoryService = categoryService;
         }
 
-
         [HttpPost]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-
         public async Task<ActionResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
         {
             if (!ModelState.IsValid)
@@ -39,7 +36,6 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-
         [HttpGet]
         public async Task<ActionResult<CategoryViewModel>> GetAll()
         {
@@ -50,7 +46,6 @@ namespace GoodsExchange.API.Controllers
             var result = await _categoryService.GetAll();
             return Ok(result);
         }
-
 
         [HttpGet("id")]
         public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
@@ -63,11 +58,9 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-
         [HttpDelete]
         [Route("id")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-
         public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
             var result = await _categoryService.DeleteCategory(id);  

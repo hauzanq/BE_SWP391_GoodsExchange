@@ -22,7 +22,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ApiResult<bool>> ReviewProduct(Guid id,bool status)
+        public async Task<ApiResult<bool>> ReviewProduct(Guid id, bool status)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -61,11 +61,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return new ApiErrorResult<ProductViewModel>("Product name already exists.");
             }
 
-            var category = await _serviceWrapper.CategoryServices.GetById(request.CategoryId);
+            var category = await _serviceWrapper.CategoryServices.GetCategoryAsync(request.CategoryId);
             if (category == null)
             {
                 return new ApiErrorResult<ProductViewModel>("Category does not exist.");
             }
+
+            var sellerFullName = await _serviceWrapper.UserServices.GetUserFullNameAsync(seller.UserId);
 
             var product = new Product()
             {
@@ -76,8 +78,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
                 IsApproved = false,
-                CategoryId = category.Data.CategoryId,
-                ProductImages = await AddListImages(seller.FirstName + " " + seller.LastName, request)
+                CategoryId = category.CategoryId,
+                ProductImages = await AddListImages(sellerFullName, request)
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
@@ -92,6 +94,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Price = product.Price,
                 IsActive = product.IsActive,
                 UserUpload = user.UserName,
+                ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UploadDate = product.UploadDate,
                 ApprovedDate = product.ApprovedDate,
                 CategoryName = (await _serviceWrapper.CategoryServices.GetById(request.CategoryId)).Data.CategoryName,
@@ -121,7 +124,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
         public async Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false, bool moderator = false)
         {
-            var query = _context.Products.Where(p => p.UserUpload.IsActive == true && p.IsApproved == true).AsQueryable();
+            var query = _context.Products.Include(p => p.ProductImages)
+                                        .Include(p => p.UserUpload)
+                                        .Include(p => p.Category)
+                                        .Where(p => p.UserUpload.IsActive == true && p.IsApproved == true)
+                                        .AsQueryable();
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -217,11 +224,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     Price = product.Price,
                                     IsActive = product.IsActive,
                                     IsApproved = product.IsApproved,
-                                    UserUpload = _context.Users.FirstOrDefault(u => u.UserId == product.UserUploadId).UserName,
-                                    ProductImageUrl = _context.ProductImages.FirstOrDefault(u => u.ProductId == product.ProductId).ImagePath,
+                                    UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                                    ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                                     UploadDate = product.UploadDate,
                                     ApprovedDate = product.ApprovedDate,
-                                    CategoryName = _context.Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId).CategoryName
+                                    CategoryName = product.Category.CategoryName
                                 })
                                 .ToListAsync();
 
@@ -236,14 +243,15 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request)
         {
-            var product = await _context.Products.FindAsync(request.ProductId);
+            var product = await _context.Products.Include(p => p.Category)
+                                                .FirstOrDefaultAsync(p => p.ProductId == request.ProductId);
             if (product == null)
             {
                 return new ApiErrorResult<ProductViewModel>("Product does not exist.");
             }
 
-            var userId = Guid.Parse(_httpContextAccessor.GetCurrentUserId());
-            if (product.UserUploadId != userId)
+            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+            if (product.UserUploadId != user.UserId)
             {
                 return new ApiErrorResult<ProductViewModel>("You do not have permission to update this product.");
             }
@@ -273,10 +281,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Description = product.Description,
                 Price = product.Price,
                 IsActive = product.IsActive,
-                UserUpload = _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId).Result.UserName,
+                UserUpload = user.UserName,
+                ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UploadDate = product.UploadDate,
                 ApprovedDate = product.ApprovedDate,
-                CategoryName = _serviceWrapper.CategoryServices.GetById(product.CategoryId).Result.Data.CategoryName
+                CategoryName = product.Category.CategoryName,
             };
 
             return new ApiSuccessResult<ProductViewModel>(result);
@@ -298,13 +307,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                                        .Include(p => p.ProductImages)
+                                        .Include(p => p.UserUpload)
+                                        .FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
                 return new ApiErrorResult<ProductDetailsViewModel>("Product does not exist.");
             }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == product.UserUploadId);
 
             var result = new ProductDetailsViewModel()
             {
@@ -312,25 +322,31 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Price = product.Price,
                 Description = product.Description,
                 ApprovedDate = product.ApprovedDate,
-
-                UserUploadId = user.UserId,
-                UserUpload = user.FirstName + " " + user.LastName,
-                UserImageUrl = user.UserImageUrl,
+                ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
+                UserUploadId = product.UserUpload.UserId,
+                UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                UserImageUrl = product.UserUpload.UserImageUrl,
                 NumberOfRatings = _serviceWrapper.RatingServices.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
                 AverageNumberStars = _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
-                UserPhoneNumber = user.PhoneNumber
+                UserPhoneNumber = product.UserUpload.PhoneNumber
             };
 
             return new ApiSuccessResult<ProductDetailsViewModel>(result);
         }
         public Task<Product> GetProductAsync(Guid id)
         {
-            var product =_context.Products.FirstOrDefaultAsync(p=>p.ProductId == id);
+            var product = _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
                 return null;
             }
             return product;
+        }
+
+        public async Task<bool> IsProductBelongToSeller(Guid productId, Guid sellerId)
+        {
+            var seller = await _context.Users.Include(u => u.Products).FirstOrDefaultAsync(u => u.UserId == sellerId);
+            return seller != null && seller.Products.Any(p => p.ProductId == productId);
         }
     }
 }
