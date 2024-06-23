@@ -135,11 +135,24 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("review/{id}")]
+        [Route("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> ApproveProduct(Guid id, bool status)
+        public async Task<IActionResult> ApproveProduct(Guid id)
         {
-            var result = await _productService.ReviewProduct(id, status);
+            var result = await _productService.ApproveProduct(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPatch]
+        [Route("deny/{id}")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> DenyProduct(Guid id)
+        {
+            var result = await _productService.DenyProduct(id);
             if (!result.IsSuccessed)
             {
                 return BadRequest(result);
