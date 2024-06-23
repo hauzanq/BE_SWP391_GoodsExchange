@@ -1,9 +1,12 @@
+using GoodsExchange.API.Middlewares;
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
 using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.BusinessLogic.ViewModels.Report;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace GoodsExchange.API.Controllers
 {
@@ -21,6 +24,8 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("send-report")]
         [Authorize]
+        [ProducesResponseType(typeof(EntityResponse<ReportViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> SendReport(CreateReportRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -29,69 +34,56 @@ namespace GoodsExchange.API.Controllers
             }
 
             var result = await _reportService.SendReport(request);
-            
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result.Message);
-            }
-
-            return Ok(result);    
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging, [FromQuery] ReportsRequestModel request)
+        [ProducesResponseType(typeof(PageResult<ReportViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] ReportsRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _reportService.GetAll(paging, request);
-
+            var result = await _reportService.GetReports(paging, request);
             return Ok(result);
         }
 
         [HttpGet]
         [Route("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<ReportViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _reportService.GetById(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result.Message);
-            }
             return Ok(result);
         }
 
         [HttpPost]
         [Route("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveReport(Guid id)
         {
             var result = await _reportService.ApproveReport(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result.Message);
-            }
             return Ok(result);
         }
 
         [HttpPost]
         [Route("deny/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DenyReport(Guid id)
         {
             var result = await _reportService.DenyReport(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result.Message);
-            }
             return Ok(result);
         }
-
     }
-
 }

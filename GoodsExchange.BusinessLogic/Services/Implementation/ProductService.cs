@@ -1,4 +1,5 @@
 using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Common.Exceptions;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.Services.Interface;
@@ -22,12 +23,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ApiResult<bool>> ApproveProduct(Guid id)
+        public async Task<EntityResponse<bool>> ApproveProduct(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                return new ApiErrorResult<bool>("Product does not exist.");
+                throw new NotFoundException("Product does not exist.");
             }
             product.IsApproved = true;
             product.ApprovedDate = DateTime.Now;
@@ -35,12 +36,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
-        public async Task<ApiResult<bool>> DenyProduct(Guid id)
+        public async Task<EntityResponse<bool>> DenyProduct(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                return new ApiErrorResult<bool>("Product does not exist.");
+                throw new NotFoundException("Product does not exist.");
             }
             product.IsApproved = false;
             product.ApprovedDate = DateTime.Now;
@@ -64,20 +65,20 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return images;
         }
-        public async Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request)
+        public async Task<EntityResponse<ProductViewModel>> CreateProduct(CreateProductRequestModel request)
         {
             var seller = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == request.ProductName);
             if (existingProduct != null)
             {
-                return new ApiErrorResult<ProductViewModel>("Product name already exists.");
+                throw new BadRequestException("Product name already exists.");
             }
 
             var category = await _serviceWrapper.CategoryServices.GetCategoryAsync(request.CategoryId);
             if (category == null)
             {
-                return new ApiErrorResult<ProductViewModel>("Category does not exist.");
+                throw new NotFoundException("Category does not exist.");
             }
 
             var sellerFullName = await _serviceWrapper.UserServices.GetUserFullNameAsync(seller.UserId);
@@ -116,18 +117,18 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<ProductViewModel>(result);
         }
 
-        public async Task<ApiResult<bool>> DeleteProduct(Guid id)
+        public async Task<EntityResponse<bool>> DeleteProduct(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                return new ApiErrorResult<bool>("Product does not exist.");
+                throw new NotFoundException("Product does not exist.");
             }
 
             var userId = Guid.Parse(_httpContextAccessor.GetCurrentUserId());
             if (product.UserUploadId != userId)
             {
-                return new ApiErrorResult<bool>("You do not have permission to delete this product.");
+                throw new UnauthorizedException("You do not have permission to delete this product.");
             }
 
             _context.Products.Remove(product);
@@ -135,7 +136,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
-        public async Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false, bool moderator = false)
+        public async Task<PageResult<ProductViewModel>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, bool seller = false, bool moderator = false)
         {
             var query = _context.Products.Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
@@ -144,9 +145,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                         .AsQueryable();
 
             #region Searching
-            if (!string.IsNullOrEmpty(search.KeyWords))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(p => p.ProductName.Contains(search.KeyWords));
+                query = query.Where(p => p.ProductName.Contains(keyword));
             }
             #endregion
 
@@ -254,31 +255,31 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return result;
         }
 
-        public async Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request)
+        public async Task<EntityResponse<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request)
         {
             var product = await _context.Products.Include(p => p.Category)
                                                 .FirstOrDefaultAsync(p => p.ProductId == request.ProductId);
             if (product == null)
             {
-                return new ApiErrorResult<ProductViewModel>("Product does not exist.");
+                throw new NotFoundException("Product does not exist.");
             }
 
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             if (product.UserUploadId != user.UserId)
             {
-                return new ApiErrorResult<ProductViewModel>("You do not have permission to update this product.");
+                throw new UnauthorizedException("You do not have permission to update this product.");
             }
 
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == request.ProductName);
             if (existingProduct != null)
             {
-                return new ApiErrorResult<ProductViewModel>("Product name already exists.");
+                throw new BadRequestException("Product name already exists.");
             }
 
             var category = await _serviceWrapper.CategoryServices.GetById(request.CategoryId.Value);
             if (category == null)
             {
-                return new ApiErrorResult<ProductViewModel>("This category does not exist.");
+                throw new NotFoundException("This category does not exist.");
             }
             product.ProductName = request.ProductName;
             product.Description = request.Description;
@@ -304,12 +305,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<ProductViewModel>(result);
         }
 
-        public async Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status)
+        public async Task<EntityResponse<bool>> UpdateProductStatus(Guid id, bool status)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                return new ApiErrorResult<bool>("Product does not exist.");
+                throw new NotFoundException("Product does not exist.");
             }
 
             product.IsActive = status;
@@ -318,7 +319,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id)
+        public async Task<EntityResponse<ProductDetailsViewModel>> GetById(Guid id)
         {
             var product = await _context.Products
                                         .Include(p => p.ProductImages)
@@ -326,7 +327,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                         .FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
-                return new ApiErrorResult<ProductDetailsViewModel>("Product does not exist.");
+                throw new NotFoundException("Product does not exist.");
             }
 
             var result = new ProductDetailsViewModel()
@@ -346,12 +347,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<ProductDetailsViewModel>(result);
         }
-        public Task<Product> GetProductAsync(Guid id)
+        public async Task<Product> GetProductAsync(Guid id)
         {
-            var product = _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
-                return null;
+                throw new NotFoundException("Product does not exist.");
             }
             return product;
         }

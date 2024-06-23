@@ -20,15 +20,14 @@ namespace GoodsExchange.API
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             var app = builder.Build();
 
-            //if (app.Environment.IsDevelopment())
-            //{
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            //}
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
             app.UseCors("AllowCORS");
+
+            app.UseExceptionHandlingMiddleware();
 
             app.UseAuthentication();
             app.UseAuthorization();

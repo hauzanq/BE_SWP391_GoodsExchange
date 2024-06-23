@@ -5,7 +5,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface IEmailService
     {
-        Task<ApiResult<bool>> SendEmailAsync(string to, string subject, string content);
+        Task<EntityResponse<bool>> SendEmailAsync(string to, string subject, string content);
         Task  SendEmailToRegisterAsync(string to , string token);
          
     }

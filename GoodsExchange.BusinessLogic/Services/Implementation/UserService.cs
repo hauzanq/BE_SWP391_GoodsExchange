@@ -1,4 +1,5 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Common.Exceptions;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.User;
@@ -36,16 +37,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
             {
-                return null;
+                throw new NotFoundException("User does not exist.");
             }
             return user;
         }
-        public async Task<ApiResult<bool>> ChangeUserStatusAsync(Guid id, bool status)
+        public async Task<EntityResponse<bool>> ChangeUserStatusAsync(Guid id, bool status)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return new ApiErrorResult<bool>("User does not exist");
+                throw new NotFoundException("User does not exist.");
             }
 
             user.IsActive = status;
@@ -54,7 +55,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request)
+        public async Task<EntityResponse<LoginViewModel>> Login(LoginRequestModel request)
         {
             var user = await _context.Users
                                     .Include(u=>u.Role)
@@ -62,16 +63,17 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     .FirstOrDefaultAsync();
             if (user == null)
             {
-                return new ApiErrorResult<LoginViewModel>("User does not exist");
+                throw new NotFoundException("User does not exist.");
             }
-
+            
             if (!user.IsActive)
             {
-                return new ApiErrorResult<LoginViewModel>("User account is inactive");
+                throw new BadRequestException("User account is inactive");
             }
+            
             if (!user.EmailConfirm)
             {
-                return new ApiErrorResult<LoginViewModel>("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
+                throw new BadRequestException("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
             }
 
             var userClaims = new[]
@@ -102,22 +104,22 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             });
         }
 
-        public async Task<ApiResult<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
+        public async Task<EntityResponse<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             if (request.UserName != user.UserName)
             {
-                return new ApiErrorResult<string>("UserName is incorrect.");
+                throw new BadRequestException("UserName is incorrect.");
             }
 
             if (request.OldPassword != user.Password)
             {
-                return new ApiErrorResult<string>("OldPassword is incorrect.");
+                throw new BadRequestException("OldPassword is incorrect.");
             }
 
             if (request.ConfirmNewPassword != request.ConfirmNewPassword)
             {
-                return new ApiErrorResult<string>("New password and confirm new password do not match.");
+                throw new BadRequestException("New password and confirm new password do not match.");
             }
 
             user.Password = request.NewPassword;
@@ -127,12 +129,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         }
 
-        public Task<ApiResult<string>> ForgotPasswordAsync(ChangePasswordRequestModel request)
+        public Task<EntityResponse<string>> ForgotPasswordAsync(ChangePasswordRequestModel request)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<PageResult<AdminUserViewModel>> GetAllUsersAsync(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model)
+        public async Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string? keyword, GetUserRequestModel model)
         {
             var query = _context.Users
                                 .Include(u => u.Role)
@@ -140,11 +142,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                 .AsQueryable();
 
             #region Searching
-            if (!string.IsNullOrEmpty(search.KeyWords))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(u => u.FirstName.Contains(search.KeyWords)
-                                        || u.LastName.Contains(search.KeyWords)
-                                        || u.Email.Contains(search.KeyWords));
+                query = query.Where(u => u.FirstName.Contains(keyword)
+                                        || u.LastName.Contains(keyword)
+                                        || u.Email.Contains(keyword));
             }
             #endregion
 
@@ -212,12 +214,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return result;
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> GetUserByIdAsync(Guid id)
+        public async Task<EntityResponse<UserProfileViewModel>> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return new ApiErrorResult<UserProfileViewModel>("User does not exist");
+                throw new NotFoundException("User does not exist.");
             }
 
             var result = new UserProfileViewModel()
@@ -233,23 +235,23 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request)
+        public async Task<EntityResponse<UserProfileViewModel>> Register(RegisterRequestModel request)
         {
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName);
             if (usernameAvailable)
             {
-                return new ApiErrorResult<UserProfileViewModel>("Username available.");
+                throw new BadRequestException("Username available.");
             }
 
             var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email);
             if (emailAvailable)
             {
-                return new ApiErrorResult<UserProfileViewModel>("Email available.");
+                throw new BadRequestException("Email available.");
             }
 
             if (request.Password != request.ConfirmPassword)
             {
-                return new ApiErrorResult<UserProfileViewModel>("The confirm password is incorrect.");
+                throw new BadRequestException("The confirm password is incorrect.");
             }
 
             var user = new User()
@@ -286,19 +288,19 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
-        public async Task<ApiResult<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
+        public async Task<EntityResponse<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
             if (usernameAvailable)
             {
-                return new ApiErrorResult<UserProfileViewModel>("Username available.");
+                throw new BadRequestException("Username available.");
             }
 
             var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
             if (emailAvailable)
             {
-                return new ApiErrorResult<UserProfileViewModel>("Email available.");
+                throw new BadRequestException("Email available.");
             }
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
@@ -354,7 +356,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
             if (user == null)
             {
-                return "";
+                throw new NotFoundException("User does not exist.");
             }
             return user.FirstName + " " + user.LastName;
         }
@@ -364,7 +366,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var product = await _serviceWrapper.ProductServices.GetProductAsync(id);
             if (product == null)
             {
-                return null;
+                throw new NotFoundException("User does not exist.");
             }
             return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
         }
