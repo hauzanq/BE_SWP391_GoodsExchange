@@ -97,9 +97,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                 ReportMade = user.FirstName + " " + user.LastName,
                 ReportReceived = await _serviceWrapper.UserServices.GetUserFullNameAsync(report.ReceiverId),
-                ReportId = request.ReceiverId,
-                ReportMade = user.UserName,
-                ReportReceived = _serviceWrapper.UserServices.GetUserAsync(report.ReceiverId).Result.UserName,
+                ReportId = report.ReportId,
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Reason = report.Reason,
@@ -150,10 +148,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = report.ProductId,
                 ProductName = report.Product.ProductName,
                 ReportId = report.ReportId,
-                ReportMade = _context.Users.FirstOrDefault(r => r.UserId == report.SenderId).UserName,
-                ReportReceived = _context.Users.FirstOrDefault(u => u.UserId == report.ReceiverId).UserName,
-                ProductId = _context.Products.FirstOrDefault(p => p.ProductId == report.ProductId).ProductId,
-                ProductName = _context.Products.FirstOrDefault(p => p.ProductId == report.ProductId).ProductName,
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive
