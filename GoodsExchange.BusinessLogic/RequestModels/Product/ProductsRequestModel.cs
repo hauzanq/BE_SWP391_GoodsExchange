@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoodsExchange.BusinessLogic.RequestModels.Product
 {
-    public class GetAllProductRequestModel
+    public class ProductsRequestModel
     {
         public string? ProductName { get; set; }
         public float? MinPrice { get; set; }

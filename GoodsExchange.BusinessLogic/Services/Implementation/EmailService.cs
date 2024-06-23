@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using GoodsExchange.BusinessLogic.Common.Exceptions;
 
 namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
@@ -24,7 +25,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _server = server;
         }
 
-        public async Task<ApiResult<bool>> SendEmailAsync(string to, string subject, string content)
+        public async Task<EntityResponse<bool>> SendEmailAsync(string to, string subject, string content)
         {
             try
             {
@@ -53,7 +54,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<bool>(ex.Message);
+                throw new BadRequestException(ex.Message);
             }
         }
 

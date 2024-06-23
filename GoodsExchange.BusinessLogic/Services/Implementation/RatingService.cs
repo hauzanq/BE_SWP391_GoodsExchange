@@ -1,4 +1,5 @@
 using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Common.Exceptions;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Rating;
 using GoodsExchange.BusinessLogic.Services.Interface;
@@ -122,12 +123,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return result;
         }
 
-        public async Task<ApiResult<RatingViewModel>> GetRatingById(Guid id)
+        public async Task<EntityResponse<RatingViewModel>> GetRatingById(Guid id)
         {
             var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.RatingId == id);
             if (rating == null)
             {
-                return new ApiErrorResult<RatingViewModel>("This rating does not exist.");
+                throw new NotFoundException("This rating does not exist.");
             }
 
             var result = new RatingViewModel()
@@ -143,7 +144,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             };
             return new ApiSuccessResult<RatingViewModel>(result);
         }
-        public async Task<ApiResult<RatingViewModel>> SendRating(CreateRatingRequestModel request)
+        public async Task<EntityResponse<RatingViewModel>> SendRating(CreateRatingRequestModel request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
@@ -151,11 +152,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (await _serviceWrapper.ProductServices.GetProductAsync(request.ProductId) == null)
             {
-                return new ApiErrorResult<RatingViewModel>("This product does not exist.");
+                throw new NotFoundException("This product does not exist.");
             }
             if (await _serviceWrapper.ProductServices.IsProductBelongToSeller(request.ProductId, user.UserId))
             {
-                return new ApiErrorResult<RatingViewModel>("This product belongs to you so you cannot rating this product.");
+                throw new BadRequestException("This product belongs to you so you cannot rating this product.");
             }
             var rating = new Rating()
             {

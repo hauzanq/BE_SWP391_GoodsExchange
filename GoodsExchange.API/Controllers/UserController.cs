@@ -1,12 +1,15 @@
+using GoodsExchange.API.Middlewares;
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.User;
 using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.BusinessLogic.ViewModels.User;
 using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -29,6 +32,8 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<LoginViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Login(LoginRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -36,15 +41,16 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var token = await _userService.Login(request);
+            var result = await _userService.Login(request);
 
-            return Ok(token);
+            return Ok(result);
         }
-
 
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Register([FromForm] RegisterRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -53,34 +59,25 @@ namespace GoodsExchange.API.Controllers
             }
 
             var result = await _userService.Register(request);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result.Message);
-            }
             return Ok(result);
         }
 
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _userService.GetUserByIdAsync(id);
-            if (!result.IsSuccessed)
-            {
-                return NotFound(result.Message);
-            }
             return Ok(result);
         }
 
         [HttpPut]
         [Route("update-account")]
         [Authorize]
+        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -89,42 +86,36 @@ namespace GoodsExchange.API.Controllers
             }
 
             var result = await _userService.UpdateUserAsync(request);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
         [HttpPatch]
         [Route("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ChangeUserStatus(Guid id, bool status)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _userService.ChangeUserStatusAsync(id, status);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
         [HttpPost]
         [Route("list-moderators")]
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
-        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] SearchRequestModel search, [FromQuery] GetUserRequestModel model)
+        [ProducesResponseType(typeof(PageResult<AdminUserViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] string keyword, [FromQuery] GetUserRequestModel model)
         {
-            var result = await _userService.GetAllUsersAsync(paging, search, model);
+            var result = await _userService.GetUsers(paging, keyword, model);
             return Ok(result);
         }
 
         [HttpGet]
-        [Route("verifyemail")]
+        [Route("verify-email")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public IActionResult VerifyEmail(string email, string token)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["JWTAuthentication:Key"]);
@@ -168,13 +159,5 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest("Invalid or expired token.");
             }
         }
-
-
-
-
-
-
-
-
     }
 }

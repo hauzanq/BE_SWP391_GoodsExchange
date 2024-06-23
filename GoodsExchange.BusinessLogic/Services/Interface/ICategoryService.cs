@@ -7,11 +7,11 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface ICategoryService
     {
-        Task<ApiResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate);
-        Task<ApiResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
-        Task<ApiResult<bool>> DeleteCategory(Guid id);
-        Task<ApiResult<List<CategoryViewModel>>> GetAll();
-        Task<ApiResult<CategoriesDetailViewModel>> GetById(Guid idTmp);
+        Task<EntityResponse<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate);
+        Task<EntityResponse<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
+        Task<EntityResponse<bool>> DeleteCategory(Guid id);
+        Task<EntityResponse<List<CategoryViewModel>>> GetCategories();
+        Task<EntityResponse<CategoriesDetailViewModel>> GetById(Guid idTmp);
         Task<Category> GetCategoryAsync(Guid id);
     }
 }

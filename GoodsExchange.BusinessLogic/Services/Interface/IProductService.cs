@@ -7,16 +7,16 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface IProductService
     {
-        Task<ApiResult<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
-        Task<ApiResult<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
-        Task<ApiResult<bool>> DeleteProduct(Guid id);
-        Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false, bool moderator = false);
-        Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id);
-        Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
-        Task<ApiResult<bool>> ApproveProduct(Guid id);
-        Task<ApiResult<bool>> DenyProduct(Guid id);
+        Task<EntityResponse<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
+        Task<EntityResponse<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
+        Task<EntityResponse<bool>> DeleteProduct(Guid id);
+        Task<PageResult<ProductViewModel>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, bool seller = false, bool moderator = false);
+        Task<EntityResponse<ProductDetailsViewModel>> GetById(Guid id);
+        Task<EntityResponse<bool>> UpdateProductStatus(Guid id, bool status);
+        Task<EntityResponse<bool>> ApproveProduct(Guid id);
+        Task<EntityResponse<bool>> DenyProduct(Guid id);
 
         Task<Product> GetProductAsync(Guid id);
-        Task<bool> IsProductBelongToSeller(Guid productId,Guid sellerId);
+        Task<bool> IsProductBelongToSeller(Guid productId, Guid sellerId);
     }
 }

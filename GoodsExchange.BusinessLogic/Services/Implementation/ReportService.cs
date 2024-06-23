@@ -1,4 +1,5 @@
 using GoodsExchange.BusinessLogic.Common;
+using GoodsExchange.BusinessLogic.Common.Exceptions;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
 using GoodsExchange.BusinessLogic.Services.Interface;
@@ -23,12 +24,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ApiResult<bool>> ApproveReport(Guid id)
+        public async Task<EntityResponse<bool>> ApproveReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
             if (report == null)
             {
-                return new ApiErrorResult<bool>("Report does not exist");
+                throw new NotFoundException("Report does not exist");
             }
 
             report.IsApprove = true;
@@ -39,12 +40,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<bool>> DenyReport(Guid id)
+        public async Task<EntityResponse<bool>> DenyReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
             if (report == null)
             {
-                return new ApiErrorResult<bool>("Report does not exist");
+                throw new NotFoundException("Report does not exist");
             }
 
             report.IsApprove = false;
@@ -54,13 +55,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
-        private async Task<bool> IsProductBelongToSeller(Guid productId, Guid sellerId)
-        {
-            var seller = await _context.Users.Include(u => u.Products).FirstOrDefaultAsync(u => u.UserId == sellerId);
-            return seller != null && seller.Products.Any(p => p.ProductId == productId);
-        }
-
-        public async Task<ApiResult<ReportViewModel>> SendReport(CreateReportRequestModel request)
+        public async Task<EntityResponse<ReportViewModel>> SendReport(CreateReportRequestModel request)
         {
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
@@ -68,12 +63,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (await _serviceWrapper.ProductServices.GetProductAsync(request.ProductId) == null)
             {
-                return new ApiErrorResult<ReportViewModel>("This product does not exist.");
+                throw new NotFoundException("This product does not exist.");
             }
 
             if (await _serviceWrapper.ProductServices.IsProductBelongToSeller(request.ProductId, user.UserId))
             {
-                return new ApiErrorResult<ReportViewModel>("This product belongs to you so you cannot report this product.");
+                throw new BadRequestException("This product belongs to you so you cannot report this product.");
             }
 
             var report = new Report()
@@ -107,7 +102,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<ReportViewModel>(result);
         }
 
-        public async Task<PageResult<ReportViewModel>> GetAll(PagingRequestModel paging, ReportsRequestModel request)
+        public async Task<PageResult<ReportViewModel>> GetReports(PagingRequestModel paging, ReportsRequestModel request)
         {
             var query = _context.Reports.Where(r => r.IsActive == true)
                         .Include(r => r.Sender)
@@ -164,12 +159,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return result;
         }
 
-        public async Task<ApiResult<ReportViewModel>> GetById(Guid id)
+        public async Task<EntityResponse<ReportViewModel>> GetById(Guid id)
         {
             var report = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == id);
             if (report == null)
             {
-                return new ApiErrorResult<ReportViewModel>("Report does not exist");
+                throw new NotFoundException("Report does not exist");
             }
 
             var result = new ReportViewModel()

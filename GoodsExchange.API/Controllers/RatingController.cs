@@ -1,9 +1,12 @@
+using GoodsExchange.API.Middlewares;
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Rating;
 using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.BusinessLogic.ViewModels.Rating;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace GoodsExchange.API.Controllers
 {
@@ -22,19 +25,19 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<RatingViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _ratingService.GetRatingById(id);
-            if (!result.IsSuccessed)
-            {
-                return NotFound(result.Message);
-            }
             return Ok(result);
         }
 
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [ProducesResponseType(typeof(PageResult<RatingViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging, [FromQuery]RatingsRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -48,6 +51,8 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("send-rating")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [ProducesResponseType(typeof(EntityResponse<RatingViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> SendRating([FromBody] CreateRatingRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -55,10 +60,6 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _ratingService.SendRating(request);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result.Message);
-            }
             return Ok(result);
         }
     }

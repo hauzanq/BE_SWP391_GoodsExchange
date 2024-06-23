@@ -7,14 +7,14 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface IUserService
     {
-        Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request);
-        Task<ApiResult<UserProfileViewModel>> Register(RegisterRequestModel request);
-        Task<ApiResult<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request);
-        Task<ApiResult<bool>> ChangeUserStatusAsync(Guid id, bool status);
-        Task<PageResult<AdminUserViewModel>> GetAllUsersAsync(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model);
-        Task<ApiResult<UserProfileViewModel>> GetUserByIdAsync(Guid id);
-        Task<ApiResult<string>> ChangePasswordAsync(ChangePasswordRequestModel request);
-        Task<ApiResult<string>> ForgotPasswordAsync(ChangePasswordRequestModel request);
+        Task<EntityResponse<LoginViewModel>> Login(LoginRequestModel request);
+        Task<EntityResponse<UserProfileViewModel>> Register(RegisterRequestModel request);
+        Task<EntityResponse<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request);
+        Task<EntityResponse<bool>> ChangeUserStatusAsync(Guid id, bool status);
+        Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string? keyword, GetUserRequestModel model);
+        Task<EntityResponse<UserProfileViewModel>> GetUserByIdAsync(Guid id);
+        Task<EntityResponse<string>> ChangePasswordAsync(ChangePasswordRequestModel request);
+        Task<EntityResponse<string>> ForgotPasswordAsync(ChangePasswordRequestModel request);
         Task<User> GetUserByProductId(Guid id);
         Task<User> GetUserAsync(Guid id);
         Task<string> GetUserFullNameAsync(Guid id);

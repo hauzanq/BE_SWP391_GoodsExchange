@@ -1,9 +1,12 @@
+using GoodsExchange.API.Middlewares;
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.BusinessLogic.ViewModels.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace GoodsExchange.API.Controllers
 {
@@ -19,9 +22,10 @@ namespace GoodsExchange.API.Controllers
             _productService = productService;
         }
 
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("create")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [ProducesResponseType(typeof(EntityResponse<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -29,83 +33,77 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _productService.CreateProduct(request);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("all")]
+        [HttpPost("all")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetProductForBuyer([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetProductForBuyer([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetAll(request, search, model);
+            var result = await _productService.GetProducts(request, keyword, model);
             return Ok(result);
         }
 
 
-        [HttpPost]
-        [Route("seller/all")]
+        [HttpPost("seller/all")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
-        public async Task<IActionResult> GetProductsBySeller([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetProductsBySeller([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetAll(request, search, model, true, false);
+            var result = await _productService.GetProducts(request, keyword, model, true, false);
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("moderator/all")]
+        [HttpPost("moderator/all")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<IActionResult> GetProductForModerator([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
+        [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetProductForModerator([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetAll(request, search, model, false, true);
+            var result = await _productService.GetProducts(request, keyword, model, false, true);
             return Ok(result);
         }
 
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var result = await _productService.GetById(id);
             return Ok(result);
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var result = await _productService.DeleteProduct(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
-        [HttpPut]
-        [Route("update")]
+        [HttpPut("update")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [ProducesResponseType(typeof(EntityResponse<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -113,50 +111,36 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _productService.UpdateProduct(request);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
-
             return Ok(result);
         }
 
-        [HttpPatch]
-        [Route("status/{id}")]
+        [HttpPatch("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProductStatus(Guid id, bool status)
         {
             var result = await _productService.UpdateProductStatus(id, status);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
-        [HttpPatch]
-        [Route("approve/{id}")]
+        [HttpPatch("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveProduct(Guid id)
         {
             var result = await _productService.ApproveProduct(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
-        [HttpPatch]
-        [Route("deny/{id}")]
+        [HttpPatch("deny/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DenyProduct(Guid id)
         {
             var result = await _productService.DenyProduct(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
     }

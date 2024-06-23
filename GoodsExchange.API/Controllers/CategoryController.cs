@@ -1,9 +1,12 @@
+using GoodsExchange.API.Middlewares;
+using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Category;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace GoodsExchange.API.Controllers
 {
@@ -22,69 +25,62 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        public async Task<ActionResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
+        [ProducesResponseType(typeof(EntityResponse<CategoryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.CreateCategory(categoryCreate);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
+            var result = await _categoryService.CreateCategory(request);
             return Ok(result);
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(EntityResponse<PageResult<CategoryViewModel>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CategoryViewModel>> GetAll()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.GetAll();
+            var result = await _categoryService.GetCategories();
             return Ok(result);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(EntityResponse<CategoryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
         {
             var result = await _categoryService.GetById(id);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 
-        [HttpDelete]
-        [Route("id")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
-            var result = await _categoryService.DeleteCategory(id);  
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
+            var result = await _categoryService.DeleteCategory(id);
             return Ok(result);
         }
 
 
         [HttpPut]
-        public async Task<ActionResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryCreate)
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [ProducesResponseType(typeof(EntityResponse<CategoryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.UpdateCategory(categoryCreate);
-            if (!result.IsSuccessed)
-            {
-                return BadRequest(result);
-            }
-
+            var result = await _categoryService.UpdateCategory(request);
             return Ok(result);
         }
     }
