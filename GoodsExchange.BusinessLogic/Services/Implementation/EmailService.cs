@@ -3,6 +3,8 @@ using GoodsExchange.BusinessLogic.RequestModels.Email;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using MailKit.Security;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -13,11 +15,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         private readonly EmailSettings _emailSettings;
         private readonly IEmailTemplateHelper _emailTemplateHelper;
         private readonly string _webHostEnvironment;
-        public EmailService(IOptions<EmailSettings> emailSetting, IEmailTemplateHelper emailTemplateHelper,IWebHostEnvironment webHostEnvironment)
+        private readonly IServer _server;
+        public EmailService(IOptions<EmailSettings> emailSetting, IEmailTemplateHelper emailTemplateHelper, IWebHostEnvironment webHostEnvironment, IServer server)
         {
             _emailSettings = emailSetting.Value;
             _emailTemplateHelper = emailTemplateHelper;
             _webHostEnvironment = webHostEnvironment.WebRootPath;
+            _server = server;
         }
 
         public async Task<ApiResult<bool>> SendEmailAsync(string to, string subject, string content)
@@ -56,7 +60,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async  Task SendEmailToRegisterAsync(string to, string token)
         {
             string content = _emailTemplateHelper.REGISTER_TEMPLATE(_webHostEnvironment);
-            var verificationLink = $"http://localhost:5000/api/v1/users/verifyemail?email={to}&token={token}";
+            var serverAddress = _server.Features.Get<IServerAddressesFeature>().Addresses.First();
+            //var verificationLink = $"http://localhost:5000/api/v1/users/verifyemail?email={to}&token={token}";
+            var verificationLink = serverAddress + $"/api/v1/users/verifyemail?email={to}&token={token}";
             content = content.Replace("{{Email}}", to);
             content = content.Replace("{{token}}", verificationLink);
 

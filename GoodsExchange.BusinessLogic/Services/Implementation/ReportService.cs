@@ -38,6 +38,28 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
+
+        public async Task<ApiResult<bool>> DenyReport(Guid id)
+        {
+            var report = await _context.Reports.FindAsync(id);
+            if (report == null)
+            {
+                return new ApiErrorResult<bool>("Report does not exist");
+            }
+
+            report.IsApprove = false;
+            report.IsActive = false;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
+        }
+        private async Task<bool> IsProductBelongToSeller(Guid productId, Guid sellerId)
+        {
+            var seller = await _context.Users.Include(u => u.Products).FirstOrDefaultAsync(u => u.UserId == sellerId);
+            return seller != null && seller.Products.Any(p => p.ProductId == productId);
+        }
+
         public async Task<ApiResult<ReportViewModel>> SendReport(CreateReportRequestModel request)
         {
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
@@ -72,8 +94,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var result = new ReportViewModel()
             {
+
                 ReportMade = user.FirstName + " " + user.LastName,
                 ReportReceived = await _serviceWrapper.UserServices.GetUserFullNameAsync(report.ReceiverId),
+                ReportId = request.ReceiverId,
+                ReportMade = user.UserName,
+                ReportReceived = _serviceWrapper.UserServices.GetUserAsync(report.ReceiverId).Result.UserName,
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Reason = report.Reason,
@@ -123,6 +149,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ReportReceived = report.Receiver.FirstName + " " + report.Receiver.LastName,
                 ProductId = report.ProductId,
                 ProductName = report.Product.ProductName,
+                ReportId = report.ReportId,
+                ReportMade = _context.Users.FirstOrDefault(r => r.UserId == report.SenderId).UserName,
+                ReportReceived = _context.Users.FirstOrDefault(u => u.UserId == report.ReceiverId).UserName,
+                ProductId = _context.Products.FirstOrDefault(p => p.ProductId == report.ProductId).ProductId,
+                ProductName = _context.Products.FirstOrDefault(p => p.ProductId == report.ProductId).ProductName,
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive

@@ -20,11 +20,11 @@ namespace GoodsExchange.API
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            //}
 
             app.UseHttpsRedirection();
 

@@ -79,6 +79,19 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("deny/{id}")]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        public async Task<IActionResult> DenyReport(Guid id)
+        {
+            var result = await _reportService.DenyReport(id);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result);
+        }
+
     }
 
 }

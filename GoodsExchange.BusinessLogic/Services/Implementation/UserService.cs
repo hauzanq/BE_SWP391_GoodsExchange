@@ -69,6 +69,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 return new ApiErrorResult<LoginViewModel>("User account is inactive");
             }
+            if (!user.EmailConfirm)
+            {
+                return new ApiErrorResult<LoginViewModel>("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
+            }
 
             var userClaims = new[]
             {
