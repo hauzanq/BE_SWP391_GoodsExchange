@@ -13,7 +13,9 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<PageResult<ProductViewModel>> GetAll(PagingRequestModel request, SearchRequestModel search, GetAllProductRequestModel model, bool seller = false, bool moderator = false);
         Task<ApiResult<ProductDetailsViewModel>> GetById(Guid id);
         Task<ApiResult<bool>> UpdateProductStatus(Guid id, bool status);
-        Task<ApiResult<bool>> ReviewProduct(Guid id, bool status);
+        Task<ApiResult<bool>> ApproveProduct(Guid id);
+        Task<ApiResult<bool>> DenyProduct(Guid id);
+
         Task<Product> GetProductAsync(Guid id);
         Task<bool> IsProductBelongToSeller(Guid productId,Guid sellerId);
     }

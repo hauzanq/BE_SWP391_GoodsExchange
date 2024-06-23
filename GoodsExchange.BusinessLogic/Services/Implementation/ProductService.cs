@@ -22,14 +22,27 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ApiResult<bool>> ReviewProduct(Guid id, bool status)
+        public async Task<ApiResult<bool>> ApproveProduct(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
                 return new ApiErrorResult<bool>("Product does not exist.");
             }
-            product.IsApproved = status;
+            product.IsApproved = true;
+            product.ApprovedDate = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
+        }
+        public async Task<ApiResult<bool>> DenyProduct(Guid id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return new ApiErrorResult<bool>("Product does not exist.");
+            }
+            product.IsApproved = false;
             product.ApprovedDate = DateTime.Now;
             await _context.SaveChangesAsync();
 
