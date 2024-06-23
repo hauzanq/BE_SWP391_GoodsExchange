@@ -5,6 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="RequestModels\Role\**" />
+    <EmbeddedResource Remove="RequestModels\Role\**" />
+    <None Remove="RequestModels\Role\**" />
+  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
 		<PackageReference Include="FireSharp.Serialization.JsonNet" Version="1.1.0" />
@@ -23,8 +29,5 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\GoodsExchange.Data\GoodsExchange.Data.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="RequestModels\Role\" />
 	</ItemGroup>
 </Project>

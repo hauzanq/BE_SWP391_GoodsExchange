@@ -1,5 +1,4 @@
 using GoodsExchange.BusinessLogic.Common;
-using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
 using GoodsExchange.BusinessLogic.Services.Interface;
@@ -39,6 +38,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ApiSuccessResult<bool>(true);
         }
+
         public async Task<ApiResult<bool>> DenyReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
@@ -59,23 +59,21 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var seller = await _context.Users.Include(u => u.Products).FirstOrDefaultAsync(u => u.UserId == sellerId);
             return seller != null && seller.Products.Any(p => p.ProductId == productId);
         }
+
         public async Task<ApiResult<ReportViewModel>> SendReport(CreateReportRequestModel request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
-            if (!(await _serviceWrapper.RoleServices.HasPermissionToReportAndRating(user.UserId, request.ReceiverId)))
-            {
-                return new ApiErrorResult<ReportViewModel>("You can not report this user.");
-            }
+            var receiver = await _serviceWrapper.UserServices.GetUserByProductId(request.ProductId);
 
             if (await _serviceWrapper.ProductServices.GetProductAsync(request.ProductId) == null)
             {
                 return new ApiErrorResult<ReportViewModel>("This product does not exist.");
             }
 
-            if (!(await IsProductBelongToSeller(request.ProductId, request.ReceiverId)))
+            if (await _serviceWrapper.ProductServices.IsProductBelongToSeller(request.ProductId, user.UserId))
             {
-                return new ApiErrorResult<ReportViewModel>("This product is not belong to this seller.");
+                return new ApiErrorResult<ReportViewModel>("This product belongs to you so you cannot report this product.");
             }
 
             var report = new Report()
@@ -83,7 +81,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Reason = request.Reason,
                 CreateDate = DateTime.Now,
                 SenderId = user.UserId,
-                ReceiverId = request.ReceiverId,
+                ReceiverId = receiver.UserId,
                 ProductId = request.ProductId,
                 IsApprove = false,
                 IsActive = true
@@ -96,6 +94,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var result = new ReportViewModel()
             {
+
+                ReportMade = user.FirstName + " " + user.LastName,
+                ReportReceived = await _serviceWrapper.UserServices.GetUserFullNameAsync(report.ReceiverId),
                 ReportId = request.ReceiverId,
                 ReportMade = user.UserName,
                 ReportReceived = _serviceWrapper.UserServices.GetUserAsync(report.ReceiverId).Result.UserName,
@@ -110,7 +111,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<PageResult<ReportViewModel>> GetAll(PagingRequestModel paging, ReportsRequestModel request)
         {
-            var query = _context.Reports.Where(r => r.IsActive == true).AsQueryable();
+            var query = _context.Reports.Where(r => r.IsActive == true)
+                        .Include(r => r.Sender)
+                        .Include(r => r.Receiver)
+                        .Include(r => r.Product).AsQueryable();
 
             #region Filtering report
 
@@ -141,6 +145,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var data = query.Select(report => new ReportViewModel()
             {
+                ReportMade = report.Sender.FirstName + " " + report.Sender.LastName,
+                ReportReceived = report.Receiver.FirstName + " " + report.Receiver.LastName,
+                ProductId = report.ProductId,
+                ProductName = report.Product.ProductName,
                 ReportId = report.ReportId,
                 ReportMade = _context.Users.FirstOrDefault(r => r.UserId == report.SenderId).UserName,
                 ReportReceived = _context.Users.FirstOrDefault(u => u.UserId == report.ReceiverId).UserName,
@@ -150,6 +158,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive
             }).ToList();
+
 
             var result = new PageResult<ReportViewModel>()
             {
@@ -163,22 +172,18 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ApiResult<ReportViewModel>> GetById(Guid id)
         {
-            var report = await _context.Reports.FindAsync(id);
+            var report = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == id);
             if (report == null)
             {
                 return new ApiErrorResult<ReportViewModel>("Report does not exist");
             }
 
-            var sender = await _serviceWrapper.UserServices.GetUserAsync(report.Sender.UserId);
-            var receiver = await _serviceWrapper.UserServices.GetUserAsync(report.Receiver.UserId);
-            var product = await _serviceWrapper.ProductServices.GetProductAsync(report.ProductId);
-            
             var result = new ReportViewModel()
             {
-                ReportMade = sender.FirstName + " " + sender.LastName,
-                ReportReceived = sender.FirstName + " " + sender.LastName,
-                ProductId = product.ProductId,
-                ProductName = product.ProductName,
+                ReportMade = await _serviceWrapper.UserServices.GetUserFullNameAsync(report.SenderId),
+                ReportReceived = await _serviceWrapper.UserServices.GetUserFullNameAsync(report.ReceiverId),
+                ProductId = (await _serviceWrapper.ProductServices.GetProductAsync(report.ProductId)).ProductId,
+                ProductName = (await _serviceWrapper.ProductServices.GetProductAsync(report.ProductId)).ProductName,
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive

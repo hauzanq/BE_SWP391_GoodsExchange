@@ -21,7 +21,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Route("create")]
-        [Authorize(Roles = SystemConstant.Roles.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Customer)]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -52,7 +52,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Route("seller/all")]
-        [Authorize(Roles = SystemConstant.Roles.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Customer)]
         public async Task<IActionResult> GetProductsBySeller([FromQuery] PagingRequestModel request, [FromQuery] SearchRequestModel search, [FromQuery] GetAllProductRequestModel model)
         {
             if (!ModelState.IsValid)
@@ -92,7 +92,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [Authorize(Roles = SystemConstant.Roles.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Customer)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var result = await _productService.DeleteProduct(id);
@@ -105,7 +105,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPut]
         [Route("update")]
-        [Authorize(Roles = SystemConstant.Roles.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Customer)]
         public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequestModel request)
         {
             if (!ModelState.IsValid)
@@ -123,7 +123,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch]
         [Route("status/{id}")]
-        [Authorize(Roles = SystemConstant.Roles.Seller)]
+        [Authorize(Roles = SystemConstant.Roles.Customer)]
         public async Task<IActionResult> UpdateProductStatus(Guid id, bool status)
         {
             var result = await _productService.UpdateProductStatus(id, status);

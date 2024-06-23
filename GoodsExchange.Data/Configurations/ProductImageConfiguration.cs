@@ -12,7 +12,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasKey(pi => pi.Id);
 
-            builder.Property(pi => pi.ImagePath).HasMaxLength(200).IsRequired();
+            builder.Property(pi => pi.ImagePath).HasMaxLength(500).IsRequired();
 
             builder.Property(pi => pi.Caption).HasMaxLength(200);
 

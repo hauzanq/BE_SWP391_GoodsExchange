@@ -56,7 +56,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ApiResult<LoginViewModel>> Login(LoginRequestModel request)
         {
-            var user = await _context.Users.Where(u => u.UserName == request.UserName && u.Password == request.Password).FirstOrDefaultAsync();
+            var user = await _context.Users
+                                    .Include(u=>u.Role)
+                                    .Where(u => u.UserName == request.UserName && u.Password == request.Password)
+                                    .FirstOrDefaultAsync();
             if (user == null)
             {
                 return new ApiErrorResult<LoginViewModel>("User does not exist");
@@ -71,15 +74,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return new ApiErrorResult<LoginViewModel>("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
             }
 
-            var roles = await _serviceWrapper.RoleServices.GetRolesOfUser(user.UserId);
-
             var userClaims = new[]
             {
                 new Claim("id",user.UserId.ToString()),
                 new Claim("username",user.UserName),
                 new Claim("emailaddress", user.Email),
                 new Claim("mobilephone", user.PhoneNumber),
-                new Claim("roles", string.Join(";",roles))
+                new Claim("roles", user.Role.RoleName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTAuthentication:Key"]));
@@ -97,7 +98,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<LoginViewModel>(new LoginViewModel()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Roles = _serviceWrapper.RoleServices.GetRolesOfUser(user.UserId).Result
+                Role = user.Role.RoleName
             });
         }
 
@@ -133,7 +134,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<PageResult<AdminUserViewModel>> GetAllUsersAsync(PagingRequestModel paging, SearchRequestModel search, GetUserRequestModel model)
         {
-            var query = _context.Users.Include(u => u.UserRoles).AsQueryable().Where(u => u.UserRoles.Any(ur => ur.Role.RoleName == SystemConstant.Roles.Moderator));
+            var query = _context.Users
+                                .Include(u => u.Role)
+                                .Where(u => u.Role.RoleName == SystemConstant.Roles.Moderator)
+                                .AsQueryable();
 
             #region Searching
             if (!string.IsNullOrEmpty(search.KeyWords))
@@ -147,7 +151,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             #region Filtering
             if (!string.IsNullOrEmpty(model.RoleName))
             {
-                query = query.Where(u => u.UserRoles.Any(ur => ur.Role.RoleName.Contains(model.RoleName)));
+                query = query.Where(u => u.Role.RoleName.Contains(model.RoleName));
             }
 
             if (model.Status != null)
@@ -194,7 +198,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Email = u.Email,
-                RoleName = string.Join(", ", u.UserRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.Role.RoleName)),
+                RoleName = u.Role.RoleName,
                 Status = u.IsActive
             }).ToListAsync();
 
@@ -243,8 +247,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return new ApiErrorResult<UserProfileViewModel>("Email available.");
             }
 
-            var buyer = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer);
-            var seller = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Seller);
+            if (request.Password != request.ConfirmPassword)
+            {
+                return new ApiErrorResult<UserProfileViewModel>("The confirm password is incorrect.");
+            }
 
             var user = new User()
             {
@@ -253,15 +259,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Email = request.Email,
                 DateOfBirth = request.DateOfBirth,
                 PhoneNumber = request.PhoneNumber,
-                UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image),
+                UserImageUrl = SystemConstant.Images.UserImageDefault,
                 UserName = request.UserName,
                 Password = request.Password,
                 IsActive = true,
-                UserRoles = new List<UserRole>
-                {
-                    new UserRole { RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Buyer) },
-                    new UserRole { RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Seller) }
-                }
+                RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Customer)
             };
 
             var token = GenerateEmailVerificationToken(user.Email);
@@ -347,5 +349,24 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return tokenHandler.WriteToken(token);
         }
 
+        public async Task<string> GetUserFullNameAsync(Guid id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+            if (user == null)
+            {
+                return "";
+            }
+            return user.FirstName + " " + user.LastName;
+        }
+
+        public async Task<User> GetUserByProductId(Guid id)
+        {
+            var product = await _serviceWrapper.ProductServices.GetProductAsync(id);
+            if (product == null)
+            {
+                return null;
+            }
+            return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
+        }
     }
 }

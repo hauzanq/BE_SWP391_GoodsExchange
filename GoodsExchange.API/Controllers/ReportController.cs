@@ -19,7 +19,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("sendreport")]
+        [Route("send-report")]
         [Authorize]
         public async Task<IActionResult> SendReport(CreateReportRequestModel request)
         {

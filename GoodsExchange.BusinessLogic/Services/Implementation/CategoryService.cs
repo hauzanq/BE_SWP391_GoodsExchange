@@ -84,6 +84,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<CategoriesDetailViewModel>(result);
         }
 
+        public async Task<Category> GetCategoryAsync(Guid id)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+            if (category == null)
+            {
+                return null;
+            }
+            return category;
+        }
+
         public async Task<ApiResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
         {
             var categoriesExisted = await _context.Categories.FindAsync(categoryUpdate.CategoryId);

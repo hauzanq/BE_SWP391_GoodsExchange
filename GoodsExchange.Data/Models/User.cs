@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoodsExchange.Data.Models
+﻿namespace GoodsExchange.Data.Models
 {
     public class User
     {
@@ -19,7 +13,8 @@ namespace GoodsExchange.Data.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public bool IsActive { get; set; }
-        public List<UserRole> UserRoles { get; set; }
+        public Guid RoleId { get; set; }
+        public Role Role { get; set; }
         public List<Rating> RatingsGiven { get; set; }
         public List<Rating> RatingsReceived { get; set; }
         public List<Report> ReportsMade { get; set; }

@@ -1,11 +1,6 @@
 ﻿using GoodsExchange.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GoodsExchange.Data.Configurations
 {
@@ -15,9 +10,11 @@ namespace GoodsExchange.Data.Configurations
         {
             builder.ToTable("Roles");
 
-            builder.HasKey(r=>r.RoleId);
+            builder.HasKey(r => r.RoleId);
 
             builder.Property(p => p.RoleName).HasMaxLength(100).IsRequired();
+
+            builder.HasMany(r => r.Users).WithOne(u => u.Role).HasForeignKey(u => u.RoleId);
         }
     }
 }
