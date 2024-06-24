@@ -63,7 +63,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             string content = _emailTemplateHelper.REGISTER_TEMPLATE(_webHostEnvironment);
             var serverAddress = _server.Features.Get<IServerAddressesFeature>().Addresses.First();
             //var verificationLink = $"http://localhost:5000/api/v1/users/verifyemail?email={to}&token={token}";
-            var verificationLink = serverAddress + $"/api/v1/users/verifyemail?email={to}&token={token}";
+            var verificationLink = serverAddress + $"/api/v1/users/verify-email?email={to}&token={token}";
             content = content.Replace("{{Email}}", to);
             content = content.Replace("{{token}}", verificationLink);
 
