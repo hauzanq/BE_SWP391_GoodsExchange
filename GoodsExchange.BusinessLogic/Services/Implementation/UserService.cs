@@ -71,10 +71,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new BadRequestException("User account is inactive");
             }
             
-            if (!user.EmailConfirm)
-            {
-                throw new BadRequestException("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
-            }
+            //if (!user.EmailConfirm)
+            //{
+            //    throw new BadRequestException("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
+            //}
 
             var userClaims = new[]
             {
@@ -225,8 +225,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var result = new UserProfileViewModel()
             {
                 UserName = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                //FirstName = user.FirstName,
+                //LastName = user.LastName,
+                FullName = user.FirstName + " " + user.LastName,
                 Email = user.Email,
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
