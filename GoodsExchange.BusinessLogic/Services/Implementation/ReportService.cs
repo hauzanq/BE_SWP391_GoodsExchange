@@ -27,6 +27,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async Task<EntityResponse<bool>> ApproveReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
+            var userUploadProduct = await _serviceWrapper.UserServices.GetUserByProductId(report.ProductId);
+            //var productbelongReceiverId = await _serviceWrapper.ProductServices.IsProductBelongToSeller(report.ProductId, report.ReceiverId);
             if (report == null)
             {
                 throw new NotFoundException("Report does not exist");
@@ -34,6 +36,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             report.IsApprove = true;
             report.IsActive = false;
+           
+            
+            userUploadProduct.IsActive = false;
+            
 
             await _context.SaveChangesAsync();
 
@@ -48,7 +54,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Report does not exist");
             }
 
-            report.IsApprove = false;
+                
             report.IsActive = false;
 
             await _context.SaveChangesAsync();

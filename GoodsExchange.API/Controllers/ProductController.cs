@@ -52,7 +52,7 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPost("seller/all")]
-        [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [Authorize(Roles = SystemConstant.Roles.Customer + "," + SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetProductsBySeller([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
