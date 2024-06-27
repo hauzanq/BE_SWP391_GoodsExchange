@@ -14,6 +14,7 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Product
         public List<string> ProductImageUrl { get; set; }
         public DateTime ApprovedDate { get; set; }
         public Guid UserUploadId { get; set; }
+        public bool IsActive { get; set; }
         public string UserUpload { get; set; }
         public string UserImageUrl { get; set; }
         public int NumberOfRatings { get; set; }
