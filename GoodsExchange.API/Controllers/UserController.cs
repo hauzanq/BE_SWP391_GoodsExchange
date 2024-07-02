@@ -105,7 +105,7 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
         [ProducesResponseType(typeof(PageResult<AdminUserViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] string keyword, [FromQuery] GetUserRequestModel model)
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] string? keyword, [FromQuery] GetUserRequestModel model)
         {
             var result = await _userService.GetUsers(paging, keyword, model);
             return Ok(result);

@@ -56,7 +56,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
 
         public async Task<EntityResponse<LoginViewModel>> Login(LoginRequestModel request)
-        {
+            {
             var user = await _context.Users
                                     .Include(u=>u.Role)
                                     .Where(u => u.UserName == request.UserName && u.Password == request.Password)
@@ -134,7 +134,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public async Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string? keyword, GetUserRequestModel model)
+        public async Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string keyword , GetUserRequestModel model)
         {
             var query = _context.Users
                                 .Include(u => u.Role)
