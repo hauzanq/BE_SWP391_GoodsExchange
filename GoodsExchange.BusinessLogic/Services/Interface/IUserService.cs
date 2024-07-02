@@ -11,7 +11,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<EntityResponse<UserProfileViewModel>> Register(RegisterRequestModel request);
         Task<EntityResponse<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request);
         Task<EntityResponse<bool>> ChangeUserStatusAsync(Guid id, bool status);
-        Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string? keyword, GetUserRequestModel model);
+        Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string keyword, GetUserRequestModel model);
         Task<EntityResponse<UserProfileViewModel>> GetUserByIdAsync(Guid id);
         Task<EntityResponse<string>> ChangePasswordAsync(ChangePasswordRequestModel request);
         Task<EntityResponse<string>> ForgotPasswordAsync(ChangePasswordRequestModel request);

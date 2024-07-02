@@ -27,7 +27,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async Task<EntityResponse<bool>> ApproveReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
-            var userUploadProduct = await _serviceWrapper.UserServices.GetUserByProductId(report.ProductId);
+            var userUploadProduct = await  _serviceWrapper.UserServices.GetUserByProductId(report.ProductId);
             //var productbelongReceiverId = await _serviceWrapper.ProductServices.IsProductBelongToSeller(report.ProductId, report.ReceiverId);
             if (report == null)
             {
