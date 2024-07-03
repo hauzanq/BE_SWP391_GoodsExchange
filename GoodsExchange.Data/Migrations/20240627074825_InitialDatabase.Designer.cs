@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240621033315_InitialDatabase")]
+    [Migration("20240627074825_InitialDatabase")]
     partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,12 +47,12 @@ namespace GoodsExchange.Data.Migrations
                         },
                         new
                         {
-                            CategoryId = new Guid("0e02f639-a2d0-4f30-8da0-4b4b29aecb3c"),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
                             CategoryName = "Art Supplies"
                         },
                         new
                         {
-                            CategoryId = new Guid("d8e3ef2a-d4ba-4690-8ac0-6aaa5b434409"),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
                             CategoryName = "Electronics"
                         });
                 });
@@ -101,6 +101,138 @@ namespace GoodsExchange.Data.Migrations
                     b.HasIndex("UserUploadId");
 
                     b.ToTable("Products", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = new Guid("9cdcc7a7-0ae7-4ac3-8812-07ab635f2ba2"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(4983),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
+                            Description = "Description for product 1",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 10f,
+                            ProductName = "Product 1",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(4982),
+                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("10b437f0-6ff2-4481-b135-c1d7df966ffa"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5003),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
+                            Description = "Description for product 2",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 20f,
+                            ProductName = "Product 2",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5003),
+                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("20b3e879-e41a-4134-88c4-819ca3ecb373"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5007),
+                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
+                            Description = "Description for product 3",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 30f,
+                            ProductName = "Product 3",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5007),
+                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("17e88ef3-88df-4181-a10e-fbd04da3968f"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5011),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
+                            Description = "Description for product 4",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 40f,
+                            ProductName = "Product 4",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5011),
+                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("6f4170fb-d03c-4335-80eb-bf6a62ee1009"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5014),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
+                            Description = "Description for product 5",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 50f,
+                            ProductName = "Product 5",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5014),
+                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("4ea4edac-5506-40c9-84a7-68d79d5b867f"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5022),
+                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
+                            Description = "Description for product 6",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 60f,
+                            ProductName = "Product 6",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5022),
+                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("8ece762f-bb55-4a1b-a37b-8be0d5e8757c"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5046),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
+                            Description = "Description for product 7",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 70f,
+                            ProductName = "Product 7",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5046),
+                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("088d56e7-60d4-4d13-a39c-a258da0c5590"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5051),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
+                            Description = "Description for product 8",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 80f,
+                            ProductName = "Product 8",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5050),
+                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("6e37b3ae-c322-4880-b155-111bca1e6690"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5054),
+                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
+                            Description = "Description for product 9",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 90f,
+                            ProductName = "Product 9",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5054),
+                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("f34a3f99-0339-42b0-ae1d-fda0aeb570b6"),
+                            ApprovedDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5061),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
+                            Description = "Description for product 10",
+                            IsActive = true,
+                            IsApproved = true,
+                            Price = 100f,
+                            ProductName = "Product 10",
+                            UploadDate = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5061),
+                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.ProductImage", b =>
@@ -133,6 +265,98 @@ namespace GoodsExchange.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImage", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("92e5b652-37cf-4e2a-8279-c865ab525a06"),
+                            Caption = "Image for product 1",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5000),
+                            FileSize = 1024L,
+                            ImagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/23/1857e50467c5629.jpg",
+                            ProductId = new Guid("9cdcc7a7-0ae7-4ac3-8812-07ab635f2ba2")
+                        },
+                        new
+                        {
+                            Id = new Guid("de9fec22-d61c-4398-a233-7c7dc6d0cc1e"),
+                            Caption = "Image for product 2",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5005),
+                            FileSize = 2048L,
+                            ImagePath = "https://img.lovepik.com/element/40145/4924.png_860.png",
+                            ProductId = new Guid("10b437f0-6ff2-4481-b135-c1d7df966ffa")
+                        },
+                        new
+                        {
+                            Id = new Guid("f17991fb-feab-49f5-9d27-d89c69f0a61a"),
+                            Caption = "Image for product 3",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5009),
+                            FileSize = 3072L,
+                            ImagePath = "https://img.lovepik.com/element/40154/8917.png_300.png",
+                            ProductId = new Guid("20b3e879-e41a-4134-88c4-819ca3ecb373")
+                        },
+                        new
+                        {
+                            Id = new Guid("1ceccd13-c07f-4757-b2fd-434c54cb0b5a"),
+                            Caption = "Image for product 4",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5012),
+                            FileSize = 4096L,
+                            ImagePath = "https://img.lovepik.com/element/40148/8397.png_300.png",
+                            ProductId = new Guid("17e88ef3-88df-4181-a10e-fbd04da3968f")
+                        },
+                        new
+                        {
+                            Id = new Guid("ef27f366-1d42-4039-84ba-71701c4d73ea"),
+                            Caption = "Image for product 5",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5019),
+                            FileSize = 5120L,
+                            ImagePath = "https://img.lovepik.com/original_origin_pic/18/08/09/ad4800dc49f64e450ae5f7d2c15bbd69.png_wh300.png",
+                            ProductId = new Guid("6f4170fb-d03c-4335-80eb-bf6a62ee1009")
+                        },
+                        new
+                        {
+                            Id = new Guid("2620b79d-2952-410c-a78e-230e7166ef8a"),
+                            Caption = "Image for product 6",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5023),
+                            FileSize = 6144L,
+                            ImagePath = "https://img.lovepik.com/png/20231021/School-office-supplies-binding-machine-stapler-book-stationery_289576_wh300.png",
+                            ProductId = new Guid("4ea4edac-5506-40c9-84a7-68d79d5b867f")
+                        },
+                        new
+                        {
+                            Id = new Guid("f8e226e7-83a4-444c-99b5-ec3c4fbf20d6"),
+                            Caption = "Image for product 7",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5048),
+                            FileSize = 7168L,
+                            ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-cute.jpg",
+                            ProductId = new Guid("8ece762f-bb55-4a1b-a37b-8be0d5e8757c")
+                        },
+                        new
+                        {
+                            Id = new Guid("349eb320-34be-4ec2-ac82-4e05ce8884e9"),
+                            Caption = "Image for product 8",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5052),
+                            FileSize = 8192L,
+                            ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-de-thuong.jpg",
+                            ProductId = new Guid("088d56e7-60d4-4d13-a39c-a258da0c5590")
+                        },
+                        new
+                        {
+                            Id = new Guid("910ac126-1828-4f4d-b426-e0a512a56607"),
+                            Caption = "Image for product 9",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5058),
+                            FileSize = 9216L,
+                            ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQClbO9Pb9b1e1cm18mublklMG69UYXdPgGgbeNGPutxgObEWNt0gMTNXmOHZInEp8O1ro&usqp=CAU",
+                            ProductId = new Guid("6e37b3ae-c322-4880-b155-111bca1e6690")
+                        },
+                        new
+                        {
+                            Id = new Guid("5e351632-537e-4700-9b1d-b4e5a3ed6a52"),
+                            Caption = "Image for product 10",
+                            DateCreated = new DateTime(2024, 6, 27, 7, 48, 25, 612, DateTimeKind.Utc).AddTicks(5062),
+                            FileSize = 10240L,
+                            ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxXUh1O9kqmHicXzEZYoksQl0zKVwNW3KRoI2N39oO3Yyw33D03xmltVXOqTtbTa3gAfU&usqp=CAU",
+                            ProductId = new Guid("f34a3f99-0339-42b0-ae1d-fda0aeb570b6")
+                        });
                 });
 
             modelBuilder.Entity("GoodsExchange.Data.Models.Rating", b =>
