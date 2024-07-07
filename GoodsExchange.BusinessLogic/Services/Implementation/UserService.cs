@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -50,6 +51,25 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
 
             user.IsActive = status;
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true);
+        }
+        public async Task<EntityResponse<bool>> ChangeUserRoleAndStatusAsync(UpdateUserRoleRequestModel request)
+        {
+            var user = await _context.Users.FindAsync(request.id);
+            if (user == null)
+            {
+                throw new NotFoundException("User does not exist.");
+            }
+
+            user.IsActive = request.status;
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.roleId);
+            if (role == null)
+            {
+                throw new NotFoundException("Role not found.");
+            }
+            user.RoleId = role.RoleId;
             await _context.SaveChangesAsync();
 
             return new ApiSuccessResult<bool>(true);
@@ -343,6 +363,34 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
 
         public async Task<EntityResponse<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
+        {
+            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
+            if (usernameAvailable)
+            {
+                throw new BadRequestException("Username available.");
+            }
+
+            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
+            if (emailAvailable)
+            {
+                throw new BadRequestException("Email available.");
+            }
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.DateOfBirth = request.DateOfBirth;
+            user.PhoneNumber = request.PhoneNumber;
+            user.UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image);
+            user.UserName = request.UserName;
+            user.Password = request.Password;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiSuccessResult<UserProfileViewModel>();
+        }
+
+        public async Task<EntityResponse<UserProfileViewModel>> UpdateUserByAdminAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
