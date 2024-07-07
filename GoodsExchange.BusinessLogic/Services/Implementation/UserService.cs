@@ -289,6 +289,59 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<UserProfileViewModel>(result);
         }
 
+        public async Task<EntityResponse<UserProfileViewModel>> CreateAccountByAdmin(RegisterRequestModel request)
+        {
+            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName);
+            if (usernameAvailable)
+            {
+                throw new BadRequestException("Username available.");
+            }
+
+            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email);
+            if (emailAvailable)
+            {
+                throw new BadRequestException("Email available.");
+            }
+
+            if (request.Password != request.ConfirmPassword)
+            {
+                throw new BadRequestException("The confirm password is incorrect.");
+            }
+
+            var user = new User()
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                DateOfBirth = request.DateOfBirth,
+                PhoneNumber = request.PhoneNumber,
+                UserImageUrl = SystemConstant.Images.UserImageDefault,
+                UserName = request.UserName,
+                Password = request.Password,
+                IsActive = true,
+                EmailConfirm = true,
+                RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Moderator)
+            };
+
+            
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            var result = new UserProfileViewModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                FullName = user.FirstName + " " + user.LastName,
+                Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                UserImageUrl = user.UserImageUrl,
+                UserName = user.UserName,
+            };
+
+            return new ApiSuccessResult<UserProfileViewModel>(result);
+        }
+
         public async Task<EntityResponse<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
@@ -371,5 +424,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
         }
+
+        
     }
 }
