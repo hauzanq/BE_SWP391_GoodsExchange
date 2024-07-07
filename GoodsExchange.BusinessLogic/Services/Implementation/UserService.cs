@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -55,7 +54,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<bool>("User status changed successfully.");
         }
-        public async Task<EntityResponse<bool>> ChangeUserRoleAndStatusAsync(UpdateUserRoleRequestModel request)
+        public async Task<ResponseModel<bool>> ChangeUserRoleAndStatusAsync(UpdateUserRoleRequestModel request)
         {
             var user = await _context.Users.FindAsync(request.id);
             if (user == null)
@@ -72,20 +71,20 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             user.RoleId = role.RoleId;
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<bool>(true);
+            return new ResponseModel<bool>(true);
         }
 
         public async Task<ResponseModel<LoginViewModel>> Login(LoginRequestModel request)
-            {
+        {
             var user = await _context.Users
-                                    .Include(u=>u.Role)
+                                    .Include(u => u.Role)
                                     .Where(u => u.UserName == request.UserName && u.Password == request.Password)
                                     .FirstOrDefaultAsync();
             if (user == null)
             {
                 throw new NotFoundException("User does not exist.");
             }
-            
+
             if (!user.IsActive)
             {
                 throw new BadRequestException("User account is inactive");
@@ -94,7 +93,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             if (!user.EmailConfirm)
             {
                 throw new BadRequestException("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
-            }   
+            }
 
             var userClaims = new[]
             {
@@ -154,7 +153,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public async Task<ResponseModel <PageResult<AdminUserViewModel>>> GetUsers(PagingRequestModel paging, string keyword , GetUserRequestModel model)
+        public async Task<ResponseModel<PageResult<AdminUserViewModel>>> GetUsers(PagingRequestModel paging, string keyword, GetUserRequestModel model)
         {
             var query = _context.Users
                                 .Include(u => u.Role)
@@ -307,7 +306,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<UserProfileViewModel>("Registration successful.", result);
         }
 
-        public async Task<EntityResponse<UserProfileViewModel>> CreateAccountByAdmin(RegisterRequestModel request)
+        public async Task<ResponseModel<UserProfileViewModel>> CreateAccountByAdmin(RegisterRequestModel request)
         {
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName);
             if (usernameAvailable)
@@ -341,7 +340,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Moderator)
             };
 
-            
+
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -357,10 +356,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserName = user.UserName,
             };
 
-            return new ApiSuccessResult<UserProfileViewModel>(result);
+            return new ResponseModel<UserProfileViewModel>(result);
         }
 
-        public async Task<EntityResponse<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
+        public async Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
@@ -388,7 +387,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<UserProfileViewModel>("User profile updated successfully.");
         }
 
-        public async Task<EntityResponse<UserProfileViewModel>> UpdateUserByAdminAsync(UpdateUserRequestModel request)
+        public async Task<ResponseModel<UserProfileViewModel>> UpdateUserByAdminAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
@@ -413,7 +412,18 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<UserProfileViewModel>();
+            var result = new UserProfileViewModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                UserImageUrl = user.UserImageUrl,
+                UserName = user.UserName,
+            };
+
+            return new ResponseModel<UserProfileViewModel>(result);
         }
 
         public string GenerateEmailVerificationToken(string email)
@@ -470,7 +480,5 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
         }
-
-        
     }
 }

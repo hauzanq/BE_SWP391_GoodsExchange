@@ -65,7 +65,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("CreateAccount")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateAccountByAdmin([FromForm] RegisterRequestModel request)
         {
@@ -118,7 +118,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("status-Roles")]
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ChangeUserStatusAndRole([FromBody] UpdateUserRoleRequestModel request)
         {

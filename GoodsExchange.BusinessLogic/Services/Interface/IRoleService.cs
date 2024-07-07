@@ -6,7 +6,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
     public interface IRoleService
     {
         Task<Guid> GetRoleIdOfRoleName(string roleName);
-        Task<EntityResponse<List<RoleViewModel>>> GetAllRole();
+        Task<ResponseModel<List<RoleViewModel>>> GetAllRole();
 
     }
 }
