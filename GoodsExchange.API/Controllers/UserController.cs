@@ -115,6 +115,16 @@ namespace GoodsExchange.API.Controllers
             var result = await _userService.ChangeUserStatusAsync(id, status);
             return Ok(result);
         }
+        [HttpPatch]
+        [Route("status-Roles")]
+        [Authorize(Roles = SystemConstant.Roles.Administrator)]
+        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> ChangeUserStatusAndRole([FromBody] UpdateUserRoleRequestModel request)
+        {
+            var result = await _userService.ChangeUserRoleAndStatusAsync(request);
+            return Ok(result);
+        }
 
         [HttpPost]
         [Route("list-moderators")]
