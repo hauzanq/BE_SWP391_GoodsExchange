@@ -42,7 +42,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return user;
         }
-        public async Task<EntityResponse<bool>> ChangeUserStatusAsync(Guid id, bool status)
+        public async Task<ResponseModel<bool>> ChangeUserStatusAsync(Guid id, bool status)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -53,7 +53,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             user.IsActive = status;
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<bool>(true);
+            return new ResponseModel<bool>("User status changed successfully.");
         }
         public async Task<EntityResponse<bool>> ChangeUserRoleAndStatusAsync(UpdateUserRoleRequestModel request)
         {
@@ -75,7 +75,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<EntityResponse<LoginViewModel>> Login(LoginRequestModel request)
+        public async Task<ResponseModel<LoginViewModel>> Login(LoginRequestModel request)
             {
             var user = await _context.Users
                                     .Include(u=>u.Role)
@@ -117,14 +117,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                     signingCredentials: creds
                 );
 
-            return new ApiSuccessResult<LoginViewModel>(new LoginViewModel()
+            return new ResponseModel<LoginViewModel>("Login successful.", new LoginViewModel()
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Role = user.Role.RoleName
             });
         }
 
-        public async Task<EntityResponse<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
+        public async Task<ResponseModel<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             if (request.UserName != user.UserName)
@@ -145,16 +145,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             user.Password = request.NewPassword;
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<string>("Change password successfully.");
+            return new ResponseModel<string>("Change password successfully.");
 
         }
 
-        public Task<EntityResponse<string>> ForgotPasswordAsync(ChangePasswordRequestModel request)
+        public Task<ResponseModel<string>> ForgotPasswordAsync(ChangePasswordRequestModel request)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<PageResult<AdminUserViewModel>> GetUsers(PagingRequestModel paging, string keyword , GetUserRequestModel model)
+        public async Task<ResponseModel <PageResult<AdminUserViewModel>>> GetUsers(PagingRequestModel paging, string keyword , GetUserRequestModel model)
         {
             var query = _context.Users
                                 .Include(u => u.Role)
@@ -231,10 +231,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CurrentPage = paging.PageIndex
             };
 
-            return result;
+            return new ResponseModel<PageResult<AdminUserViewModel>>(result);
         }
 
-        public async Task<EntityResponse<UserProfileViewModel>> GetUserByIdAsync(Guid id)
+        public async Task<ResponseModel<UserProfileViewModel>> GetUserByIdAsync(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -245,18 +245,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var result = new UserProfileViewModel()
             {
                 UserName = user.UserName,
-                //FirstName = user.FirstName,
-                //LastName = user.LastName,
                 FullName = user.FirstName + " " + user.LastName,
                 Email = user.Email,
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
                 UserImageUrl = user.UserImageUrl
             };
-            return new ApiSuccessResult<UserProfileViewModel>(result);
+            return new ResponseModel<UserProfileViewModel>("User profile retrieved successfully.", result);
         }
 
-        public async Task<EntityResponse<UserProfileViewModel>> Register(RegisterRequestModel request)
+        public async Task<ResponseModel<UserProfileViewModel>> Register(RegisterRequestModel request)
         {
             var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName);
             if (usernameAvailable)
@@ -306,7 +304,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserName = user.UserName,
             };
 
-            return new ApiSuccessResult<UserProfileViewModel>(result);
+            return new ResponseModel<UserProfileViewModel>("Registration successful.", result);
         }
 
         public async Task<EntityResponse<UserProfileViewModel>> CreateAccountByAdmin(RegisterRequestModel request)
@@ -387,7 +385,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<UserProfileViewModel>();
+            return new ResponseModel<UserProfileViewModel>("User profile updated successfully.");
         }
 
         public async Task<EntityResponse<UserProfileViewModel>> UpdateUserByAdminAsync(UpdateUserRequestModel request)

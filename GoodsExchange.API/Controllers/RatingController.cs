@@ -25,7 +25,7 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<RatingViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<RatingViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -51,7 +51,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("send-rating")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
-        [ProducesResponseType(typeof(EntityResponse<RatingViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<RatingViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> SendRating([FromBody] CreateRatingRequestModel request)
         {

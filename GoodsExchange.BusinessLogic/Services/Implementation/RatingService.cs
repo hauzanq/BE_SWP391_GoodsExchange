@@ -42,7 +42,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return numberRatings;
         }
 
-        public async Task<PageResult<RatingViewModel>> GetRatings(PagingRequestModel paging, RatingsRequestModel request)
+        public async Task<ResponseModel<PageResult<RatingViewModel>>> GetRatings(PagingRequestModel paging, RatingsRequestModel request)
         {
             var seller = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
@@ -120,10 +120,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 TotalPage = totalPages,
                 CurrentPage = paging.PageIndex
             };
-            return result;
+            return new ResponseModel<PageResult<RatingViewModel>>(result);
         }
 
-        public async Task<EntityResponse<RatingViewModel>> GetRatingById(Guid id)
+        public async Task<ResponseModel<RatingViewModel>> GetRatingById(Guid id)
         {
             var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.RatingId == id);
             if (rating == null)
@@ -142,9 +142,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = rating.ProductId,
                 ProductName = (await _serviceWrapper.ProductServices.GetProductAsync(rating.ProductId)).ProductName,
             };
-            return new ApiSuccessResult<RatingViewModel>(result);
+            return new ResponseModel<RatingViewModel>("The rating was retrieved successfully.", result);
         }
-        public async Task<EntityResponse<RatingViewModel>> SendRating(CreateRatingRequestModel request)
+        public async Task<ResponseModel<RatingViewModel>> SendRating(CreateRatingRequestModel request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
@@ -182,7 +182,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = rating.ProductId,
                 ProductName = (await _serviceWrapper.ProductServices.GetProductAsync(rating.ProductId)).ProductName,
             };
-            return new ApiSuccessResult<RatingViewModel>(result);
+            return new ResponseModel<RatingViewModel>("The rating was submitted successfully.", result);
         }
     }
 }

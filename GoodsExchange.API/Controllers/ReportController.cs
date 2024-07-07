@@ -24,7 +24,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("send-report")]
         [Authorize]
-        [ProducesResponseType(typeof(EntityResponse<ReportViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<ReportViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> SendReport(CreateReportRequestModel request)
         {
@@ -56,7 +56,7 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [Route("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<ReportViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<ReportViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -67,7 +67,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveReport(Guid id)
         {
@@ -78,7 +78,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("deny/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DenyReport(Guid id)
         {

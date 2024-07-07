@@ -6,10 +6,10 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface IReportService
     {
-        Task<EntityResponse<ReportViewModel>> SendReport(CreateReportRequestModel request);
-        Task<EntityResponse<bool>> ApproveReport(Guid id);
-        Task<EntityResponse<bool>> DenyReport(Guid id);
-        Task<PageResult<ReportViewModel>> GetReports(PagingRequestModel paging, ReportsRequestModel request);
-        Task<EntityResponse<ReportViewModel>> GetById(Guid id);
+        Task<ResponseModel<ReportViewModel>> SendReport(CreateReportRequestModel request);
+        Task<ResponseModel<bool>> ApproveReport(Guid id);
+        Task<ResponseModel<bool>> DenyReport(Guid id);
+        Task<ResponseModel<PageResult<ReportViewModel>>> GetReports(PagingRequestModel paging, ReportsRequestModel request);
+        Task<ResponseModel<ReportViewModel>> GetById(Guid id);
     }
 }

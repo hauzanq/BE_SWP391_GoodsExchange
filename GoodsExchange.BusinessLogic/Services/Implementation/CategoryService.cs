@@ -16,7 +16,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _context = context;
         }
 
-        public async Task<EntityResponse<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
+        public async Task<ResponseModel<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate)
         {
             var category = new Category()
             {
@@ -28,13 +28,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var result = new CategoryViewModel()
             {
                 CategoryName = category.CategoryName,
-
             };
-            return new ApiSuccessResult<CategoryViewModel>(result);
-
+            return new ResponseModel<CategoryViewModel>("The category was created successfully.", result);
         }
         
-        public async Task<EntityResponse<bool>> DeleteCategory(Guid id)
+        public async Task<ResponseModel<bool>> DeleteCategory(Guid id)
         {
             var existedCategory = await _context.Categories.FindAsync(id);
         
@@ -44,11 +42,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             _context.Remove(existedCategory);
             await _context.SaveChangesAsync();
-            return new ApiSuccessResult<bool>(true);
-
+            return new ResponseModel<bool>("The category was deleted successfully.", true);
         }
 
-        public async Task<EntityResponse<List<CategoryViewModel>>> GetCategories()
+        public async Task<ResponseModel<List<CategoryViewModel>>> GetCategories()
         {
             var categories = await _context.Categories.ToListAsync();
             var result = categories.Select(c => new CategoryViewModel
@@ -57,10 +54,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CategoryName = c.CategoryName,
 
             }).ToList();
-            return new ApiSuccessResult<List<CategoryViewModel>>(result);
+            return new ResponseModel<List<CategoryViewModel>>("Categories loaded successfully.", result);
         }
 
-        public async Task<EntityResponse<CategoriesDetailViewModel>> GetById(Guid idTmp)
+        public async Task<ResponseModel<CategoriesDetailViewModel>> GetById(Guid idTmp)
         {
             var category = await _context.Categories.FindAsync(idTmp);
             if (category == null)
@@ -82,7 +79,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserUploadId = product.UserUploadId,
 
             };
-            return new ApiSuccessResult<CategoriesDetailViewModel>(result);
+            return new ResponseModel<CategoriesDetailViewModel>("Category details loaded successfully.", result);
         }
 
         public async Task<Category> GetCategoryAsync(Guid id)
@@ -95,7 +92,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return category;
         }
 
-        public async Task<EntityResponse<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
+        public async Task<ResponseModel<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate)
         {
             var categoriesExisted = await _context.Categories.FindAsync(categoryUpdate.CategoryId);
             if (categoriesExisted == null)
@@ -109,7 +106,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 CategoryName = categoryUpdate.CategoryName,
             };
-            return new ApiSuccessResult<CategoryViewModel>(result);
+            return new ResponseModel<CategoryViewModel>("The category was updated successfully.", result);
         }
     }
 }

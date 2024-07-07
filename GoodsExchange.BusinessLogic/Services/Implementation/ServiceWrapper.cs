@@ -16,9 +16,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         private readonly IOptions<EmailSettings> _emailSettings;
         private readonly IConfiguration _configuration;
 
-        public ServiceWrapper(GoodsExchangeDbContext context, 
-            IHttpContextAccessor httpContextAccessor, 
-            IOptions<EmailSettings> emailSettings, 
+        public ServiceWrapper(GoodsExchangeDbContext context,
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<EmailSettings> emailSettings,
             IConfiguration configuration
             )
         {
@@ -42,7 +42,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
 
         private IEmailService _emailService;
-        private  IEmailTemplateHelper _emailTemplateHelper;
+        private IEmailTemplateHelper _emailTemplateHelper;
         private IWebHostEnvironment _webHostEnvironment;
         private readonly IServer _server;
 
@@ -52,7 +52,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_emailService is null)
                 {
-                    _emailService = new EmailService(_emailSettings,_emailTemplateHelper,_webHostEnvironment,_server);
+                    _emailService = new EmailService(_emailSettings, _emailTemplateHelper, _webHostEnvironment, _server);
                 }
                 return _emailService;
             }
@@ -65,9 +65,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_productService is null)
                 {
-                    _productService = new ProductService(_context,_httpContextAccessor,this);
+                    _productService = new ProductService(_context, _httpContextAccessor, this);
                 }
-                return _productService; 
+                return _productService;
             }
         }
 
@@ -119,7 +119,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_userService is null)
                 {
-                    _userService = new UserService(_context,_httpContextAccessor,_configuration,this,_emailService);
+                    _userService = new UserService(_context, _httpContextAccessor, _configuration, this, _emailService);
                 }
                 return _userService;
             }
@@ -135,6 +135,32 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                     _firebaseStorageService = new FirebaseStorageService(_configuration);
                 }
                 return _firebaseStorageService;
+            }
+        }
+
+        private IPreOrderService _preOrderService;
+        public IPreOrderService PreOrderService
+        {
+            get
+            {
+                if (_preOrderService is null)
+                {
+                    _preOrderService = new PreOrderService(_context, _httpContextAccessor, this);
+                }
+                return _preOrderService;
+            }
+        }
+
+        private ITransactionService _transactionService;
+        public ITransactionService TransactionService
+        {
+            get
+            {
+                if (_transactionService is null)
+                {
+                    _transactionService = new TransactionService(_context);
+                }
+                return _transactionService;
             }
         }
     }

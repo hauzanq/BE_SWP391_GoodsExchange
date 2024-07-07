@@ -8,8 +8,6 @@ namespace GoodsExchange.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("Roles");
-
             builder.HasKey(r => r.RoleId);
 
             builder.Property(p => p.RoleName).HasMaxLength(100).IsRequired();

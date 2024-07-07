@@ -24,7 +24,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost("create")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
-        [ProducesResponseType(typeof(EntityResponse<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequestModel request)
         {
@@ -82,7 +82,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
@@ -92,7 +92,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
@@ -102,7 +102,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPut("update")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
-        [ProducesResponseType(typeof(EntityResponse<ProductViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequestModel request)
         {
@@ -116,7 +116,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Customer)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProductStatus(Guid id, bool status)
         {
@@ -126,7 +126,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveProduct(Guid id)
         {
@@ -136,7 +136,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPatch("deny/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DenyProduct(Guid id)
         {

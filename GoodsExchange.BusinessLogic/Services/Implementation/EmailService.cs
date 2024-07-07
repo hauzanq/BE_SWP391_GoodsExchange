@@ -1,13 +1,12 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
-using GoodsExchange.BusinessLogic.RequestModels.Email;
+using GoodsExchange.BusinessLogic.Common.Exceptions;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using MailKit.Security;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using GoodsExchange.BusinessLogic.Common.Exceptions;
 
 namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
@@ -25,7 +24,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _server = server;
         }
 
-        public async Task<EntityResponse<bool>> SendEmailAsync(string to, string subject, string content)
+        public async Task<bool> SendEmailAsync(string to, string subject, string content)
         {
             try
             {
@@ -50,7 +49,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 await smtp.SendAsync(email);
                 smtp.Disconnect(true);
 
-                return new ApiSuccessResult<bool>();
+                return true;
             }
             catch (Exception ex)
             {
