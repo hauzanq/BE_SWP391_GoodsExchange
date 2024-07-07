@@ -25,7 +25,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<CategoryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<CategoryViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel request)
         {
@@ -38,7 +38,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(EntityResponse<PageResult<CategoryViewModel>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<PageResult<CategoryViewModel>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CategoryViewModel>> GetAll()
         {
@@ -51,7 +51,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(EntityResponse<CategoryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<CategoryViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
         {
@@ -61,7 +61,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
@@ -72,7 +72,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPut]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<CategoryViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<CategoryViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel request)
         {

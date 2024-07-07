@@ -8,8 +8,6 @@ namespace GoodsExchange.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ProductImage> builder)
         {
-            builder.ToTable("ProductImage");
-
             builder.HasKey(pi => pi.Id);
 
             builder.Property(pi => pi.ImagePath).HasMaxLength(500).IsRequired();

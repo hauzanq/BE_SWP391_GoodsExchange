@@ -8,8 +8,6 @@ namespace GoodsExchange.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Report> builder)
         {
-            builder.ToTable("Reports");
-
             builder.HasKey(r => r.ReportId);
 
             builder.Property(r => r.Reason).IsRequired().HasMaxLength(255);

@@ -1,11 +1,6 @@
 ﻿using GoodsExchange.Data.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GoodsExchange.Data.Configurations
 {
@@ -13,8 +8,6 @@ namespace GoodsExchange.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder.ToTable("Products");
-
             builder.HasKey(p => p.ProductId);
 
             builder.Property(p => p.ProductName).HasMaxLength(100).IsRequired();

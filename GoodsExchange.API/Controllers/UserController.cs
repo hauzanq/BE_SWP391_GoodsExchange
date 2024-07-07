@@ -32,7 +32,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<LoginViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<LoginViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Login(LoginRequestModel request)
         {
@@ -49,7 +49,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Register([FromForm] RegisterRequestModel request)
         {
@@ -81,7 +81,7 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetUserById(Guid id)
         {
@@ -92,7 +92,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPut]
         [Route("update-account")]
         [Authorize]
-        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
         {
@@ -108,7 +108,7 @@ namespace GoodsExchange.API.Controllers
         [HttpPatch]
         [Route("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ChangeUserStatus(Guid id, bool status)
         {
@@ -140,7 +140,7 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [Route("verify-email")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(EntityResponse<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public IActionResult VerifyEmail(string email, string token)
         {

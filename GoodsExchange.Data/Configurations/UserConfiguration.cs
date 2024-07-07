@@ -8,8 +8,6 @@ namespace GoodsExchange.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users");
-
             builder.HasKey(u => u.UserId);
 
             builder.Property(u => u.UserName).IsRequired().HasMaxLength(255);

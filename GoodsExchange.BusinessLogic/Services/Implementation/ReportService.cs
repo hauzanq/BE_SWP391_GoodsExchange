@@ -24,11 +24,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<EntityResponse<bool>> ApproveReport(Guid id)
+        public async Task<ResponseModel<bool>> ApproveReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
-            var userUploadProduct = await  _serviceWrapper.UserServices.GetUserByProductId(report.ProductId);
-            //var productbelongReceiverId = await _serviceWrapper.ProductServices.IsProductBelongToSeller(report.ProductId, report.ReceiverId);
+            var userUploadProduct = await _serviceWrapper.UserServices.GetUserByProductId(report.ProductId);
             if (report == null)
             {
                 throw new NotFoundException("Report does not exist");
@@ -36,17 +35,17 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             report.IsApprove = true;
             report.IsActive = false;
-           
-            
+
+
             userUploadProduct.IsActive = false;
-            
+
 
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<bool>(true);
+            return new ResponseModel<bool>("The report was approved successfully.", true);
         }
 
-        public async Task<EntityResponse<bool>> DenyReport(Guid id)
+        public async Task<ResponseModel<bool>> DenyReport(Guid id)
         {
             var report = await _context.Reports.FindAsync(id);
             if (report == null)
@@ -54,14 +53,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Report does not exist");
             }
 
-                
+
             report.IsActive = false;
 
             await _context.SaveChangesAsync();
 
-            return new ApiSuccessResult<bool>(true);
+            return new ResponseModel<bool>("The report was denied successfully.", true);
         }
-        public async Task<EntityResponse<ReportViewModel>> SendReport(CreateReportRequestModel request)
+        public async Task<ResponseModel<ReportViewModel>> SendReport(CreateReportRequestModel request)
         {
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
@@ -105,10 +104,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 IsApprove = report.IsApprove,
                 IsActive = report.IsActive
             };
-            return new ApiSuccessResult<ReportViewModel>(result);
+            return new ResponseModel<ReportViewModel>("The report was submitted successfully.", result);
         }
 
-        public async Task<PageResult<ReportViewModel>> GetReports(PagingRequestModel paging, ReportsRequestModel request)
+        public async Task<ResponseModel<PageResult<ReportViewModel>>> GetReports(PagingRequestModel paging, ReportsRequestModel request)
         {
             var query = _context.Reports.Where(r => r.IsActive == true)
                         .Include(r => r.Sender)
@@ -162,10 +161,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CurrentPage = paging.PageIndex
             };
 
-            return result;
+            return new ResponseModel<PageResult<ReportViewModel>>(result);
         }
 
-        public async Task<EntityResponse<ReportViewModel>> GetById(Guid id)
+        public async Task<ResponseModel<ReportViewModel>> GetById(Guid id)
         {
             var report = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == id);
             if (report == null)
@@ -184,7 +183,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 IsActive = report.IsActive
             };
 
-            return new ApiSuccessResult<ReportViewModel>(result);
+            return new ResponseModel<ReportViewModel>("The report was retrieved successfully.", result);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Category
     {
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
-
         public Guid ProductID { get; set; }
         public string ProductName { get; set; }
         public float Price { get; set; }

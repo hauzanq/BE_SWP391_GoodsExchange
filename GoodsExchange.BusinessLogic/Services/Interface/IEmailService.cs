@@ -1,12 +1,8 @@
-﻿using GoodsExchange.BusinessLogic.Common;
-using GoodsExchange.BusinessLogic.RequestModels.Email;
-
-namespace GoodsExchange.BusinessLogic.Services.Interface
+﻿namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface IEmailService
     {
-        Task<EntityResponse<bool>> SendEmailAsync(string to, string subject, string content);
-        Task  SendEmailToRegisterAsync(string to , string token);
-         
+        Task<bool> SendEmailAsync(string to, string subject, string content);
+        Task SendEmailToRegisterAsync(string to, string token);
     }
 }
