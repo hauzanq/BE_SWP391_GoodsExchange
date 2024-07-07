@@ -62,6 +62,22 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("CreateAccount")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(EntityResponse<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CreateAccountByAdmin([FromForm] RegisterRequestModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _userService.CreateAccountByAdmin(request);
+            return Ok(result);
+        }
+
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
