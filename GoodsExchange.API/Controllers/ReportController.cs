@@ -64,7 +64,7 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("approve/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]
@@ -75,7 +75,7 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPatch]
         [Route("deny/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(EntityResponse<bool>), (int)HttpStatusCode.OK)]

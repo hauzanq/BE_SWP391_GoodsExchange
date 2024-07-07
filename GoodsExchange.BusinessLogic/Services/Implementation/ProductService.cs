@@ -44,6 +44,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Product does not exist.");
             }
             product.IsApproved = false;
+            product.IsActive = false;
             product.ApprovedDate = DateTime.Now;
             await _context.SaveChangesAsync();
 
