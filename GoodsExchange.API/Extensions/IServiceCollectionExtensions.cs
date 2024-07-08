@@ -85,6 +85,8 @@ namespace GoodsExchange.API.Extensions
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddScoped<IPreOrderService, PreOrderService>();
+
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IProductService, ProductService>();
