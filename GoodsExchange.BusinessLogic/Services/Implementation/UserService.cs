@@ -126,10 +126,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async Task<ResponseModel<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            if (request.UserName != user.UserName)
-            {
-                throw new BadRequestException("UserName is incorrect.");
-            }
+            //if (request.UserName != user.UserName)
+            //{
+            //    throw new BadRequestException("UserName is incorrect.");
+            //}
 
             if (request.OldPassword != user.Password)
             {
@@ -244,6 +244,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var result = new UserProfileViewModel()
             {
                 UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 FullName = user.FirstName + " " + user.LastName,
                 Email = user.Email,
                 DateOfBirth = user.DateOfBirth,
@@ -356,7 +358,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserName = user.UserName,
             };
 
-            return new ResponseModel<UserProfileViewModel>(result);
+            return new ResponseModel<UserProfileViewModel>("Create Account with role Moderator Successfully",result);
         }
 
         public async Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
@@ -386,6 +388,33 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<UserProfileViewModel>("User profile updated successfully.");
         }
+
+
+        public async Task<ResponseModel<UpdateProfileUserRequestModel>> UpdateUserForCustomerAsync(UpdateProfileUserRequestModel request)
+        {
+            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+            //var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.userName && u.UserId != user.UserId);
+            //if (usernameAvailable)
+            //{
+            //    throw new BadRequestException("Username available.");
+            //}
+
+            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
+            if (emailAvailable)
+            {
+                throw new BadRequestException("Email available.");
+            }
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.DateOfBirth = request.DateOfBirth;
+            user.PhoneNumber = request.PhoneNumber;
+            //user.UserName = request.userName;
+            await _context.SaveChangesAsync();
+
+            return new ResponseModel<UpdateProfileUserRequestModel>("User profile updated successfully.");
+        }
+
 
         public async Task<ResponseModel<UserProfileViewModel>> UpdateUserByAdminAsync(UpdateUserRequestModel request)
         {
@@ -480,5 +509,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
         }
+
+      
+    
     }
 }
