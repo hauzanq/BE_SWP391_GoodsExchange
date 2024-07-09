@@ -14,22 +14,21 @@ namespace GoodsExchange.BusinessLogic.RequestModels.User
         public string Email { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required.")]
+      
         [RegularExpression(@"^\d{10,11}$", ErrorMessage = "Phone Number must be 10 or 11 digits.")]
         public string PhoneNumber { get; set; }
         public IFormFile Image { get; set; }
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
+        
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$",
        ErrorMessage = "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Confirm Password is required.")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password and Confirm Password do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } 
     }
 }

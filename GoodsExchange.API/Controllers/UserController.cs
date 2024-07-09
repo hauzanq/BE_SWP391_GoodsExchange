@@ -104,6 +104,22 @@ namespace GoodsExchange.API.Controllers
             var result = await _userService.UpdateUserAsync(request);
             return Ok(result);
         }
+        [HttpPut]
+        [Route("update-Profile")]
+        [Authorize]
+        [ProducesResponseType(typeof(ResponseModel<UpdateProfileUserRequestModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileUserRequestModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _userService.UpdateUserForCustomerAsync(request);
+            return Ok(result);
+        }
+
 
         [HttpPatch]
         [Route("status/{id}")]
