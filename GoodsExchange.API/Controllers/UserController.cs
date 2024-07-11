@@ -64,7 +64,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Route("CreateAccount")]
-        [AllowAnonymous]
+        [Authorize(Roles = SystemConstant.Roles.Administrator)]
         [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateAccountByAdmin([FromForm] RegisterRequestModel request)
@@ -120,6 +120,16 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        [HttpPatch]
+        [Route("Changing-Password")]
+        [Authorize]
+        [ProducesResponseType(typeof(ResponseModel<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> ChangePasswordPròile(ChangePasswordRequestModel request)
+        {
+            var result = await _userService.ChangePasswordAsync(request);
+            return Ok(result);
+        }
 
         [HttpPatch]
         [Route("status/{id}")]
@@ -131,8 +141,9 @@ namespace GoodsExchange.API.Controllers
             var result = await _userService.ChangeUserStatusAsync(id, status);
             return Ok(result);
         }
+
         [HttpPatch]
-        [Route("status-Roles")]
+        [Route("status")]
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]

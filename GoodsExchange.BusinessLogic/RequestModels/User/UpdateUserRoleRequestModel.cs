@@ -17,7 +17,7 @@ namespace GoodsExchange.BusinessLogic.RequestModels.User
         [Required(ErrorMessage = "Status is required.")]
         public bool status { get; set; }
 
-        [Required(ErrorMessage = "Role ID is required.")]
-        public Guid roleId { get; set; }
+        //[Required(ErrorMessage = "Role ID is required.")]
+        //public Guid roleId { get; set; }
     }
 }
