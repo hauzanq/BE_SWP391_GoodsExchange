@@ -63,12 +63,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
 
             user.IsActive = request.status;
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.roleId);
-            if (role == null)
-            {
-                throw new NotFoundException("Role not found.");
-            }
-            user.RoleId = role.RoleId;
+            //var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.roleId);
+            //if (role == null)
+            //{
+            //    throw new NotFoundException("Role not found.");
+            //}
+            //user.RoleId = role.RoleId;
             await _context.SaveChangesAsync();
 
             return new ResponseModel<bool>(true);

@@ -9,12 +9,12 @@ namespace GoodsExchange.BusinessLogic.RequestModels.User
 {
     public class ChangePasswordRequestModel
     {
-        public string UserName { get; set; }
+        //public string UserName { get; set; }
 
         [Required(ErrorMessage = "Old Password is required.")]
         [DataType(DataType.Password)]
         public string OldPassword { get; set; }
-
+            
         [Required(ErrorMessage = "New Password is required.")]
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "New Password must be between 6 and 100 characters.")]
