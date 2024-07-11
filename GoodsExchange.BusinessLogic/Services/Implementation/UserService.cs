@@ -216,6 +216,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var data = await query.Select(u => new AdminUserViewModel()
             {
+                UserId = u.UserId,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Email = u.Email,
