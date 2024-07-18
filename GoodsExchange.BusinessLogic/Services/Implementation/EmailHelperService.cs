@@ -13,6 +13,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
     {
         private  string FOLDER = "EmailTemplates";
         private  readonly string REGISTER_TEMPLATE_FILE = "RegisterConfirm.html";
+        private readonly string UPDATE_TEMPLATE_FILE = "UpdateProfileConfirm.html";
 
         private  readonly string CONFIRM_RESET_PASSWORD_TEMPLATE_FILE = "ConfirmResetPassword.html";
 
@@ -48,6 +49,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Console.WriteLine($"Error loading template file {templatePath}: {ex.Message}");
             }
             return string.Empty;
+        }
+
+       
+
+        public string UPDATE_NEWEMAIL_TEMPLATE(string rootPath)
+        {
+            return GetTemplate(rootPath, UPDATE_TEMPLATE_FILE);
         }
 
         //public Task<ApiResult<string>> GetTemplate(EmailHelperRequestModel request)

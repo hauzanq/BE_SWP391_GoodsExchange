@@ -16,5 +16,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 
         public  string NEWPASSWORD_TEMPLATE(string rootPath);
 
+        public string UPDATE_NEWEMAIL_TEMPLATE(string rootPath);
+
     }
 }

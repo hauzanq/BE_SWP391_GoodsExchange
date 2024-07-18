@@ -405,11 +405,23 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 throw new BadRequestException("Email available.");
             }
+           
+            
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
-            user.Email = request.Email;
+       
+            // If Email update doesn't exist when update then rwquire comfirm email then update
+            if(user.Email != request.Email)
+            {
+                user.Email = request.Email;
+                var token = GenerateEmailVerificationToken(user.Email);
+                user.EmailConfirm = false;
+                await _emailService.SendEmailToUpdateProfile(user.Email, token);
+
+            }
             user.DateOfBirth = request.DateOfBirth;
             user.PhoneNumber = request.PhoneNumber;
+            
             //user.UserName = request.userName;
             await _context.SaveChangesAsync();
 
