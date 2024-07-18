@@ -325,6 +325,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var product = await _context.Products
                                         .Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
+                                        .Include(p => p.Category)
                                         .FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
@@ -343,7 +344,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserImageUrl = product.UserUpload.UserImageUrl,
                 NumberOfRatings = _serviceWrapper.RatingServices.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
                 AverageNumberStars = _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
-                UserPhoneNumber = product.UserUpload.PhoneNumber
+                UserPhoneNumber = product.UserUpload.PhoneNumber,
+                CategoryName = product.Category.CategoryName
             };
 
             return new ResponseModel<ProductDetailsViewModel>("The product details were retrieved successfully.", result);

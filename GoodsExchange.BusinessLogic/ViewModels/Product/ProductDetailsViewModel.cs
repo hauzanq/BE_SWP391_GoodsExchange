@@ -20,5 +20,7 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Product
         public int NumberOfRatings { get; set; }
         public float AverageNumberStars { get; set; }
         public string UserPhoneNumber { get; set; }
+        public string CategoryName { get; set; }
+
     }
 }

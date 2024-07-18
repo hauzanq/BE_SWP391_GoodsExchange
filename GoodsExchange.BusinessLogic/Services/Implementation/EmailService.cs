@@ -57,7 +57,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
         }
 
-        public async  Task SendEmailToRegisterAsync(string to, string token)
+        public async Task SendEmailToRegisterAsync(string to, string token)
         {
             string content = _emailTemplateHelper.REGISTER_TEMPLATE(_webHostEnvironment);
             var serverAddress = _server.Features.Get<IServerAddressesFeature>().Addresses.First();
@@ -68,6 +68,19 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
 
             await SendEmailAsync(to, "Fgoodexchange send confirm Registration Account", content);
+
+        }
+
+        public async Task SendEmailToUpdateProfile(string to, string token)
+        {
+           string content = _emailTemplateHelper.UPDATE_NEWEMAIL_TEMPLATE(_webHostEnvironment);
+            var serverAddress = _server.Features.Get<IServerAddressesFeature>().Addresses.First();
+            var verificationLink = serverAddress + $"/api/v1/users/verify-email?email={to}&token={token}";
+            content = content.Replace("{{Email}}", to);
+            content = content.Replace("{{token}}",verificationLink);
+            bool result = await SendEmailAsync(to, "Fgoodexchange send confirm Update Profile Account", content);
+          
+
 
         }
     }

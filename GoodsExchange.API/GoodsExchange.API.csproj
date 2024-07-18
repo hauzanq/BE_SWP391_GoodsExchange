@@ -31,8 +31,4 @@
 	  <ProjectReference Include="..\GoodsExchange.Data\GoodsExchange.Data.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="wwwroot\" />
-	</ItemGroup>
-
 </Project>
