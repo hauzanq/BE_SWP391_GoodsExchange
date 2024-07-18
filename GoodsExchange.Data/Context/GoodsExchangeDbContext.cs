@@ -28,11 +28,13 @@ namespace GoodsExchange.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            string file = environment == "Production" ? "appsettings.Production.json" : "appsettings.Development.json";
             string root = Directory.GetParent(Directory.GetCurrentDirectory())?.FullName;
             string apiDirectory = Path.Combine(root, "GoodsExchange.API");
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(apiDirectory)
-                .AddJsonFile("appsettings.Development.json")
+                .AddJsonFile(file)
                 .Build();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString);
