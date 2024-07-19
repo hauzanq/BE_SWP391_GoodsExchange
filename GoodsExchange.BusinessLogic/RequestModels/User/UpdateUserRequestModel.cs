@@ -12,6 +12,8 @@ namespace GoodsExchange.BusinessLogic.RequestModels.User
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
         [RegularExpression(@"^[a-zA-Z0-9._%+-]+@(gmail\.com|fpt\.edu\.vn)$", ErrorMessage = "Email domain must be gmail.com or fpt.edu.vn.")]
         public string Email { get; set; }
+
+        
         public DateTime DateOfBirth { get; set; }
 
       
