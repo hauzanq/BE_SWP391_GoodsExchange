@@ -98,7 +98,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ReportMade = user.FirstName + " " + user.LastName,
                 ReportReceived = await _serviceWrapper.UserServices.GetUserFullNameAsync(report.ReceiverId),
                 ReportId = report.ReportId,
-                ProductId = product.ProductId,
+                //ProductId = product.ProductId,
+                ProductImages = product.ProductImages,
                 ProductName = product.ProductName,
                 Reason = report.Reason,
                 IsApprove = report.IsApprove,
@@ -112,6 +113,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var query = _context.Reports.Where(r => r.IsActive == true)
                         .Include(r => r.Sender)
                         .Include(r => r.Receiver)
+                        
                         .Include(r => r.Product).AsQueryable();
 
             #region Filtering report
@@ -145,7 +147,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 ReportMade = report.Sender.FirstName + " " + report.Sender.LastName,
                 ReportReceived = report.Receiver.FirstName + " " + report.Receiver.LastName,
-                ProductId = report.ProductId,
+                //ProductId = report.ProductId,
+                ProductImages = report.Product.ProductImages,
                 ProductName = report.Product.ProductName,
                 ReportId = report.ReportId,
                 Reason = report.Reason,

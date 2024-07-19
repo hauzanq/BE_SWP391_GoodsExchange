@@ -135,6 +135,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 throw new BadRequestException("OldPassword is incorrect.");
             }
+            if (request.NewPassword == user.Password)
+            {
+                throw new BadRequestException("New password cannot be the same as the old password.");
+            }
+
 
             if (request.ConfirmNewPassword != request.ConfirmNewPassword)
             {
@@ -247,7 +252,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                FullName = user.FirstName + " " + user.LastName,
+                FullName = user.LastName + " " + user.FirstName,
                 Email = user.Email,
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
@@ -359,36 +364,36 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UserName = user.UserName,
             };
 
-            return new ResponseModel<UserProfileViewModel>("Create Account with role Moderator Successfully",result);
+            return new ResponseModel<UserProfileViewModel>("Create Account with role Moderator Successfully", result);
         }
 
-        public async Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
-        {
-            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
-            if (usernameAvailable)
-            {
-                throw new BadRequestException("Username available.");
-            }
+        //public async Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
+        //{
+        //    var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+        //    var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
+        //    if (usernameAvailable)
+        //    {
+        //        throw new BadRequestException("Username available.");
+        //    }
 
-            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
-            if (emailAvailable)
-            {
-                throw new BadRequestException("Email available.");
-            }
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-            user.Email = request.Email;
-            user.DateOfBirth = request.DateOfBirth;
-            user.PhoneNumber = request.PhoneNumber;
-            user.UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image);
-            user.UserName = request.UserName;
-            user.Password = request.Password;
+        //    var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
+        //    if (emailAvailable)
+        //    {
+        //        throw new BadRequestException("Email available.");
+        //    }
+        //    user.FirstName = request.FirstName;
+        //    user.LastName = request.LastName;
+        //    user.Email = request.Email;
+        //    user.DateOfBirth = request.DateOfBirth;
+        //    user.PhoneNumber = request.PhoneNumber;
+        //    user.UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image);
+        //    user.UserName = request.UserName;
+        //    user.Password = request.Password;
 
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            return new ResponseModel<UserProfileViewModel>("User profile updated successfully.");
-        }
+        //    return new ResponseModel<UserProfileViewModel>("User profile updated successfully.");
+        //}
 
 
         public async Task<ResponseModel<UpdateProfileUserRequestModel>> UpdateUserForCustomerAsync(UpdateProfileUserRequestModel request)
@@ -405,13 +410,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 throw new BadRequestException("Email available.");
             }
-           
-            
+
+
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
-       
+
             // If Email update doesn't exist when update then rwquire comfirm email then update
-            if(user.Email != request.Email)
+            if (user.Email != request.Email)
             {
                 user.Email = request.Email;
                 var token = GenerateEmailVerificationToken(user.Email);
@@ -421,7 +426,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             user.DateOfBirth = request.DateOfBirth;
             user.PhoneNumber = request.PhoneNumber;
-            
+
             //user.UserName = request.userName;
             await _context.SaveChangesAsync();
 
@@ -523,7 +528,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
         }
 
-      
-    
+
+
     }
 }

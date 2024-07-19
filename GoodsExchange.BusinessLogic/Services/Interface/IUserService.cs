@@ -11,7 +11,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<UserProfileViewModel>> Register(RegisterRequestModel request);
         Task<ResponseModel<UserProfileViewModel>> CreateAccountByAdmin(RegisterRequestModel request);
             
-        Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request);
+        //Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request);
 
         Task<ResponseModel<UpdateProfileUserRequestModel>> UpdateUserForCustomerAsync(UpdateProfileUserRequestModel request);
         Task<ResponseModel<bool>> ChangeUserStatusAsync(Guid id, bool status);

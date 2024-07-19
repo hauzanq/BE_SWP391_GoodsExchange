@@ -89,23 +89,25 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        //[HttpPut]
+        //[Route("update-account")]
+        //[Authorize]
+        //[ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        //public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var result = await _userService.UpdateUserAsync(request);
+        //    return Ok(result);
+        //}
+
+
         [HttpPut]
         [Route("update-account")]
-        [Authorize]
-        [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _userService.UpdateUserAsync(request);
-            return Ok(result);
-        }
-        [HttpPut]
-        [Route("update-Profile")]
         [Authorize]
         [ProducesResponseType(typeof(ResponseModel<UpdateProfileUserRequestModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
@@ -121,7 +123,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("Changing-Password")]
+        [Route("changing-password")]
         [Authorize]
         [ProducesResponseType(typeof(ResponseModel<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
@@ -179,7 +181,7 @@ namespace GoodsExchange.API.Controllers
             {
                 var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
-                    ValidateIssuer = false, 
+                    ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
