@@ -70,12 +70,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             var seller = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
-            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == request.ProductName);
-            if (existingProduct != null)
-            {
-                throw new BadRequestException("Product name already exists.");
-            }
-
             var category = await _serviceWrapper.CategoryServices.GetCategoryAsync(request.CategoryId);
             if (category == null)
             {
@@ -229,7 +223,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var totalItems = await query.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
 
-            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+            var data = await query.OrderByDescending(p => p.UploadDate)
+                                .Skip((request.PageIndex - 1) * request.PageSize)
                                 .Take(request.PageSize)
                                 .Select(product => new ProductViewModel()
                                 {
