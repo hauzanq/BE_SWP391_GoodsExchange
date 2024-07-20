@@ -340,7 +340,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ApprovedDate = product.ApprovedDate,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UserUploadId = product.UserUpload.UserId,
-                UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                UserUpload = product.UserUpload.LastName + " " + product.UserUpload.FirstName,
                 UserImageUrl = product.UserUpload.UserImageUrl,
                 NumberOfRatings = _serviceWrapper.RatingServices.CountNumberRatingOfUser(product.UserUpload.UserId).Result,
                 AverageNumberStars = _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(product.UserUpload.UserId).Result,
