@@ -11,7 +11,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
         Task<ResponseModel<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
         Task<ResponseModel<bool>> DeleteProduct(Guid id);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, bool seller = false, bool moderator = false);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role);
         Task<ResponseModel<ProductDetailsViewModel>> GetById(Guid id);
         Task<ResponseModel<bool>> UpdateProductStatus(Guid id, bool status);
         Task<ResponseModel<bool>> ApproveProduct(Guid id);
