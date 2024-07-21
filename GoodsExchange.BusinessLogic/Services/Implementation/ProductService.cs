@@ -1,5 +1,6 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Common.Exceptions;
+using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.Services.Interface;
@@ -32,7 +33,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Product not found.");
             }
 
-            product.IsActive = false; 
+            product.IsActive = false;
             product.IsApproved = true;
             product.ApprovedDate = DateTime.Now;
 
@@ -136,13 +137,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<bool>("The product was deleted successfully.", true);
         }
-        public async Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, bool seller = false, bool moderator = false)
+        public async Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role)
         {
             var query = _context.Products.Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
                                         .Include(p => p.Category)
-                                        .Where(p => p.UserUpload.IsActive == true && p.IsActive == true)
+                                        .Where(p => p.UserUpload.IsActive == true)
                                         .AsQueryable();
+
 
             #region Searching
             if (!string.IsNullOrEmpty(keyword))
@@ -213,16 +215,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             #endregion
 
-            if (seller == true)
+            if (role == SystemConstant.Roles.Guest || role == SystemConstant.Roles.Moderator)
             {
-                query = _context.Products.Where(p => p.UserUpload.IsActive == true).AsQueryable();
-
-                query = query.Where(p => p.UserUploadId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+                query = query.Where(p => p.IsActive == true);
             }
 
-            if (moderator == true)
+            if (role == SystemConstant.Roles.Customer)
             {
-                query = _context.Products.Where(p => p.UserUpload.IsActive == true && p.IsApproved == false).AsQueryable();
+                query = query.Where(p => p.UserUploadId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             }
 
             var totalItems = await query.CountAsync();
