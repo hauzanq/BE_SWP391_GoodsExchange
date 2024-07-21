@@ -94,7 +94,7 @@ namespace GoodsExchange.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestModel request)
         {
             if (!ModelState.IsValid)
             {
