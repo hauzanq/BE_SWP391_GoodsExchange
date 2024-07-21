@@ -11,6 +11,7 @@
         }
         public ResponseModel(T data)
         {
+            Message = "The task excute successful.";
             Data = data;
         }
         public ResponseModel(string message)

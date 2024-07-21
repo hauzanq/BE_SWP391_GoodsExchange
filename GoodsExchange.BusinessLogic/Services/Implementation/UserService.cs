@@ -59,11 +59,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             var user = await _context.Users
                                     .Include(u => u.Role)
-                                    .Where(u => u.UserName == request.UserName && u.Password == request.Password)
+                                    .Where(u => u.UserName == request.UserName)
                                     .FirstOrDefaultAsync();
             if (user == null)
             {
                 throw new NotFoundException("User does not exist.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            {
+                throw new BadRequestException("Password is incorrect.");
             }
 
             if (!user.IsActive)
@@ -74,11 +79,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             if (!user.EmailConfirm)
             {
                 throw new BadRequestException("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
-            }
-
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password)) 
-            {
-                throw new BadRequestException("Password is incorrect.");
             }
 
             var userClaims = new[]
