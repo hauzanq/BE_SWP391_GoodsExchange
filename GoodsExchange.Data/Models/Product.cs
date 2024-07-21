@@ -12,6 +12,7 @@
         public User UserUpload { get; set; }
         public bool IsApproved { get; set; }
         public DateTime ApprovedDate { get; set; }
+        public bool IsReviewed { get; set; }
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
         public Rating Rate { get; set; }
