@@ -22,8 +22,7 @@ namespace GoodsExchange.BusinessLogic.RequestModels.User
         [CustomDateOfBirth(ErrorMessage = "Date of Birth cannot be in the future.")]
         public DateTime DateOfBirth { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required.")]
-        [PhoneNumber]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number must be valid.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "User Name is required.")]
