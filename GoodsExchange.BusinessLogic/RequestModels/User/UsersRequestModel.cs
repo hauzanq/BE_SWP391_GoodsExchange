@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoodsExchange.BusinessLogic.RequestModels.User
+﻿namespace GoodsExchange.BusinessLogic.RequestModels.User
 {
-    public class GetUserRequestModel
+    public class UsersRequestModel
     {
-        
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }

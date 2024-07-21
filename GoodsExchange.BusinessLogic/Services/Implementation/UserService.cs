@@ -54,25 +54,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<bool>("User status changed successfully.");
         }
-        public async Task<ResponseModel<bool>> ChangeUserRoleAndStatusAsync(UpdateUserRoleRequestModel request)
-        {
-            var user = await _context.Users.FindAsync(request.id);
-            if (user == null)
-            {
-                throw new NotFoundException("User does not exist.");
-            }
-
-            user.IsActive = request.status;
-            //var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == request.roleId);
-            //if (role == null)
-            //{
-            //    throw new NotFoundException("Role not found.");
-            //}
-            //user.RoleId = role.RoleId;
-            await _context.SaveChangesAsync();
-
-            return new ResponseModel<bool>(true);
-        }
 
         public async Task<ResponseModel<LoginViewModel>> Login(LoginRequestModel request)
         {
@@ -93,6 +74,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             if (!user.EmailConfirm)
             {
                 throw new BadRequestException("The emails doesn't vertified , Please check yours gmail : " + user.Email + "to vertified account !!");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password)) 
+            {
+                throw new BadRequestException("Password is incorrect.");
             }
 
             var userClaims = new[]
@@ -126,10 +112,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async Task<ResponseModel<string>> ChangePasswordAsync(ChangePasswordRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            //if (request.UserName != user.UserName)
-            //{
-            //    throw new BadRequestException("UserName is incorrect.");
-            //}
 
             if (request.OldPassword != user.Password)
             {
@@ -140,6 +122,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new BadRequestException("New password cannot be the same as the old password.");
             }
 
+            if (request.NewPassword == user.Password)
+            {
+                throw new BadRequestException("The new password must not be the same as the old password.");
+            }
 
             if (request.ConfirmNewPassword != request.ConfirmNewPassword)
             {
@@ -150,15 +136,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             await _context.SaveChangesAsync();
 
             return new ResponseModel<string>("Change password successfully.");
-
         }
 
-        public Task<ResponseModel<string>> ForgotPasswordAsync(ChangePasswordRequestModel request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ResponseModel<PageResult<AdminUserViewModel>>> GetUsers(PagingRequestModel paging, string keyword, GetUserRequestModel model)
+        public async Task<ResponseModel<PageResult<AdminUserViewModel>>> GetUsersAsync(PagingRequestModel paging, string keyword, UsersRequestModel model)
         {
             var query = _context.Users
                                 .Include(u => u.Role)
@@ -256,7 +236,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Email = user.Email,
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
-                UserImageUrl = user.UserImageUrl
+                UserImageUrl = user.UserImageUrl,
+                AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(user.UserId),
             };
             return new ResponseModel<UserProfileViewModel>("User profile retrieved successfully.", result);
         }
@@ -289,7 +270,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 PhoneNumber = request.PhoneNumber,
                 UserImageUrl = SystemConstant.Images.UserImageDefault,
                 UserName = request.UserName,
-                Password = request.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 IsActive = true,
                 RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Customer)
             };
@@ -309,6 +290,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 PhoneNumber = user.PhoneNumber,
                 UserImageUrl = user.UserImageUrl,
                 UserName = user.UserName,
+                FullName = user.FirstName + " " + user.LastName,
+                AverageNumberStars = 0
             };
 
             return new ResponseModel<UserProfileViewModel>("Registration successful.", result);
@@ -362,86 +345,15 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 PhoneNumber = user.PhoneNumber,
                 UserImageUrl = user.UserImageUrl,
                 UserName = user.UserName,
+                AverageNumberStars = 0
             };
 
             return new ResponseModel<UserProfileViewModel>("Create Account with role Moderator Successfully", result);
         }
 
-        //public async Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
-        //{
-        //    var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-        //    var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
-        //    if (usernameAvailable)
-        //    {
-        //        throw new BadRequestException("Username available.");
-        //    }
-
-        //    var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
-        //    if (emailAvailable)
-        //    {
-        //        throw new BadRequestException("Email available.");
-        //    }
-        //    user.FirstName = request.FirstName;
-        //    user.LastName = request.LastName;
-        //    user.Email = request.Email;
-        //    user.DateOfBirth = request.DateOfBirth;
-        //    user.PhoneNumber = request.PhoneNumber;
-        //    user.UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image);
-        //    user.UserName = request.UserName;
-        //    user.Password = request.Password;
-
-        //    await _context.SaveChangesAsync();
-
-        //    return new ResponseModel<UserProfileViewModel>("User profile updated successfully.");
-        //}
-
-
-        public async Task<ResponseModel<UpdateProfileUserRequestModel>> UpdateUserForCustomerAsync(UpdateProfileUserRequestModel request)
+        public async Task<ResponseModel<UserProfileViewModel>> UpdateUserAsync(UpdateUserRequestModel request)
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            //var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.userName && u.UserId != user.UserId);
-            //if (usernameAvailable)
-            //{
-            //    throw new BadRequestException("Username available.");
-            //}
-
-            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
-            if (emailAvailable)
-            {
-                throw new BadRequestException("Email available.");
-            }
-
-
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-
-            // If Email update doesn't exist when update then rwquire comfirm email then update
-            if (user.Email != request.Email)
-            {
-                user.Email = request.Email;
-                var token = GenerateEmailVerificationToken(user.Email);
-                user.EmailConfirm = false;
-                await _emailService.SendEmailToUpdateProfile(user.Email, token);
-
-            }
-            user.DateOfBirth = request.DateOfBirth;
-            user.PhoneNumber = request.PhoneNumber;
-
-            //user.UserName = request.userName;
-            await _context.SaveChangesAsync();
-
-            return new ResponseModel<UpdateProfileUserRequestModel>("User profile updated successfully.");
-        }
-
-
-        public async Task<ResponseModel<UserProfileViewModel>> UpdateUserByAdminAsync(UpdateUserRequestModel request)
-        {
-            var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            var usernameAvailable = await _context.Users.AnyAsync(u => u.UserName == request.UserName && u.UserId != user.UserId);
-            if (usernameAvailable)
-            {
-                throw new BadRequestException("Username available.");
-            }
 
             var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
             if (emailAvailable)
@@ -453,24 +365,24 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             user.Email = request.Email;
             user.DateOfBirth = request.DateOfBirth;
             user.PhoneNumber = request.PhoneNumber;
-            user.UserImageUrl = await _serviceWrapper.FirebaseStorageServices.UploadUserImage(request.FirstName + " " + request.LastName, request.Image);
-            user.UserName = request.UserName;
-            user.Password = request.Password;
 
             await _context.SaveChangesAsync();
+
 
             var result = new UserProfileViewModel()
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                FullName = user.FirstName + " " + user.LastName,
                 Email = user.Email,
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
                 UserImageUrl = user.UserImageUrl,
                 UserName = user.UserName,
+                AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(user.UserId)
             };
 
-            return new ResponseModel<UserProfileViewModel>(result);
+            return new ResponseModel<UserProfileViewModel>("User profile updated successfully.",result);
         }
 
         public string GenerateEmailVerificationToken(string email)
@@ -527,8 +439,5 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
         }
-
-
-
     }
 }

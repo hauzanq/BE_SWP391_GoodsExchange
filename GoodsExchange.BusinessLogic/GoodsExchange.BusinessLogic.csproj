@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
 		<PackageReference Include="FireSharp.Serialization.JsonNet" Version="1.1.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />

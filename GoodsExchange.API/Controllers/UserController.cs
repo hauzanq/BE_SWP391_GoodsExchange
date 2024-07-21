@@ -89,36 +89,19 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        //[HttpPut]
-        //[Route("update-account")]
-        //[Authorize]
-        //[ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
-        //[ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        //public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    var result = await _userService.UpdateUserAsync(request);
-        //    return Ok(result);
-        //}
-
-
         [HttpPut]
         [Route("update-account")]
         [Authorize]
-        [ProducesResponseType(typeof(ResponseModel<UpdateProfileUserRequestModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseModel<UserProfileViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileUserRequestModel request)
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.UpdateUserForCustomerAsync(request);
+            var result = await _userService.UpdateUserAsync(request);
             return Ok(result);
         }
 
@@ -144,25 +127,14 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        [HttpPatch]
-        [Route("status")]
-        [Authorize(Roles = SystemConstant.Roles.Administrator)]
-        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> ChangeUserStatusAndRole([FromBody] UpdateUserRoleRequestModel request)
-        {
-            var result = await _userService.ChangeUserRoleAndStatusAsync(request);
-            return Ok(result);
-        }
-
         [HttpPost]
         [Route("list-moderators")]
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
         [ProducesResponseType(typeof(PageResult<AdminUserViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] string? keyword, [FromQuery] GetUserRequestModel model)
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] string? keyword, [FromQuery] UsersRequestModel model)
         {
-            var result = await _userService.GetUsers(paging, keyword, model);
+            var result = await _userService.GetUsersAsync(paging, keyword, model);
             return Ok(result);
         }
 
