@@ -47,9 +47,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var seller = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
             var query = _context.Ratings.Where(r => r.ReceiverId == seller.UserId)
-                            .Include(r=>r.Sender)
-                            .Include(r=>r.Receiver)
-                            .Include(r=>r.Product)
+                            .Include(r => r.Sender)
+                            .Include(r => r.Receiver)
+                            .Include(r => r.Product)
                             .AsQueryable();
 
             #region Filter
@@ -144,6 +144,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             };
             return new ResponseModel<RatingViewModel>("The rating was retrieved successfully.", result);
         }
+        private async Task<bool> IsCustomerRatingProduct(Guid userid, Guid productid)
+        {
+            return await _context.Ratings.AnyAsync(r => r.SenderId == userid && r.ProductId == productid);
+        }
         public async Task<ResponseModel<RatingViewModel>> SendRating(CreateRatingRequestModel request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
@@ -157,6 +161,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             if (await _serviceWrapper.ProductServices.IsProductBelongToSeller(request.ProductId, user.UserId))
             {
                 throw new BadRequestException("This product belongs to you so you cannot rating this product.");
+            }
+            if (await IsCustomerRatingProduct(user.UserId, request.ProductId))
+            {
+                throw new BadRequestException("You have rated this product.");
             }
             var rating = new Rating()
             {

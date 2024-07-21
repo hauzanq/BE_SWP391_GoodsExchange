@@ -25,30 +25,35 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ResponseModel<bool>> ApproveProduct(Guid id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+
             if (product == null)
             {
-                throw new NotFoundException("The product does not exist.");
+                throw new NotFoundException("Product not found.");
             }
+
+            product.IsActive = false; 
             product.IsApproved = true;
             product.ApprovedDate = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
-            return new ResponseModel<bool>("The product was approved successfully.", true);
+            return new ResponseModel<bool>("Product approved successfully.");
         }
         public async Task<ResponseModel<bool>> DenyProduct(Guid id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+
             if (product == null)
             {
-                throw new NotFoundException("The product does not exist.");
+                throw new NotFoundException("Product not found.");
             }
-            product.IsApproved = false;
+
             product.IsActive = false;
-            product.ApprovedDate = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
-            return new ResponseModel<bool>("The product was denied successfully.", true);
+            return new ResponseModel<bool>("Product denied successfully.");
         }
         private async Task<List<ProductImage>> AddListImages(string sellerName, CreateProductRequestModel request)
         {
@@ -136,7 +141,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var query = _context.Products.Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
                                         .Include(p => p.Category)
-                                        .Where(p => p.UserUpload.IsActive == true && p.IsApproved == true)
+                                        .Where(p => p.UserUpload.IsActive == true && p.IsActive == true)
                                         .AsQueryable();
 
             #region Searching

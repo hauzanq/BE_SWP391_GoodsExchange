@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GoodsExchange.BusinessLogic.RequestModels.User
 {
     public class ChangePasswordRequestModel
     {
-        //public string UserName { get; set; }
-
         [Required(ErrorMessage = "Old Password is required.")]
         [DataType(DataType.Password)]
         public string OldPassword { get; set; }
