@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using RestSharp.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -113,26 +114,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
-            if (request.OldPassword != user.Password)
+            if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
             {
                 throw new BadRequestException("OldPassword is incorrect.");
             }
-            if (request.NewPassword == user.Password)
+            if (BCrypt.Net.BCrypt.Verify(request.NewPassword, user.Password))
             {
                 throw new BadRequestException("New password cannot be the same as the old password.");
             }
 
-            if (request.NewPassword == user.Password)
-            {
-                throw new BadRequestException("The new password must not be the same as the old password.");
-            }
-
-            if (request.ConfirmNewPassword != request.ConfirmNewPassword)
-            {
-                throw new BadRequestException("New password and confirm new password do not match.");
-            }
-
-            user.Password = request.NewPassword;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             await _context.SaveChangesAsync();
 
             return new ResponseModel<string>("Change password successfully.");
@@ -311,11 +302,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new BadRequestException("Email available.");
             }
 
-            if (request.Password != request.ConfirmPassword)
-            {
-                throw new BadRequestException("The confirm password is incorrect.");
-            }
-
             var user = new User()
             {
                 FirstName = request.FirstName,
@@ -325,7 +311,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 PhoneNumber = request.PhoneNumber,
                 UserImageUrl = SystemConstant.Images.UserImageDefault,
                 UserName = request.UserName,
-                Password = request.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 IsActive = true,
                 EmailConfirm = true,
                 RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Moderator)
@@ -355,16 +341,22 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             var user = await _context.Users.FindAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
-            var emailAvailable = await _context.Users.AnyAsync(u => u.Email == request.Email && u.UserId != user.UserId);
-            if (emailAvailable)
+            if (request.FirstName.HasValue())
             {
-                throw new BadRequestException("Email available.");
+                user.FirstName = request.FirstName;
             }
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-            user.Email = request.Email;
-            user.DateOfBirth = request.DateOfBirth;
-            user.PhoneNumber = request.PhoneNumber;
+            if (request.LastName.HasValue())
+            {
+                user.LastName = request.LastName;
+            }
+            if (request.DateOfBirth != null)
+            {
+                user.DateOfBirth = request.DateOfBirth.Value;
+            }
+            if (request.PhoneNumber != null)
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
 
             await _context.SaveChangesAsync();
 
@@ -382,7 +374,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(user.UserId)
             };
 
-            return new ResponseModel<UserProfileViewModel>("User profile updated successfully.",result);
+            return new ResponseModel<UserProfileViewModel>("User profile updated successfully.", result);
         }
 
         public string GenerateEmailVerificationToken(string email)

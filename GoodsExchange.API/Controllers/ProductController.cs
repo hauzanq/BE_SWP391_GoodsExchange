@@ -40,13 +40,13 @@ namespace GoodsExchange.API.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetProductForBuyer([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
+        public async Task<IActionResult> GetProductForGuest([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetProducts(request, keyword, model);
+            var result = await _productService.GetProducts(request, keyword, model,SystemConstant.Roles.Guest);
             return Ok(result);
         }
 
@@ -55,13 +55,13 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.Customer + "," + SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetProductsBySeller([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
+        public async Task<IActionResult> GetProductsForCustomer([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetProducts(request, keyword, model, true, false);
+            var result = await _productService.GetProducts(request, keyword, model,SystemConstant.Roles.Customer);
             return Ok(result);
         }
 
@@ -69,13 +69,13 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(PageResult<ProductViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetProductForModerator([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
+        public async Task<IActionResult> GetProductsForModerator([FromQuery] PagingRequestModel request, [FromQuery] string? keyword, [FromQuery] ProductsRequestModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _productService.GetProducts(request, keyword, model, false, true);
+            var result = await _productService.GetProducts(request, keyword, model, SystemConstant.Roles.Moderator);
             return Ok(result);
         }
 

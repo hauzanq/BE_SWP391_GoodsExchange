@@ -110,7 +110,7 @@ namespace GoodsExchange.API.Controllers
         [Authorize]
         [ProducesResponseType(typeof(ResponseModel<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> ChangePasswordPròile(ChangePasswordRequestModel request)
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequestModel request)
         {
             var result = await _userService.ChangePasswordAsync(request);
             return Ok(result);
