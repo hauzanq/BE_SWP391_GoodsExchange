@@ -23,8 +23,6 @@ namespace GoodsExchange.Data.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
-        public DbSet<PreOrder> PreOrders { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,8 +47,6 @@ namespace GoodsExchange.Data.Context
             modelBuilder.ApplyConfiguration(new ProductImageConfiguration());
             modelBuilder.ApplyConfiguration(new ReportConfiguration());
             modelBuilder.ApplyConfiguration(new RatingConfiguration());
-            modelBuilder.ApplyConfiguration(new PreOrderConfiguration());
-            modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.Seed();
         }
     }

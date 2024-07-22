@@ -137,31 +137,5 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return _firebaseStorageService;
             }
         }
-
-        private IPreOrderService _preOrderService;
-        public IPreOrderService PreOrderService
-        {
-            get
-            {
-                if (_preOrderService is null)
-                {
-                    _preOrderService = new PreOrderService(_context, _httpContextAccessor, this);
-                }
-                return _preOrderService;
-            }
-        }
-
-        private ITransactionService _transactionService;
-        public ITransactionService TransactionService
-        {
-            get
-            {
-                if (_transactionService is null)
-                {
-                    _transactionService = new TransactionService(_context);
-                }
-                return _transactionService;
-            }
-        }
     }
 }

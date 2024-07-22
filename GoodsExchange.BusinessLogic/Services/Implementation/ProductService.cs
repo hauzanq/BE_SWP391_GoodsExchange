@@ -109,6 +109,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Price = product.Price,
                 IsActive = product.IsActive,
                 UserUpload = user.UserName,
+                IsApproved = product.IsApproved,
+                IsReviewed = product.IsReviewed,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UploadDate = product.UploadDate,
                 ApprovedDate = product.ApprovedDate,
@@ -217,7 +219,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (role == SystemConstant.Roles.Guest)
             {
-                query = query.Where(p => p.IsActive == true);
+                query = query.Where(p => p.IsApproved == true);
+            }
+
+            if (role == SystemConstant.Roles.Moderator)
+            {
+                query = query.Where(p => p.IsApproved == false && p.IsReviewed == false);
             }
 
             if (role == SystemConstant.Roles.Moderator)
@@ -244,6 +251,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     Price = product.Price,
                                     IsActive = product.IsActive,
                                     IsApproved = product.IsApproved,
+                                    IsReviewed = product.IsReviewed,
                                     UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
                                     ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                                     UploadDate = product.UploadDate,
@@ -301,6 +309,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Description = product.Description,
                 Price = product.Price,
                 IsActive = product.IsActive,
+                IsReviewed = product.IsReviewed,
+                IsApproved = product.IsApproved,
                 UserUpload = user.UserName,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UploadDate = product.UploadDate,

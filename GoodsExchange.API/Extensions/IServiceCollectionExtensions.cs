@@ -79,13 +79,15 @@ namespace GoodsExchange.API.Extensions
         {
             services.AddScoped<IServiceWrapper, ServiceWrapper>();
             
-            services.AddScoped<IUserService, UserService>();
-
             services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<IPreOrderService, PreOrderService>();
+            services.AddTransient<IEmailService, EmailService>();
+
+            services.AddScoped<IEmailTemplateHelper, EmailHelperService>();
+
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<ICategoryService, CategoryService>();
 
@@ -96,11 +98,6 @@ namespace GoodsExchange.API.Extensions
             services.AddScoped<IReportService, ReportService>();
 
             services.AddScoped<IRoleService, RoleService>();
-          
-           services.AddTransient<IEmailService, EmailService>();
-
-            services.AddScoped<IEmailTemplateHelper,EmailHelperService>();
-            
 
             return services;
         }

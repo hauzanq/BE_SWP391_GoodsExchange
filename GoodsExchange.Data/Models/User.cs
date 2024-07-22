@@ -20,7 +20,5 @@
         public List<Report> ReportsMade { get; set; }
         public List<Report> ReportsReceived { get; set; }
         public List<Product> Products { get; set; }
-        public List<PreOrder> PreOrderToBuyers { get; set; }
-        public List<PreOrder> PreOrderToSellers { get; set; }
     }
 }
