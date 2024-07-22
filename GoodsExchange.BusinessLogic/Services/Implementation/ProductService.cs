@@ -33,8 +33,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Product not found.");
             }
 
-            product.IsActive = false;
             product.IsApproved = true;
+            product.IsReviewed = true;
             product.ApprovedDate = DateTime.Now;
 
             await _context.SaveChangesAsync();
@@ -50,8 +50,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Product not found.");
             }
 
-            product.IsActive = false;
-
+            product.IsReviewed = true;
             await _context.SaveChangesAsync();
 
             return new ResponseModel<bool>("Product denied successfully.");
@@ -93,6 +92,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
                 IsApproved = false,
+                IsReviewed = false,
                 CategoryId = category.CategoryId,
                 ProductImages = await AddListImages(sellerFullName, request)
             };
@@ -215,9 +215,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             #endregion
 
-            if (role == SystemConstant.Roles.Guest || role == SystemConstant.Roles.Moderator)
+            if (role == SystemConstant.Roles.Guest)
             {
                 query = query.Where(p => p.IsActive == true);
+            }
+
+            if (role == SystemConstant.Roles.Moderator)
+            {
+                query = query.Where(p => p.IsApproved == false && p.IsReviewed == false);
             }
 
             if (role == SystemConstant.Roles.Customer)
