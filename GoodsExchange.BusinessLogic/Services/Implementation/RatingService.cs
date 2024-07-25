@@ -70,12 +70,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (request.FromDate != null)
             {
-                query = query.Where(r => r.CreateDate >= request.FromDate);
+                query = query.Where(r => r.DateCreated >= request.FromDate);
             }
 
             if (request.ToDate != null)
             {
-                query = query.Where(r => r.CreateDate <= request.ToDate);
+                query = query.Where(r => r.DateCreated <= request.ToDate);
             }
 
             if (request.SenderId != null)
@@ -104,7 +104,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                 .Select(rating => new RatingViewModel()
                                 {
                                     RatingId = rating.RatingId,
-                                    CreateDate = rating.CreateDate,
+                                    CreateDate = rating.DateCreated,
                                     Feedback = rating.Feedback,
                                     NumberStars = rating.NumberStars,
                                     ProductId = rating.ProductId,
@@ -136,7 +136,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 RatingId = rating.RatingId,
                 NumberStars = rating.NumberStars,
                 Feedback = rating.Feedback,
-                CreateDate = rating.CreateDate,
+                CreateDate = rating.DateCreated,
                 SenderId = rating.SenderId,
                 SenderName = await _serviceWrapper.UserServices.GetUserFullNameAsync(rating.SenderId),
                 ProductId = rating.ProductId,
@@ -170,7 +170,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 NumberStars = request.NumberStars,
                 Feedback = request.Feedback,
-                CreateDate = DateTime.Now,
+                DateCreated = DateTime.Now,
                 SenderId = user.UserId,
                 ReceiverId = receiver.UserId,
                 ProductId = request.ProductId
@@ -184,7 +184,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 RatingId = rating.RatingId,
                 NumberStars = rating.NumberStars,
                 Feedback = rating.Feedback,
-                CreateDate = rating.CreateDate,
+                CreateDate = rating.DateCreated,
                 SenderId = rating.SenderId,
                 SenderName = await _serviceWrapper.UserServices.GetUserFullNameAsync(rating.SenderId),
                 ProductId = rating.ProductId,

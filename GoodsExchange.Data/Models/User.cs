@@ -8,6 +8,7 @@
         public string Email { get; set; }
         public bool EmailConfirm { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public DateTime DateCreated { get; set; }
         public string PhoneNumber { get; set; }
         public string UserImageUrl { get; set; }
         public string UserName { get; set; }

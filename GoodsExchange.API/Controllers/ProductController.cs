@@ -86,7 +86,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
-            var result = await _productService.GetById(id);
+            var result = await _productService.GetProductById(id);
             return Ok(result);
         }
 

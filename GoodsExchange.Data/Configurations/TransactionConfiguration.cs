@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GoodsExchange.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GoodsExchange.Data.Models
+namespace GoodsExchange.Data.Configurations
 {
     public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
     {

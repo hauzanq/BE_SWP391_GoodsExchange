@@ -12,7 +12,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(r => r.Reason).IsRequired().HasMaxLength(255);
 
-            builder.Property(r => r.CreateDate).HasColumnType("datetime");
+            builder.Property(r => r.DateCreated).HasColumnType("datetime2");
 
             builder.Property(r => r.IsApprove).IsRequired();
 

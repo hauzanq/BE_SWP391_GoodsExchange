@@ -6,6 +6,7 @@
         public string ProductName { get; set; }
         public string Description { get; set; }
         public float Price { get; set; }
+        public float MaxPriceDifference { get; set; }
         public bool IsActive { get; set; }
         public DateTime UploadDate { get; set; }
         public Guid UserUploadId { get; set; }

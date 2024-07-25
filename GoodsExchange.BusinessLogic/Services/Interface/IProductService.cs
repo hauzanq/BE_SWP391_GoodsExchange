@@ -12,7 +12,13 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
         Task<ResponseModel<bool>> DeleteProduct(Guid id);
         Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role);
-        Task<ResponseModel<ProductDetailsViewModel>> GetById(Guid id);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetActiveProductsAsync(PagingRequestModel request);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetPendingApprovalProductsAsync(PagingRequestModel request);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetHiddenProductsAsync(PagingRequestModel request);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetSentExchangeRequestsAsync(PagingRequestModel request);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetReceivedExchangeRequestsAsync(PagingRequestModel request);
+        Task<ResponseModel<PageResult<ProductViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request);
+        Task<ResponseModel<ProductDetailsViewModel>> GetProductById(Guid id);
         Task<ResponseModel<bool>> UpdateProductStatus(Guid id, bool status);
         Task<ResponseModel<bool>> ApproveProduct(Guid id);
         Task<ResponseModel<bool>> DenyProduct(Guid id);

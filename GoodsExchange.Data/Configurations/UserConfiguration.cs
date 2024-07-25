@@ -27,6 +27,8 @@ namespace GoodsExchange.Data.Configurations
             builder.HasMany(u => u.Products).WithOne(p => p.UserUpload).HasForeignKey(p => p.UserUploadId);
 
             builder.HasOne(u => u.Role).WithMany(r => r.Users).HasForeignKey(u => u.RoleId);
+
+            builder.Property(u => u.DateCreated).HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

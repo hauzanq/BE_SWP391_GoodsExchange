@@ -82,8 +82,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 BuyerId = buyer.UserId,
                 SellerId = seller.UserId,
-                IsActive = true,
-                DateCreated = DateTime.UtcNow,
+                Status = true
             };
 
             await _context.PreOrders.AddAsync(preOrder);

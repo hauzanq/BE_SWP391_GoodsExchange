@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoodsExchange.Data.Models
+﻿namespace GoodsExchange.Data.Models
 {
     public class Rating
     {
         public Guid RatingId { get; set; }
         public int NumberStars { get; set; }
         public string Feedback { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime DateCreated { get; set; }
         public Guid SenderId { get; set; }
         public User Sender { get; set; }
         public Guid ReceiverId { get; set; }

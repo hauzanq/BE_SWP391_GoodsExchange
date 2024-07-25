@@ -19,6 +19,8 @@ namespace GoodsExchange.Data.Configurations
             builder.Property(po => po.BuyerConfirmed).HasDefaultValue(false);
 
             builder.Property(po => po.SellerConfirmed).HasDefaultValue(false);
+
+            builder.Property(po => po.DateCreated).HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

@@ -8,11 +8,13 @@ namespace GoodsExchange.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.HasKey(c => c.CategoryId); 
+            builder.HasKey(c => c.CategoryId);
 
-            builder.Property(c => c.CategoryName).IsRequired().HasMaxLength(255); 
+            builder.Property(c => c.CategoryName).IsRequired().HasMaxLength(255);
 
-            builder.HasMany(c=>c.Products).WithOne(p=>p.Category).HasForeignKey(p=>p.CategoryId);
+            builder.HasMany(c => c.Products).WithOne(p => p.Category).HasForeignKey(p => p.CategoryId);
+
+            builder.Property(c => c.DateCreated).HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }
