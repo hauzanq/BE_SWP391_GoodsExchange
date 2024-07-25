@@ -158,7 +158,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 throw new NotFoundException("This product does not exist.");
             }
-            if (await _serviceWrapper.ProductServices.IsProductBelongToSeller(request.ProductId, user.UserId))
+            if (await _serviceWrapper.ProductServices.IsProductBelongToSellerAsync(request.ProductId, user.UserId))
             {
                 throw new BadRequestException("This product belongs to you so you cannot rating this product.");
             }

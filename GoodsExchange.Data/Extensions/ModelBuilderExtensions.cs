@@ -23,7 +23,7 @@ namespace GoodsExchange.Data.Extensions
                     new Role()
                     {
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
-                        RoleName = "Customer",
+                        RoleName = "User",
                     }
                 );
 

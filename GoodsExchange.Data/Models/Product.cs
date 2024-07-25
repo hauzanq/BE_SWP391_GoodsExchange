@@ -19,5 +19,7 @@
         public Rating Rate { get; set; }
         public List<Report> Reports { get; set; }
         public List<ProductImage> ProductImages { get; set; }
+        public List<PreOrder> ExchangeRequestsSent { get; set; }
+        public List<PreOrder> ExchangeRequestsReceived { get; set; }
     }
 }

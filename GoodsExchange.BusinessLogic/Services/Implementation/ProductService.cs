@@ -1,4 +1,4 @@
-using GoodsExchange.BusinessLogic.Common;
+﻿using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Common.Exceptions;
 using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.Extensions;
@@ -24,7 +24,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ResponseModel<bool>> ApproveProduct(Guid id)
+        public async Task<ResponseModel<bool>> ApproveProductAsync(Guid id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
@@ -41,7 +41,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<bool>("Product approved successfully.");
         }
-        public async Task<ResponseModel<bool>> DenyProduct(Guid id)
+        public async Task<ResponseModel<bool>> DenyProductAsync(Guid id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
 
@@ -71,7 +71,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             return images;
         }
-        public async Task<ResponseModel<ProductViewModel>> CreateProduct(CreateProductRequestModel request)
+        public async Task<ResponseModel<ProductListViewModel>> CreateProductAsync(CreateProductRequestModel request)
         {
             var seller = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
@@ -101,7 +101,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var user = await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
 
-            var result = new ProductViewModel()
+            var result = new ProductListViewModel()
             {
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
@@ -117,10 +117,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CategoryName = (await _serviceWrapper.CategoryServices.GetById(request.CategoryId)).Data.CategoryName,
             };
 
-            return new ResponseModel<ProductViewModel>("The product was created successfully.", result);
+            return new ResponseModel<ProductListViewModel>("The product was created successfully.", result);
         }
 
-        public async Task<ResponseModel<bool>> DeleteProduct(Guid id)
+        public async Task<ResponseModel<bool>> DeleteProductAsync(Guid id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -139,7 +139,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<bool>("The product was deleted successfully.", true);
         }
-        public async Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role)
+        public async Task<ResponseModel<PageResult<ProductListViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role)
         {
             var query = _context.Products.Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
@@ -232,18 +232,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 query = query.Where(p => p.IsApproved == false && p.IsReviewed == false);
             }
 
-            if (role == SystemConstant.Roles.Customer)
-            {
-                query = query.Where(p => p.UserUploadId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            }
-
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+            var number = await query.CountAsync();
+            var pages = (int)Math.Ceiling((double)number / request.PageSize);
 
             var data = await query.OrderByDescending(p => p.UploadDate)
                                 .Skip((request.PageIndex - 1) * request.PageSize)
                                 .Take(request.PageSize)
-                                .Select(product => new ProductViewModel()
+                                .Select(product => new ProductListViewModel()
                                 {
                                     ProductId = product.ProductId,
                                     ProductName = product.ProductName,
@@ -260,16 +255,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                 })
                                 .ToListAsync();
 
-            var result = new PageResult<ProductViewModel>()
+            var result = new PageResult<ProductListViewModel>()
             {
                 Items = data,
-                TotalPage = totalPages,
+                TotalPage = pages,
                 CurrentPage = request.PageIndex
             };
-            return new ResponseModel<PageResult<ProductViewModel>>(result);
+            return new ResponseModel<PageResult<ProductListViewModel>>(result);
         }
 
-        public async Task<ResponseModel<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request)
+        public async Task<ResponseModel<ProductListViewModel>> UpdateProductAsync(UpdateProductRequestModel request)
         {
             var product = await _context.Products.Include(p => p.Category)
                                                 .FirstOrDefaultAsync(p => p.ProductId == request.ProductId);
@@ -302,7 +297,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             await _context.SaveChangesAsync();
 
-            var result = new ProductViewModel()
+            var result = new ProductListViewModel()
             {
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
@@ -318,10 +313,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CategoryName = product.Category.CategoryName,
             };
 
-            return new ResponseModel<ProductViewModel>("The product was updated successfully.", result);
+            return new ResponseModel<ProductListViewModel>("The product was updated successfully.", result);
         }
 
-        public async Task<ResponseModel<bool>> UpdateProductStatus(Guid id, bool status)
+        public async Task<ResponseModel<bool>> UpdateProductStatusAsync(Guid id, bool status)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -335,7 +330,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<bool>("The product status was updated successfully.", true);
         }
 
-        public async Task<ResponseModel<ProductDetailsViewModel>> GetProductById(Guid id)
+        public async Task<ResponseModel<ProductDetailViewModel>> GetProductDetailAsync(Guid id)
         {
             var product = await _context.Products
                                         .Include(p => p.ProductImages)
@@ -347,7 +342,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Product does not exist.");
             }
 
-            var result = new ProductDetailsViewModel()
+            var result = new ProductDetailViewModel()
             {
                 ProductName = product.ProductName,
                 Price = product.Price,
@@ -363,7 +358,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CategoryName = product.Category.CategoryName
             };
 
-            return new ResponseModel<ProductDetailsViewModel>("The product details were retrieved successfully.", result);
+            return new ResponseModel<ProductDetailViewModel>("The product details were retrieved successfully.", result);
         }
         public async Task<Product> GetProductAsync(Guid id)
         {
@@ -375,153 +370,130 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return product;
         }
 
-        public async Task<bool> IsProductBelongToSeller(Guid productId, Guid sellerId)
+        public async Task<bool> IsProductBelongToSellerAsync(Guid productId, Guid sellerId)
         {
             var seller = await _context.Users.Include(u => u.Products).FirstOrDefaultAsync(u => u.UserId == sellerId);
             return seller != null && seller.Products.Any(p => p.ProductId == productId);
         }
 
-        public async Task<ResponseModel<PurchaseProductViewModel>> PurchaseProduct(Guid id)
+        private async Task<string> GetProductStatusAsync(Guid productId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+            var product = await _context.Products.FindAsync(productId);
+
             if (product == null)
             {
-                throw new NotFoundException("Product does not exist.");
+                throw new NotFoundException("The product does not exist.");
             }
-            var buyer = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            return null;
+
+            if (await _serviceWrapper.TransactionService.IsProductInTransactionAsync(productId))
+            {
+                return SystemConstant.ProductStatus.ExchangeSuccessful;
+            }
+
+            if (await _serviceWrapper.PreOrderService.IsProductInPreOrderAsync(productId))
+            {
+                return SystemConstant.ProductStatus.AreExchanging;
+            }
+
+            if (product.IsActive)
+            {
+                return SystemConstant.ProductStatus.IsShowing;
+            }
+
+            if (!product.IsActive)
+            {
+                return SystemConstant.ProductStatus.Hidden;
+            }
+
+            if (product.IsApproved && product.ApprovedDate != DateTime.MinValue)
+            {
+                return SystemConstant.ProductStatus.Approved;
+            }
+
+            if (!product.IsApproved && product.ApprovedDate != DateTime.MinValue)
+            {
+                return SystemConstant.ProductStatus.Rejected;
+            }
+
+            return SystemConstant.ProductStatus.AwaitingApproval;
         }
 
-        public async Task<ResponseModel<PageResult<ProductViewModel>>> GetActiveProductsAsync(PagingRequestModel request)
+        public async Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserAsync(PagingRequestModel request)
         {
             var query = _context.Products.Include(p => p.ProductImages)
                                        .Include(p => p.UserUpload)
                                        .Include(p => p.Category)
-                                       .Where(p => p.IsActive == true)
                                        .AsQueryable();
 
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
+            var numbers = await query.CountAsync();
+            var pages = (int)Math.Ceiling((double)numbers / request.PageSize);
 
-            var data = await query.OrderByDescending(p => p.UploadDate)
-                                .Skip((request.PageIndex - 1) * request.PageSize)
-                                .Take(request.PageSize)
-                                .Select(product => new ProductViewModel()
-                                {
-                                    ProductId = product.ProductId,
-                                    ProductName = product.ProductName,
-                                    Description = product.Description,
-                                    Price = product.Price,
-                                    IsActive = product.IsActive,
-                                    IsApproved = product.IsApproved,
-                                    UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
-                                    ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
-                                    UploadDate = product.UploadDate,
-                                    ApprovedDate = product.ApprovedDate,
-                                    CategoryName = product.Category.CategoryName
-                                })
-                                .ToListAsync();
+            var products = await query.OrderByDescending(p => p.UploadDate)
+                              .Skip((request.PageIndex - 1) * request.PageSize)
+                              .Take(request.PageSize)
+                              .ToListAsync();
 
-            var result = new PageResult<ProductViewModel>()
+            var data = new List<UserProductListViewModel>();
+
+            foreach (var product in products)
+            {
+                var status = await GetProductStatusAsync(product.ProductId);
+
+                data.Add(new UserProductListViewModel()
+                {
+                    ProductId = product.ProductId,
+                    ProductName = product.ProductName,
+                    Description = product.Description,
+                    Price = product.Price,
+                    Status = status,
+                    UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                    ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
+                    UploadDate = product.UploadDate,
+                    ApprovedDate = product.ApprovedDate,
+                    CategoryName = product.Category.CategoryName
+                });
+            }
+
+            var result = new PageResult<UserProductListViewModel>()
             {
                 Items = data,
-                TotalPage = totalPages,
+                TotalPage = pages,
                 CurrentPage = request.PageIndex
             };
-            return new ResponseModel<PageResult<ProductViewModel>>(result);
+            return new ResponseModel<PageResult<UserProductListViewModel>>(result);
         }
 
-        public async Task<ResponseModel<PageResult<ProductViewModel>>> GetPendingApprovalProductsAsync(PagingRequestModel request)
-        {
-            var query = _context.Products.Include(p => p.ProductImages)
-                                      .Include(p => p.UserUpload)
-                                      .Include(p => p.Category)
-                                      .Where(p => p.IsApproved == false)
-                                      .AsQueryable();
-
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
-
-            var data = await query.OrderByDescending(p => p.UploadDate)
-                                .Skip((request.PageIndex - 1) * request.PageSize)
-                                .Take(request.PageSize)
-                                .Select(product => new ProductViewModel()
-                                {
-                                    ProductId = product.ProductId,
-                                    ProductName = product.ProductName,
-                                    Description = product.Description,
-                                    Price = product.Price,
-                                    IsActive = product.IsActive,
-                                    IsApproved = product.IsApproved,
-                                    UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
-                                    ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
-                                    UploadDate = product.UploadDate,
-                                    ApprovedDate = product.ApprovedDate,
-                                    CategoryName = product.Category.CategoryName
-                                })
-                                .ToListAsync();
-
-            var result = new PageResult<ProductViewModel>()
-            {
-                Items = data,
-                TotalPage = totalPages,
-                CurrentPage = request.PageIndex
-            };
-            return new ResponseModel<PageResult<ProductViewModel>>(result);
-        }
-
-        public async Task<ResponseModel<PageResult<ProductViewModel>>> GetHiddenProductsAsync(PagingRequestModel request)
-        {
-            var query = _context.Products.Include(p => p.ProductImages)
-                                      .Include(p => p.UserUpload)
-                                      .Include(p => p.Category)
-                                      .Where(p => p.IsActive == false)
-                                      .AsQueryable();
-
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / request.PageSize);
-
-            var data = await query.OrderByDescending(p => p.UploadDate)
-                                .Skip((request.PageIndex - 1) * request.PageSize)
-                                .Take(request.PageSize)
-                                .Select(product => new ProductViewModel()
-                                {
-                                    ProductId = product.ProductId,
-                                    ProductName = product.ProductName,
-                                    Description = product.Description,
-                                    Price = product.Price,
-                                    IsActive = product.IsActive,
-                                    IsApproved = product.IsApproved,
-                                    UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
-                                    ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
-                                    UploadDate = product.UploadDate,
-                                    ApprovedDate = product.ApprovedDate,
-                                    CategoryName = product.Category.CategoryName
-                                })
-                                .ToListAsync();
-
-            var result = new PageResult<ProductViewModel>()
-            {
-                Items = data,
-                TotalPage = totalPages,
-                CurrentPage = request.PageIndex
-            };
-            return new ResponseModel<PageResult<ProductViewModel>>(result);
-        }
-
-        public Task<ResponseModel<PageResult<ProductViewModel>>> GetSentExchangeRequestsAsync(PagingRequestModel request)
+        public Task<ResponseModel<PageResult<UserProductListViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<PageResult<ProductViewModel>>> GetReceivedExchangeRequestsAsync(PagingRequestModel request)
+        public async Task<ResponseModel<UserProductDetailViewModel>> GetUserProductDetailAsync(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            var product = await _context.Products
+                                       .Include(p => p.ProductImages)
+                                       .Include(p => p.UserUpload)
+                                       .Include(p => p.Category)
+                                       .Include(p => p.ExchangeRequestsSent)
+                                       .Include(p => p.ExchangeRequestsReceived)
+                                       .FirstOrDefaultAsync(p => p.ProductId == id);
+            if (product == null)
+            {
+                throw new NotFoundException("Product does not exist.");
+            }
 
-        public Task<ResponseModel<PageResult<ProductViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request)
-        {
-            throw new NotImplementedException();
+            var result = new UserProductDetailViewModel()
+            {
+                ProductName = product.ProductName,
+                Price = product.Price,
+                Description = product.Description,
+                ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
+                CategoryName = product.Category.CategoryName,
+                SentRequests = await _serviceWrapper.PreOrderService.GetSentExchangeRequestsByProductIdAsync(product.ProductId),
+                ReceivedRequests = await _serviceWrapper.PreOrderService.GetReceivedExchangeRequestsByProductIdAsync(product.ProductId)
+            };
+
+            return new ResponseModel<UserProductDetailViewModel>("The product details were retrieved successfully.", result);
         }
     }
 }
