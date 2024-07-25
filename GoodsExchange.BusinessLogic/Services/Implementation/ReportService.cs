@@ -79,7 +79,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var report = new Report()
             {
                 Reason = request.Reason,
-                CreateDate = DateTime.Now,
+                DateCreated = DateTime.Now,
                 SenderId = user.UserId,
                 ReceiverId = receiver.UserId,
                 ProductId = request.ProductId,
@@ -130,12 +130,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (request.FromDate != null)
             {
-                query = query.Where(r => r.CreateDate >= request.FromDate);
+                query = query.Where(r => r.DateCreated >= request.FromDate);
             }
 
             if (request.ToDate != null)
             {
-                query = query.Where(r => r.CreateDate <= request.ToDate);
+                query = query.Where(r => r.DateCreated <= request.ToDate);
             }
 
             #endregion

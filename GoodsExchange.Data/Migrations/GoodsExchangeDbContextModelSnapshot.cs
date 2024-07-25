@@ -33,6 +33,11 @@ namespace GoodsExchange.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
@@ -41,20 +46,71 @@ namespace GoodsExchange.Data.Migrations
                         new
                         {
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
-                            CategoryName = "School Supplies"
+                            CategoryName = "School Supplies",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            CategoryName = "Art Supplies"
+                            CategoryName = "Art Supplies",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            CategoryName = "Electronics"
+                            CategoryName = "Electronics",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
+<<<<<<< HEAD
+=======
+            modelBuilder.Entity("GoodsExchange.Data.Models.PreOrder", b =>
+                {
+                    b.Property<Guid>("PreOrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("BuyerConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("SellerConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid>("SellerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("PreOrderId");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("PreOrders");
+                });
+
+>>>>>>> feature/manage-accounts
             modelBuilder.Entity("GoodsExchange.Data.Models.Product", b =>
                 {
                     b.Property<Guid>("ProductId")
@@ -85,6 +141,9 @@ namespace GoodsExchange.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<float>("MaxPriceDifference")
+                        .HasColumnType("real");
+
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
@@ -110,142 +169,262 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("c2065469-632f-4e76-bd75-be725b92b50a"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2847),
+=======
+                            ProductId = new Guid("b0142c14-b880-40d9-98e3-55e517414dea"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4780),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
                             Description = "Description for product 1",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 10f,
                             ProductName = "Product 1",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2843),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 10f,
+                            ProductName = "Product 1",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4778),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("9ed06e9a-b0de-44f4-8687-5714c5a46451"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2880),
+=======
+                            ProductId = new Guid("bf6ad13c-c8fa-4c94-9d9e-85af596fd1b3"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4800),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
                             Description = "Description for product 2",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 20f,
                             ProductName = "Product 2",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2880),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 20f,
+                            ProductName = "Product 2",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4799),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("8ef96aa6-4909-4ed9-8bb0-849dcabd3019"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2884),
+=======
+                            ProductId = new Guid("e85c8390-98c4-413e-8c33-a00f585dc7a2"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4803),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
                             Description = "Description for product 3",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 30f,
                             ProductName = "Product 3",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2884),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 30f,
+                            ProductName = "Product 3",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4803),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("8273a702-e264-4086-b3fe-b9259dd55841"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2888),
+=======
+                            ProductId = new Guid("e4ee609d-e08e-4e3c-95bd-55c91ddf4f9a"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4818),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
                             Description = "Description for product 4",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 40f,
                             ProductName = "Product 4",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2888),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 40f,
+                            ProductName = "Product 4",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4818),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("cb688e5b-0218-48e9-bfb0-9d82a5fec85e"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2897),
+=======
+                            ProductId = new Guid("7c36c0ee-9ba9-4f5b-8675-1b0b29fc8752"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4826),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
                             Description = "Description for product 5",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 50f,
                             ProductName = "Product 5",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2897),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 50f,
+                            ProductName = "Product 5",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4826),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("dbef2450-3327-4a0b-822d-916969a40f39"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2905),
+=======
+                            ProductId = new Guid("e2a57082-c5c3-479d-a3b3-ec3270e350c2"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4835),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
                             Description = "Description for product 6",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 60f,
                             ProductName = "Product 6",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2905),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 60f,
+                            ProductName = "Product 6",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4835),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("f48bd0e5-4bd4-468d-9f20-fb11f9ffc814"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2909),
+=======
+                            ProductId = new Guid("c11bbc17-96af-4830-bdfe-28ccecbc9c03"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4838),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
                             Description = "Description for product 7",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 70f,
                             ProductName = "Product 7",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2909),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 70f,
+                            ProductName = "Product 7",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4838),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("bf7a2ead-b61d-47f1-b272-a5c9ffff03e0"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2913),
+=======
+                            ProductId = new Guid("effa8cfb-7227-4175-a599-906539474a74"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4843),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
                             Description = "Description for product 8",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 80f,
                             ProductName = "Product 8",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2913),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 80f,
+                            ProductName = "Product 8",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4843),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("54b29331-47f2-4a4f-883e-059760183989"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2916),
+=======
+                            ProductId = new Guid("126bf07d-8012-4a79-9a73-e3c2adeb2fd8"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4846),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
                             Description = "Description for product 9",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 90f,
                             ProductName = "Product 9",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2916),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 90f,
+                            ProductName = "Product 9",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4846),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
+<<<<<<< HEAD
                             ProductId = new Guid("c7b06ffa-6a3f-41a8-813b-94c7fa69a041"),
                             ApprovedDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2924),
+=======
+                            ProductId = new Guid("8163a18b-a474-4f55-90b2-7d973115177e"),
+                            ApprovedDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4850),
+>>>>>>> feature/manage-accounts
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
                             Description = "Description for product 10",
                             IsActive = true,
                             IsApproved = true,
+<<<<<<< HEAD
                             IsReviewed = false,
                             Price = 100f,
                             ProductName = "Product 10",
                             UploadDate = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2923),
+=======
+                            MaxPriceDifference = 0f,
+                            Price = 100f,
+                            ProductName = "Product 10",
+                            UploadDate = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4850),
+>>>>>>> feature/manage-accounts
                             UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
                         });
                 });
@@ -284,6 +463,7 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD
                             Id = new Guid("908fad68-a621-44f5-87fe-2d5d46cd122b"),
                             Caption = "Image for product 1",
                             DateCreated = new DateTime(2024, 7, 22, 4, 11, 37, 914, DateTimeKind.Utc).AddTicks(2861),
@@ -371,6 +551,95 @@ namespace GoodsExchange.Data.Migrations
                             FileSize = 10240L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxXUh1O9kqmHicXzEZYoksQl0zKVwNW3KRoI2N39oO3Yyw33D03xmltVXOqTtbTa3gAfU&usqp=CAU",
                             ProductId = new Guid("c7b06ffa-6a3f-41a8-813b-94c7fa69a041")
+=======
+                            Id = new Guid("1d9a4082-205c-4ecc-a0a0-350be44e6c6f"),
+                            Caption = "Image for product 1",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4792),
+                            FileSize = 1024L,
+                            ImagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/23/1857e50467c5629.jpg",
+                            ProductId = new Guid("b0142c14-b880-40d9-98e3-55e517414dea")
+                        },
+                        new
+                        {
+                            Id = new Guid("6d53ebfc-2497-4560-a30b-e3c8fe1c6d0b"),
+                            Caption = "Image for product 2",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4801),
+                            FileSize = 2048L,
+                            ImagePath = "https://img.lovepik.com/element/40145/4924.png_860.png",
+                            ProductId = new Guid("bf6ad13c-c8fa-4c94-9d9e-85af596fd1b3")
+                        },
+                        new
+                        {
+                            Id = new Guid("9ab6e772-15d4-4137-8bf1-22b8cb63d133"),
+                            Caption = "Image for product 3",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4816),
+                            FileSize = 3072L,
+                            ImagePath = "https://img.lovepik.com/element/40154/8917.png_300.png",
+                            ProductId = new Guid("e85c8390-98c4-413e-8c33-a00f585dc7a2")
+                        },
+                        new
+                        {
+                            Id = new Guid("761da536-d2c1-4ef4-a860-7f5d6bc7b586"),
+                            Caption = "Image for product 4",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4820),
+                            FileSize = 4096L,
+                            ImagePath = "https://img.lovepik.com/element/40148/8397.png_300.png",
+                            ProductId = new Guid("e4ee609d-e08e-4e3c-95bd-55c91ddf4f9a")
+                        },
+                        new
+                        {
+                            Id = new Guid("79fba7ad-c5b6-475d-b365-6f2144008df4"),
+                            Caption = "Image for product 5",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4828),
+                            FileSize = 5120L,
+                            ImagePath = "https://img.lovepik.com/original_origin_pic/18/08/09/ad4800dc49f64e450ae5f7d2c15bbd69.png_wh300.png",
+                            ProductId = new Guid("7c36c0ee-9ba9-4f5b-8675-1b0b29fc8752")
+                        },
+                        new
+                        {
+                            Id = new Guid("44141e4c-ac2d-482b-975d-03babe4f6d37"),
+                            Caption = "Image for product 6",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4836),
+                            FileSize = 6144L,
+                            ImagePath = "https://img.lovepik.com/png/20231021/School-office-supplies-binding-machine-stapler-book-stationery_289576_wh300.png",
+                            ProductId = new Guid("e2a57082-c5c3-479d-a3b3-ec3270e350c2")
+                        },
+                        new
+                        {
+                            Id = new Guid("9a757039-1a7c-4029-b634-1f5f21920c31"),
+                            Caption = "Image for product 7",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4841),
+                            FileSize = 7168L,
+                            ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-cute.jpg",
+                            ProductId = new Guid("c11bbc17-96af-4830-bdfe-28ccecbc9c03")
+                        },
+                        new
+                        {
+                            Id = new Guid("c1787415-fe12-4c65-8078-c0779f03f400"),
+                            Caption = "Image for product 8",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4844),
+                            FileSize = 8192L,
+                            ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-de-thuong.jpg",
+                            ProductId = new Guid("effa8cfb-7227-4175-a599-906539474a74")
+                        },
+                        new
+                        {
+                            Id = new Guid("8cbc8811-04b1-4e3b-95d9-f30f5bc8d09d"),
+                            Caption = "Image for product 9",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4847),
+                            FileSize = 9216L,
+                            ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQClbO9Pb9b1e1cm18mublklMG69UYXdPgGgbeNGPutxgObEWNt0gMTNXmOHZInEp8O1ro&usqp=CAU",
+                            ProductId = new Guid("126bf07d-8012-4a79-9a73-e3c2adeb2fd8")
+                        },
+                        new
+                        {
+                            Id = new Guid("49e6ab27-24bb-4e0b-884d-5fd76276ebaf"),
+                            Caption = "Image for product 10",
+                            DateCreated = new DateTime(2024, 7, 25, 6, 1, 27, 580, DateTimeKind.Utc).AddTicks(4851),
+                            FileSize = 10240L,
+                            ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxXUh1O9kqmHicXzEZYoksQl0zKVwNW3KRoI2N39oO3Yyw33D03xmltVXOqTtbTa3gAfU&usqp=CAU",
+                            ProductId = new Guid("8163a18b-a474-4f55-90b2-7d973115177e")
+>>>>>>> feature/manage-accounts
                         });
                 });
 
@@ -380,8 +649,8 @@ namespace GoodsExchange.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Feedback")
                         .IsRequired()
@@ -418,8 +687,8 @@ namespace GoodsExchange.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -491,6 +760,11 @@ namespace GoodsExchange.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
@@ -548,6 +822,7 @@ namespace GoodsExchange.Data.Migrations
                         new
                         {
                             UserId = new Guid("0af02748-9d43-4110-81e5-93d9ece8cfda"),
+<<<<<<< HEAD
                             DateOfBirth = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
                             EmailConfirm = true,
@@ -555,6 +830,16 @@ namespace GoodsExchange.Data.Migrations
                             IsActive = false,
                             LastName = "Admin",
                             Password = "$2a$11$3n8VBhsSYvbFlJocImTa0OQaoHviVdme.fGNN.myxfyPhvmxWT.Ee",
+=======
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(2003, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "minhkhoa@gmail.com",
+                            EmailConfirm = true,
+                            FirstName = "Minh",
+                            IsActive = false,
+                            LastName = "Khoa",
+                            Password = "$2a$11$kqMQMObY.wQ4JS5MStoueOsNoS.0dsSwTR3GUZUJZ0VmElqwG6OxC",
+>>>>>>> feature/manage-accounts
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810"),
                             UserImageUrl = "",
@@ -563,13 +848,22 @@ namespace GoodsExchange.Data.Migrations
                         new
                         {
                             UserId = new Guid("b6b6e80f-cc04-43e3-800f-a3c89b3ba017"),
+<<<<<<< HEAD
                             DateOfBirth = new DateTime(1992, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+=======
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(2003, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+>>>>>>> feature/manage-accounts
                             Email = "phamthanh@gmail.com",
                             EmailConfirm = true,
                             FirstName = "Pham",
                             IsActive = false,
                             LastName = "Thanh",
+<<<<<<< HEAD
                             Password = "$2a$11$16s.JUn1x9C6.5.XuSHMlePEQ4e.Dvi/Cy4s8lasrBIKIgGXZMs5a",
+=======
+                            Password = "$2a$11$5MtHH5pjK63OmvH5eDskmeIGnmf7RkFgKAws/B0FRdqxpHL9HXGEO",
+>>>>>>> feature/manage-accounts
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "",
@@ -578,13 +872,22 @@ namespace GoodsExchange.Data.Migrations
                         new
                         {
                             UserId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54"),
+<<<<<<< HEAD
                             DateOfBirth = new DateTime(1978, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+=======
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(2003, 11, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+>>>>>>> feature/manage-accounts
                             Email = "phuongthao@gmail.com",
                             EmailConfirm = true,
                             FirstName = "Phuong",
                             IsActive = false,
                             LastName = "Thao",
+<<<<<<< HEAD
                             Password = "$2a$11$dYgTcg7hsujA2.P2rBm.EOQKwgYGNNUvv76ey8RnhOG8MaZ8Buuuy",
+=======
+                            Password = "$2a$11$YpV8h6zYlJlDOMSRZkrKauOHPJx2c.evfI.zaqAdb/Y9cWXlszyNS",
+>>>>>>> feature/manage-accounts
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "",
@@ -593,13 +896,22 @@ namespace GoodsExchange.Data.Migrations
                         new
                         {
                             UserId = new Guid("fda6e282-e429-4364-a445-136b570e2fde"),
+<<<<<<< HEAD
                             DateOfBirth = new DateTime(1990, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+=======
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(2003, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+>>>>>>> feature/manage-accounts
                             Email = "quoctrieu@gmail.com",
                             EmailConfirm = true,
                             FirstName = "Quoc",
                             IsActive = false,
                             LastName = "Trieu",
+<<<<<<< HEAD
                             Password = "$2a$11$j4JVrlWNrzA8FmmHIO5dCeaz/rBF8DJXFBzpQ503YHc5wWDCjMzkm",
+=======
+                            Password = "$2a$11$dEzV7FYKYZvICkOXFcMNAuj9qESZrQOZniQ.VqlfKsbDLTjud/olK",
+>>>>>>> feature/manage-accounts
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "",
@@ -608,13 +920,22 @@ namespace GoodsExchange.Data.Migrations
                         new
                         {
                             UserId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13"),
+<<<<<<< HEAD
                             DateOfBirth = new DateTime(1982, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+=======
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(2003, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+>>>>>>> feature/manage-accounts
                             Email = "haugiang@gmail.com",
                             EmailConfirm = true,
                             FirstName = "Hau",
                             IsActive = false,
                             LastName = "Giang",
+<<<<<<< HEAD
                             Password = "$2a$11$LUVYDnjnVLWCsnHxlMEOXef8Rr4VfCyq4EE.kmcKdrnLwhT.trns.",
+=======
+                            Password = "$2a$11$15hGN3pkeLC2fsOcJl.shuCU8KiMEzgOxa0mqLqBTVJpPi6z1jimW",
+>>>>>>> feature/manage-accounts
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "",
