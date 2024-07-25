@@ -35,7 +35,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(PageResult<RatingViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging, [FromQuery]RatingsRequestModel request)
@@ -50,7 +50,7 @@ namespace GoodsExchange.API.Controllers
 
         [HttpPost]
         [Route("send-rating")]
-        [Authorize(Roles = SystemConstant.Roles.Customer)]
+        [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(ResponseModel<RatingViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> SendRating([FromBody] CreateRatingRequestModel request)

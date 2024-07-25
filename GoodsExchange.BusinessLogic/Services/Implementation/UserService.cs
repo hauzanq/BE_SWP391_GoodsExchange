@@ -264,7 +264,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 IsActive = true,
                 EmailConfirm = false,
-                RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.Customer)
+                RoleId = await _serviceWrapper.RoleServices.GetRoleIdOfRoleName(SystemConstant.Roles.User)
             };
 
             var token = GenerateEmailVerificationToken(user.Email);

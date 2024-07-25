@@ -24,7 +24,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(p => p.ApprovedDate).HasColumnType("datetime2");
 
-            builder.Property(p=>p.IsReviewed).HasDefaultValue(false);   
+            builder.Property(p => p.IsReviewed).HasDefaultValue(false);
 
             builder.HasMany(p => p.Reports).WithOne(r => r.Product).HasForeignKey(r => r.ProductId);
 
@@ -32,7 +32,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasOne(p => p.UserUpload).WithMany(u => u.Products).HasForeignKey(p => p.UserUploadId);
 
-            builder.HasMany(p => p.ProductImages).WithOne(pi=>pi.Product).HasForeignKey(p => p.ProductId);
+            builder.HasMany(p => p.ProductImages).WithOne(pi => pi.Product).HasForeignKey(p => p.ProductId);
         }
     }
 }

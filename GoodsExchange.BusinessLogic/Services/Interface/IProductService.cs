@@ -7,21 +7,18 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
 {
     public interface IProductService
     {
-        Task<ResponseModel<ProductViewModel>> CreateProduct(CreateProductRequestModel request);
-        Task<ResponseModel<ProductViewModel>> UpdateProduct(UpdateProductRequestModel request);
-        Task<ResponseModel<bool>> DeleteProduct(Guid id);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetActiveProductsAsync(PagingRequestModel request);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetPendingApprovalProductsAsync(PagingRequestModel request);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetHiddenProductsAsync(PagingRequestModel request);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetSentExchangeRequestsAsync(PagingRequestModel request);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetReceivedExchangeRequestsAsync(PagingRequestModel request);
-        Task<ResponseModel<PageResult<ProductViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request);
-        Task<ResponseModel<ProductDetailsViewModel>> GetProductById(Guid id);
-        Task<ResponseModel<bool>> UpdateProductStatus(Guid id, bool status);
-        Task<ResponseModel<bool>> ApproveProduct(Guid id);
-        Task<ResponseModel<bool>> DenyProduct(Guid id);
+        Task<ResponseModel<ProductListViewModel>> CreateProductAsync(CreateProductRequestModel request);
+        Task<ResponseModel<ProductListViewModel>> UpdateProductAsync(UpdateProductRequestModel request);
+        Task<ResponseModel<bool>> DeleteProductAsync(Guid id);
+        Task<ResponseModel<PageResult<ProductListViewModel>>> GetProducts(PagingRequestModel request, string? keyword, ProductsRequestModel model, string role);
+        Task<ResponseModel<ProductDetailViewModel>> GetProductDetailAsync(Guid id);
+        Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserAsync(PagingRequestModel request);
+        Task<ResponseModel<UserProductDetailViewModel>> GetUserProductDetailAsync(Guid id);
+        Task<ResponseModel<PageResult<UserProductListViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request);
+        Task<ResponseModel<bool>> UpdateProductStatusAsync(Guid id, bool status);
+        Task<ResponseModel<bool>> ApproveProductAsync(Guid id);
+        Task<ResponseModel<bool>> DenyProductAsync(Guid id);
         Task<Product> GetProductAsync(Guid id);
-        Task<bool> IsProductBelongToSeller(Guid productId, Guid sellerId);
+        Task<bool> IsProductBelongToSellerAsync(Guid productId, Guid sellerId);
     }
 }

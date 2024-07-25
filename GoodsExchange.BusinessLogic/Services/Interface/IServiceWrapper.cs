@@ -10,5 +10,7 @@
         public IRoleService RoleServices { get;}
         public IUserService UserServices { get;}
         public IFirebaseStorageService FirebaseStorageServices { get;}
+        public ITransactionService TransactionService { get;}
+        public IPreOrderService PreOrderService { get;}
     }
 }
