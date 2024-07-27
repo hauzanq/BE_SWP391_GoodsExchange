@@ -27,6 +27,7 @@
             public const string Created = "Created";
             public const string Approved = "Approved";
             public const string Complete = "Complete";
+            public const string Cancelled = "Cancelled";
         }
     }
 }

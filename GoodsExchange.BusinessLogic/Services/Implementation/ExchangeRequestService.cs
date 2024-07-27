@@ -37,12 +37,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                     }
                     else
                     {
-                        throw new BadRequestException("No more next status");
+                        throw new BadRequestException("No more next status.");
                     }
                 }
                 else
                 {
-                    throw new BadRequestException("Waiting for sender approve this request");
+                    throw new BadRequestException("Waiting for sender approve this request.");
                 }
             }
             else
@@ -57,11 +57,22 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (request.SenderStatus == 1 && request.ReceiverStatus == 1)
             {
+                request.CurrentProduct.IsActive = false;
+                request.TargetProduct.IsActive = false;
+                request.Status = SystemConstant.ExchangeRequestStatus.Approved;
+            }
+
+            if ((request.SenderStatus == 2 && request.ReceiverStatus == 1) || (request.SenderStatus == 1 && request.ReceiverStatus == 2))
+            {
+                request.CurrentProduct.IsActive = false;
+                request.TargetProduct.IsActive = false;
                 request.Status = SystemConstant.ExchangeRequestStatus.Approved;
             }
 
             if (request.SenderStatus == 2 && request.ReceiverStatus == 2)
             {
+                request.CurrentProduct.IsActive = false;
+                request.TargetProduct.IsActive = false;
                 request.Status = SystemConstant.ExchangeRequestStatus.Complete;
             }
 
@@ -173,13 +184,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                {
                    ExchangeRequestId = ex.ExchangeRequestId,
 
-                   CurrentProductId = ex.CurrentProduct.ProductId,
-                   CurrentProductName = ex.CurrentProduct.ProductName,
-                   CurrentProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   CurrentProductId = ex.TargetProduct.ProductId,
+                   CurrentProductName = ex.TargetProduct.ProductName,
+                   CurrentProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
 
-                   TargetProductId = ex.TargetProduct.ProductId,
-                   TargetProductName = ex.TargetProduct.ProductName,
-                   TargetProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   TargetProductId = ex.CurrentProduct.ProductId,
+                   TargetProductName = ex.CurrentProduct.ProductName,
+                   TargetProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
 
                    ReceiverId = ex.Receiver.UserId,
                    ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
@@ -232,6 +243,29 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async Task<bool> IsProductInExchangeProcessingAsync(Guid productId)
         {
             return await _context.ExchangeRequests.AnyAsync(ex => ex.TargetProductId == productId);
+        }
+
+        public async Task<ResponseModel<ExchangeRequestViewModel>> DenyExchangeAsync(Guid requestid)
+        {
+            var request = await _context.ExchangeRequests.Include(ex => ex.CurrentProduct)
+                                              .Include(ex => ex.TargetProduct)
+                                              .Include(ex => ex.Sender)
+                                              .Include(ex => ex.Receiver)
+                                              .Where(ex => ex.ExchangeRequestId == requestid).FirstOrDefaultAsync();
+            if (request == null)
+            {
+                throw new NotFoundException("This request does not exist.");
+            }
+            // Change status for exhchange request
+            request.Status = SystemConstant.ExchangeRequestStatus.Cancelled;
+
+            // Enable product while deny exchange request
+            request.CurrentProduct.IsActive = true;
+            request.TargetProduct.IsActive = true;
+
+            await _context.SaveChangesAsync();
+
+            return new ResponseModel<ExchangeRequestViewModel>("Deny exchange successfully.");
         }
     }
 }
