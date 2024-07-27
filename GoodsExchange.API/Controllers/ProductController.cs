@@ -51,7 +51,7 @@ namespace GoodsExchange.API.Controllers
         }
 
 
-        [HttpPost("user/products")]
+        [HttpPost("user")]
         [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(PageResult<ProductListViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]

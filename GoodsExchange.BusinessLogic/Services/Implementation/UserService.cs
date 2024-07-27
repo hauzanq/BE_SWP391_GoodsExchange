@@ -131,10 +131,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ResponseModel<PageResult<AdminUserViewModel>>> GetUsersAsync(PagingRequestModel paging, string keyword, UsersRequestModel model)
         {
-            var query = _context.Users
-                                .Include(u => u.Role)
-                                .Where(u => u.Role.RoleName == SystemConstant.Roles.Moderator)
-                                .AsQueryable();
+            var query = _context.Users.Include(u => u.Role).AsQueryable();
 
             #region Searching
             if (!string.IsNullOrEmpty(keyword))
@@ -190,7 +187,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var totalItems = await query.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalItems / paging.PageSize);
 
-            var data = await query.Select(u => new AdminUserViewModel()
+            var data = await query.Skip((paging.PageIndex - 1) * paging.PageSize).Take(paging.PageSize).Select(u => new AdminUserViewModel()
             {
                 UserId = u.UserId,
                 FirstName = u.FirstName,
