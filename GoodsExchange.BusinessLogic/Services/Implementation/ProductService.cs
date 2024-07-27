@@ -87,7 +87,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 ProductName = request.ProductName,
                 Description = request.Description,
-                Price = request.Price,
                 IsActive = true,
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
@@ -106,7 +105,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
-                Price = product.Price,
                 IsActive = product.IsActive,
                 UserUpload = user.UserName,
                 IsApproved = product.IsApproved,
@@ -161,14 +159,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 query = query.Where(p => p.ProductName.Contains(model.ProductName));
             }
-            if (model.MinPrice != null)
-            {
-                query = query.Where(p => p.Price >= model.MinPrice);
-            }
-            if (model.MaxPrice != null)
-            {
-                query = query.Where(p => p.Price <= model.MaxPrice);
-            }
             if (model.StartUploadDate != null)
             {
                 query = query.Where(p => p.UploadDate >= model.StartUploadDate);
@@ -202,19 +192,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 query = query.OrderByDescending(p => p.ProductName);
             }
 
-
-            if (model.MinPrice.HasValue && model.MaxPrice.HasValue)
-            {
-                if (model.MinPrice.Value <= model.MaxPrice.Value)
-                {
-                    query = query.OrderBy(p => p.Price);
-                }
-                else
-                {
-                    query = query.OrderByDescending(p => p.Price);
-                }
-            }
-
             #endregion
 
             if (role == SystemConstant.Roles.Guest)
@@ -243,7 +220,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     ProductId = product.ProductId,
                                     ProductName = product.ProductName,
                                     Description = product.Description,
-                                    Price = product.Price,
                                     IsActive = product.IsActive,
                                     IsApproved = product.IsApproved,
                                     IsReviewed = product.IsReviewed,
@@ -279,12 +255,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new UnauthorizedException("You do not have permission to update this product.");
             }
 
-            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.ProductName == request.ProductName);
-            if (existingProduct != null)
-            {
-                throw new BadRequestException("Product name already exists.");
-            }
-
             var category = await _serviceWrapper.CategoryServices.GetById(request.CategoryId.Value);
             if (category == null)
             {
@@ -292,7 +262,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
             product.ProductName = request.ProductName;
             product.Description = request.Description;
-            product.Price = request.Price.Value;
             product.CategoryId = request.CategoryId.Value;
 
             await _context.SaveChangesAsync();
@@ -302,7 +271,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
-                Price = product.Price,
                 IsActive = product.IsActive,
                 IsReviewed = product.IsReviewed,
                 IsApproved = product.IsApproved,
@@ -345,7 +313,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var result = new ProductDetailViewModel()
             {
                 ProductName = product.ProductName,
-                Price = product.Price,
                 Description = product.Description,
                 ApprovedDate = product.ApprovedDate,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
@@ -362,7 +329,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
         public async Task<Product> GetProductAsync(Guid id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+            var product = await _context.Products.Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
                 throw new NotFoundException("Product does not exist.");
@@ -390,14 +357,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return SystemConstant.ProductStatus.ExchangeSuccessful;
             }
 
-            if (await _serviceWrapper.PreOrderService.IsProductInPreOrderAsync(productId))
+            if (await _serviceWrapper.ExchangeRequestService.IsProductInExchangeProcessingAsync(productId))
             {
                 return SystemConstant.ProductStatus.AreExchanging;
-            }
-
-            if (product.IsActive)
-            {
-                return SystemConstant.ProductStatus.IsShowing;
             }
 
             if (!product.IsActive)
@@ -420,9 +382,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserAsync(PagingRequestModel request)
         {
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
             var query = _context.Products.Include(p => p.ProductImages)
                                        .Include(p => p.UserUpload)
                                        .Include(p => p.Category)
+                                       .Where(p => p.UserUploadId == user.UserId)
                                        .AsQueryable();
 
             var numbers = await query.CountAsync();
@@ -444,7 +410,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                     ProductId = product.ProductId,
                     ProductName = product.ProductName,
                     Description = product.Description,
-                    Price = product.Price,
                     Status = status,
                     UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
                     ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
@@ -485,12 +450,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var result = new UserProductDetailViewModel()
             {
                 ProductName = product.ProductName,
-                Price = product.Price,
                 Description = product.Description,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 CategoryName = product.Category.CategoryName,
-                SentRequests = await _serviceWrapper.PreOrderService.GetSentExchangeRequestsByProductIdAsync(product.ProductId),
-                ReceivedRequests = await _serviceWrapper.PreOrderService.GetReceivedExchangeRequestsByProductIdAsync(product.ProductId)
+                SentRequests = await _serviceWrapper.ExchangeRequestService.GetSentExchangeRequestsAsync(),
+                ReceivedRequests = await _serviceWrapper.ExchangeRequestService.GetReceivedExchangeRequestsAsync()
             };
 
             return new ResponseModel<UserProductDetailViewModel>("The product details were retrieved successfully.", result);

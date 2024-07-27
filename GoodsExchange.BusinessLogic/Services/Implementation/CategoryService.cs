@@ -27,6 +27,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var result = new CategoryViewModel()
             {
+                CategoryId = category.CategoryId,
                 CategoryName = category.CategoryName,
             };
             return new ResponseModel<CategoryViewModel>("The category was created successfully.", result);
@@ -74,7 +75,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductName = product.ProductName,
                 //ProductImageUrl = product.ProductImageUrl,
                 Description = product.Description,
-                Price = product.Price,
                 ApprovedDate = product.ApprovedDate,
                 UserUploadId = product.UserUploadId,
 

@@ -16,11 +16,11 @@ namespace GoodsExchange.API.Controllers
 
     public class CategoryController : ControllerBase
     {
-        private ICategoryService _categoryService;
+        private readonly IServiceWrapper _serviceWrapper;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(IServiceWrapper serviceWrapper)
         {
-            _categoryService = categoryService;
+            _serviceWrapper = serviceWrapper;
         }
 
         [HttpPost]
@@ -33,7 +33,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.CreateCategory(request);
+            var result = await _serviceWrapper.CategoryServices.CreateCategory(request);
             return Ok(result);
         }
 
@@ -46,7 +46,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.GetCategories();
+            var result = await _serviceWrapper.CategoryServices.GetCategories();
             return Ok(result);
         }
 
@@ -55,7 +55,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
         {
-            var result = await _categoryService.GetById(id);
+            var result = await _serviceWrapper.CategoryServices.GetById(id);
             return Ok(result);
         }
 
@@ -65,7 +65,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<bool>> DeleteCategory(Guid id)
         {
-            var result = await _categoryService.DeleteCategory(id);
+            var result = await _serviceWrapper.CategoryServices.DeleteCategory(id);
             return Ok(result);
         }
 
@@ -80,7 +80,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.UpdateCategory(request);
+            var result = await _serviceWrapper.CategoryServices.UpdateCategory(request);
             return Ok(result);
         }
     }

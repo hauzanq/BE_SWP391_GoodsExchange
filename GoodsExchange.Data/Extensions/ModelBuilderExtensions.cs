@@ -30,6 +30,9 @@ namespace GoodsExchange.Data.Extensions
             #endregion
 
             #region Users
+
+            var avatar = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1";
+
             builder.Entity<User>().HasData
                 (
                     new User()
@@ -40,7 +43,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "minhkhoa@gmail.com",
                         DateOfBirth = new DateTime(2003, 6, 15),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "admin",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("E398CEE3-6381-4A52-AAF5-20A2E9B54810"),
@@ -54,7 +57,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "phamthanh@gmail.com",
                         DateOfBirth = new DateTime(2003, 3, 10),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "moderator",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
@@ -68,7 +71,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "phuongthao@gmail.com",
                         DateOfBirth = new DateTime(2003, 11, 22),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "phuongthao",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -82,7 +85,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "quoctrieu@gmail.com",
                         DateOfBirth = new DateTime(2003, 7, 1),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "quoctrieu",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -96,7 +99,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "haugiang@gmail.com",
                         DateOfBirth = new DateTime(2003, 4, 30),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "haugiang",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -110,7 +113,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "minhphuoc@gmail.com",
                         DateOfBirth = new DateTime(2003, 4, 30),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "minhphuoc",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -124,7 +127,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "haugiang01@gmail.com",
                         DateOfBirth = new DateTime(2003, 4, 30),
                         PhoneNumber = "0123456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "haugiang45",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -138,7 +141,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "minhtran@gmail.com",
                         DateOfBirth = new DateTime(1995, 1, 15),
                         PhoneNumber = "0987654321",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "minhtran",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -152,7 +155,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "thaonguyen@gmail.com",
                         DateOfBirth = new DateTime(2000, 12, 5),
                         PhoneNumber = "0912345678",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "thaonguyen",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -166,7 +169,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "anhpham@gmail.com",
                         DateOfBirth = new DateTime(1998, 7, 23),
                         PhoneNumber = "0908765432",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "anhpham",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -180,7 +183,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "namle@gmail.com",
                         DateOfBirth = new DateTime(1996, 11, 30),
                         PhoneNumber = "0901234567",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "namle",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -194,7 +197,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "lanhoang@gmail.com",
                         DateOfBirth = new DateTime(1999, 3, 14),
                         PhoneNumber = "0934567890",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "lanhoang",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -208,7 +211,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "tudo@gmail.com",
                         DateOfBirth = new DateTime(2002, 5, 18),
                         PhoneNumber = "0981234567",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "tudo",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -222,7 +225,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "quynhphan@gmail.com",
                         DateOfBirth = new DateTime(2001, 9, 21),
                         PhoneNumber = "0908761234",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "quynhphan",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -236,7 +239,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "huongtrinh@gmail.com",
                         DateOfBirth = new DateTime(1997, 6, 27),
                         PhoneNumber = "0937894561",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "huongtrinh",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -250,7 +253,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "khangvo@gmail.com",
                         DateOfBirth = new DateTime(2004, 8, 10),
                         PhoneNumber = "0923456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "khangvo",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("D81F428F-9572-47F1-A980-69DE7A1E348B"),
@@ -264,7 +267,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "nguyenvana@gmail.com",
                         DateOfBirth = new DateTime(2002, 5, 20),
                         PhoneNumber = "0902345678",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "nguyenvana",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
@@ -278,7 +281,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "lethib@gmail.com",
                         DateOfBirth = new DateTime(2001, 8, 14),
                         PhoneNumber = "0903456789",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "lethib",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
@@ -292,7 +295,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "tranvanc@gmail.com",
                         DateOfBirth = new DateTime(2000, 12, 1),
                         PhoneNumber = "0904567890",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "tranvanc",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
@@ -306,7 +309,7 @@ namespace GoodsExchange.Data.Extensions
                         Email = "phamthid@gmail.com",
                         DateOfBirth = new DateTime(2003, 11, 30),
                         PhoneNumber = "0905678901",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "phamthid",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
@@ -320,14 +323,12 @@ namespace GoodsExchange.Data.Extensions
                         Email = "dovane@gmail.com",
                         DateOfBirth = new DateTime(2004, 3, 10),
                         PhoneNumber = "0906789012",
-                        UserImageUrl = "",
+                        UserImageUrl = avatar,
                         UserName = "dovane",
                         Password = BCrypt.Net.BCrypt.HashPassword("123456"),
                         RoleId = new Guid("3D446530-061E-4A88-AE6C-1B6A6190A693"),
                         EmailConfirm = true
                     }
-
-
                 );
 
             #endregion
@@ -436,7 +437,6 @@ namespace GoodsExchange.Data.Extensions
                 var categoryId = categoryIds[i % categoryIds.Count];
                 var userUploadId = userUploadIds[i % userUploadIds.Length];
                 var imagePath = images[i % images.Length];
-                var price = (float)(minPrice + random.NextDouble() * (maxPrice - minPrice));
                 var descriptionIndex = random.Next(descriptions.Count);
                 var nameIndex = random.Next(productNames.Count);
 
@@ -445,11 +445,11 @@ namespace GoodsExchange.Data.Extensions
                     ProductId = productId,
                     ProductName = productNames[nameIndex],
                     Description = descriptions[descriptionIndex],
-                    Price = price,
                     IsActive = true,
                     UploadDate = DateTime.UtcNow,
                     UserUploadId = userUploadId,
                     IsApproved = true,
+                    IsReviewed = true,
                     ApprovedDate = DateTime.UtcNow,
                     CategoryId = categoryId
                 });

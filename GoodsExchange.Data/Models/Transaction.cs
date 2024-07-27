@@ -3,7 +3,7 @@
     public class Transaction
     {
         public Guid TransactionId { get; set; }
-        public Guid PreOrderId { get; set; }
-        public PreOrder PreOrder { get; set; }
+        public Guid ExchangeRequestId { get; set; }
+        public ExchangeRequest ExchangeRequest { get; set; }
     }
 }
