@@ -29,7 +29,21 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             if (user.UserId == request.SenderId)
             {
-                request.SenderStatus += 1;
+                if (request.ReceiverStatus != 0)
+                {
+                    if (request.SenderStatus < 2)
+                    {
+                        request.SenderStatus += 1;
+                    }
+                    else
+                    {
+                        throw new BadRequestException("No more next status");
+                    }
+                }
+                else
+                {
+                    throw new BadRequestException("Waiting for sender approve this request");
+                }
             }
             else
             {
@@ -92,6 +106,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("The product does not exist.");
             }
 
+            if (_context.ExchangeRequests.Any(ex => ex.TargetProductId == request.TargetProductId))
+            {
+                throw new BadRequestException("The request to exchange this product have created.");
+            }
+
             var sender = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
             var receiver = await _serviceWrapper.UserServices.GetUserByProductId(targetProduct.ProductId);
 
@@ -109,6 +128,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             await _context.ExchangeRequests.AddAsync(exchange);
             await _context.SaveChangesAsync();
+
+
 
             var data = new ExchangeRequestViewModel()
             {
@@ -130,6 +151,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                 UserImage = receiver.UserImageUrl
             };
+
+            await _serviceWrapper.EmailServices.SendMailForExchangeRequest(receiver.Email, data);
 
             return new ResponseModel<ExchangeRequestViewModel>("The exchange request was created successfully.", data);
         }

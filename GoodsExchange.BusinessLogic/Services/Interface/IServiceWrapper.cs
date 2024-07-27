@@ -3,6 +3,7 @@
     public interface IServiceWrapper
     {
         public ICategoryService CategoryServices { get;}
+        public IEmailHelperService EmailHelperServices { get;}
         public IEmailService EmailServices { get;}
         public IProductService ProductServices { get;}
         public IRatingService RatingServices { get;}
