@@ -127,7 +127,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPost]
-        [Route("list-moderators")]
+        [Route("list-users")]
         [Authorize(Roles = SystemConstant.Roles.Administrator)]
         [ProducesResponseType(typeof(PageResult<AdminUserViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]

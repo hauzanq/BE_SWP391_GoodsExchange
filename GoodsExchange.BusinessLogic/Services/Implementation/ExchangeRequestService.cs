@@ -84,6 +84,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var status = await GetStatusOfExchangeRequest(request);
 
+            request.DateCreated = DateTime.Now;
+
             if (status == SystemConstant.ExchangeRequestStatus.Complete)
             {
                 await _serviceWrapper.TransactionService.CreateTransactionAsync(request.ExchangeRequestId);
