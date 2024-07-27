@@ -2,7 +2,6 @@
 using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Role;
-using GoodsExchange.Data.Context;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -12,14 +11,12 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/roles")]
     public class RoleController : ControllerBase
     {
-        private readonly IRoleService _roleService;
-
-        public RoleController(IRoleService roleService)
+        private readonly IServiceWrapper _serviceWrapper;
+        public RoleController(IServiceWrapper serviceWrapper)
         {
-            _roleService = roleService;
+            _serviceWrapper = serviceWrapper;
         }
 
-        // GET: api/Role
         [HttpGet]
         [ProducesResponseType(typeof(ResponseModel<PageResult<RoleViewModel>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
@@ -29,11 +26,8 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _roleService.GetAllRole();
+            var result = await _serviceWrapper.RoleServices.GetAllRole();
             return Ok(result);
         }
-
-     
-      
     }
 }

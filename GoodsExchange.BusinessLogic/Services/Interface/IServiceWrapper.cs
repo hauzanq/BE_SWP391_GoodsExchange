@@ -11,6 +11,6 @@
         public IUserService UserServices { get;}
         public IFirebaseStorageService FirebaseStorageServices { get;}
         public ITransactionService TransactionService { get;}
-        public IPreOrderService PreOrderService { get;}
+        public IExchangeRequestService ExchangeRequestService { get;}
     }
 }

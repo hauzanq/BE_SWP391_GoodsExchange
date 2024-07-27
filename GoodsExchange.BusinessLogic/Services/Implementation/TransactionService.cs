@@ -18,7 +18,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             var transaction = new Transaction()
             {
-                PreOrderId = preorderid
+                ExchangeRequestId = preorderid
             };
 
             await _context.Transactions.AddAsync(transaction);
@@ -28,8 +28,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         public async Task<bool> IsProductInTransactionAsync(Guid productId)
         {
             return await _context.Transactions
-                                 .Include(t => t.PreOrder)
-                                 .AnyAsync(t => t.PreOrder.TargetProductId == productId);
+                                 .Include(t => t.ExchangeRequest)
+                                 .AnyAsync(t => t.ExchangeRequest.TargetProductId == productId);
         }
     }
 }

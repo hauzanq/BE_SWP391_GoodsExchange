@@ -6,7 +6,6 @@
         public string ProductName { get; set; }
         public string Description { get; set; }
         public List<string> ProductImageUrl { get; set; }
-        public float Price { get; set; }
         public string Status { get; set; }
         public string UserUpload { get; set; }
         public DateTime UploadDate { get; set; }

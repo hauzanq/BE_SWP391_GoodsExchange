@@ -15,13 +15,18 @@
         }
         public sealed class ProductStatus
         {
-            public const string IsShowing = "Is showing";
             public const string AwaitingApproval = "Awaiting approval";
             public const string Approved = "Approved";
             public const string Rejected = "Rejected";
             public const string Hidden = "Hidden";
             public const string AreExchanging = "Exchange is in progress";
             public const string ExchangeSuccessful = "Exchange successful";
+        }
+        public sealed class ExchangeRequestStatus
+        {
+            public const string Created = "Created";
+            public const string Approved = "Approved";
+            public const string Complete = "Complete";
         }
     }
 }

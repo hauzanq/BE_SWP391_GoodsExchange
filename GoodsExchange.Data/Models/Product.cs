@@ -5,8 +5,6 @@
         public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
-        public float Price { get; set; }
-        public float MaxPriceDifference { get; set; }
         public bool IsActive { get; set; }
         public DateTime UploadDate { get; set; }
         public Guid UserUploadId { get; set; }
@@ -19,7 +17,7 @@
         public Rating Rate { get; set; }
         public List<Report> Reports { get; set; }
         public List<ProductImage> ProductImages { get; set; }
-        public List<PreOrder> ExchangeRequestsSent { get; set; }
-        public List<PreOrder> ExchangeRequestsReceived { get; set; }
+        public List<ExchangeRequest> ExchangeRequestsSent { get; set; }
+        public List<ExchangeRequest> ExchangeRequestsReceived { get; set; }
     }
 }

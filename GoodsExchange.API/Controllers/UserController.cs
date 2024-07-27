@@ -20,12 +20,11 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IServiceWrapper _serviceWrapper;
         private readonly IConfiguration _configuration;
-
-        public UserController(IUserService userService, IConfiguration configuration)
+        public UserController(IServiceWrapper serviceWrapper, IConfiguration configuration)
         {
-            _userService = userService;
+            _serviceWrapper = serviceWrapper;
             _configuration = configuration;
         }
 
@@ -41,7 +40,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.Login(request);
+            var result = await _serviceWrapper.UserServices.Login(request);
 
             return Ok(result);
         }
@@ -58,7 +57,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.Register(request);
+            var result = await _serviceWrapper.UserServices.Register(request);
             return Ok(result);
         }
 
@@ -74,7 +73,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.CreateAccountByAdmin(request);
+            var result = await _serviceWrapper.UserServices.CreateAccountByAdmin(request);
             return Ok(result);
         }
 
@@ -85,7 +84,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            var result = await _userService.GetUserByIdAsync(id);
+            var result = await _serviceWrapper.UserServices.GetUserByIdAsync(id);
             return Ok(result);
         }
 
@@ -101,7 +100,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userService.UpdateUserAsync(request);
+            var result = await _serviceWrapper.UserServices.UpdateUserAsync(request);
             return Ok(result);
         }
 
@@ -112,18 +111,18 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequestModel request)
         {
-            var result = await _userService.ChangePasswordAsync(request);
+            var result = await _serviceWrapper.UserServices.ChangePasswordAsync(request);
             return Ok(result);
         }
 
         [HttpPatch]
         [Route("status/{id}")]
-        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [Authorize(Roles = SystemConstant.Roles.Administrator)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ChangeUserStatus(Guid id, bool status)
         {
-            var result = await _userService.ChangeUserStatusAsync(id, status);
+            var result = await _serviceWrapper.UserServices.ChangeUserStatusAsync(id, status);
             return Ok(result);
         }
 
@@ -134,7 +133,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] string? keyword, [FromQuery] UsersRequestModel model)
         {
-            var result = await _userService.GetUsersAsync(paging, keyword, model);
+            var result = await _serviceWrapper.UserServices.GetUsersAsync(paging, keyword, model);
             return Ok(result);
         }
 

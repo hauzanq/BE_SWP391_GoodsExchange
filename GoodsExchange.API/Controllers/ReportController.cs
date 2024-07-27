@@ -15,10 +15,11 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/reports")]
     public class ReportController : ControllerBase
     {
-        private readonly IReportService _reportService;
-        public ReportController(IReportService reportService)
+        private readonly IServiceWrapper _serviceWrapper;
+
+        public ReportController(IServiceWrapper serviceWrapper)
         {
-            _reportService = reportService;
+            _serviceWrapper = serviceWrapper;
         }
 
         [HttpPost]
@@ -33,7 +34,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _reportService.SendReport(request);
+            var result = await _serviceWrapper.ReportServices.SendReport(request);
             return Ok(result);
         }
 
@@ -49,7 +50,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _reportService.GetReports(paging, request);
+            var result = await _serviceWrapper.ReportServices.GetReports(paging, request);
             return Ok(result);
         }
 
@@ -60,7 +61,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _reportService.GetById(id);
+            var result = await _serviceWrapper.ReportServices.GetById(id);
             return Ok(result);
         }
 
@@ -71,7 +72,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveReport(Guid id)
         {
-            var result = await _reportService.ApproveReport(id);
+            var result = await _serviceWrapper.ReportServices.ApproveReport(id);
             return Ok(result);
         }
 
@@ -82,7 +83,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DenyReport(Guid id)
         {
-            var result = await _reportService.DenyReport(id);
+            var result = await _serviceWrapper.ReportServices.DenyReport(id);
             return Ok(result);
         }
     }

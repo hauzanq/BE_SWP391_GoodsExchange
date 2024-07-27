@@ -151,14 +151,14 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
         }
 
-        private IPreOrderService _preOrderService;
-        public IPreOrderService PreOrderService
+        private IExchangeRequestService _preOrderService;
+        public IExchangeRequestService ExchangeRequestService
         {
             get
             {
                 if (_preOrderService is null)
                 {
-                    _preOrderService = new PreOrderService(_context, _httpContextAccessor, this);
+                    _preOrderService = new ExchangeRequestService(_context, _httpContextAccessor, this);
                 }
                 return _preOrderService;
             }

@@ -15,11 +15,11 @@ namespace GoodsExchange.API.Controllers
     [Route("/api/v1/ratings")]
     public class RatingController : ControllerBase
     {
-        private readonly IRatingService _ratingService;
+        private readonly IServiceWrapper _serviceWrapper;
 
-        public RatingController(IRatingService ratingService)
+        public RatingController(IServiceWrapper serviceWrapper)
         {
-            _ratingService = ratingService;
+            _serviceWrapper = serviceWrapper;
         }
 
         [HttpGet]
@@ -29,7 +29,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _ratingService.GetRatingById(id);
+            var result = await _serviceWrapper.RatingServices.GetRatingById(id);
             return Ok(result);
         }
 
@@ -44,7 +44,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _ratingService.GetRatings(paging, request);
+            var result = await _serviceWrapper.RatingServices.GetRatings(paging, request);
             return Ok(result);
         }
 
@@ -59,7 +59,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _ratingService.SendRating(request);
+            var result = await _serviceWrapper.RatingServices.SendRating(request);
             return Ok(result);
         }
     }

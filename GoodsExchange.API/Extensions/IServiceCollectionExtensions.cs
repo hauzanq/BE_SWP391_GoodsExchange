@@ -78,26 +78,8 @@ namespace GoodsExchange.API.Extensions
         public static IServiceCollection RegisterService(this IServiceCollection services)
         {
             services.AddScoped<IServiceWrapper, ServiceWrapper>();
-            
-            services.AddScoped<IFirebaseStorageService, FirebaseStorageService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.AddTransient<IEmailService, EmailService>();
-
-            services.AddScoped<IEmailTemplateHelper, EmailHelperService>();
-
-            services.AddScoped<IUserService, UserService>();
-
-            services.AddScoped<ICategoryService, CategoryService>();
-
-            services.AddScoped<IProductService, ProductService>();
-
-            services.AddScoped<IRatingService, RatingService>();
-
-            services.AddScoped<IReportService, ReportService>();
-
-            services.AddScoped<IRoleService, RoleService>();
 
             return services;
         }

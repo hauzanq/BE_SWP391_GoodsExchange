@@ -14,8 +14,6 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(p => p.Description).HasMaxLength(500).IsRequired();
 
-            builder.Property(p => p.Price).IsRequired();
-
             builder.Property(p => p.IsActive).IsRequired();
 
             builder.Property(p => p.UploadDate).HasColumnType("datetime2");
