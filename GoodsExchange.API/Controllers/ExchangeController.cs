@@ -42,6 +42,17 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("deny-request")]
+        [Authorize(Roles = SystemConstant.Roles.User)]
+        [ProducesResponseType(typeof(ResponseModel<ExchangeRequestViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DenyExchangeAsync(Guid requestid)
+        {
+            var result = await _service.ExchangeRequestService.DenyExchangeAsync(requestid);
+            return Ok(result);
+        }
+
         [HttpGet]
         [Route("send-request-list")]
         [Authorize(Roles = SystemConstant.Roles.User)]
