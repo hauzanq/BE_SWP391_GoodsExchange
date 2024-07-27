@@ -1,15 +1,8 @@
-﻿using GoodsExchange.BusinessLogic.Common;
-using GoodsExchange.BusinessLogic.RequestModels.Email;
-using GoodsExchange.BusinessLogic.Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GoodsExchange.BusinessLogic.Services.Interface;
 
 namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
-    public class EmailHelperService : IEmailTemplateHelper
+    public class EmailHelperService : IEmailHelperService
     {
         private  string FOLDER = "EmailTemplates";
         private  readonly string REGISTER_TEMPLATE_FILE = "RegisterConfirm.html";
@@ -18,6 +11,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         private  readonly string CONFIRM_RESET_PASSWORD_TEMPLATE_FILE = "ConfirmResetPassword.html";
 
         private  readonly string NEWPASSWORD_TEMPLATE_FILE = "NewPasswordTemplate.html";
+        private  readonly string EXCHANGE_REQUEST_TEMPLATE_FILE = "ExchangeRequestTemplate.html";
 
         public string REGISTER_TEMPLATE(string rootPath)
         {
@@ -58,32 +52,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return GetTemplate(rootPath, UPDATE_TEMPLATE_FILE);
         }
 
-        //public Task<ApiResult<string>> GetTemplate(EmailHelperRequestModel request)
-        //{
-        //    string templatePath = Path.Combine(request.RootPath, FOLDER, request.templateFile);
-        //    try
-        //    {
-        //        using (var streamReader = File.OpenText(request.templateFile))
-        //        {
-        //            string content = streamReader.ReadToEnd();
-
-        //            return new Task<ApiSuccessResult<string>>(content);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new Task<ApiErrorResult<string>>(string.Empty);
-        //    }
-
-        //}
-
-        //public Task<ApiResult<string>> REGISTER_TEMPLATE(string rootPath)
-        //{
-        //   return 
-        //}
-
-
-
-
+        public string EXCHANGE_REQUEST_TEMPLATE(string rootPath)
+        {
+            return GetTemplate(rootPath, EXCHANGE_REQUEST_TEMPLATE_FILE);
+        }
     }
 }

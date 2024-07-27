@@ -15,17 +15,19 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOptions<EmailSettings> _emailSettings;
         private readonly IConfiguration _configuration;
-
+        private IWebHostEnvironment _webHostEnvironment;
+        private readonly IServer _server;
         public ServiceWrapper(GoodsExchangeDbContext context,
             IHttpContextAccessor httpContextAccessor,
             IOptions<EmailSettings> emailSettings,
-            IConfiguration configuration
-            )
+            IConfiguration configuration,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _emailSettings = emailSettings;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         private ICategoryService _categoryService;
@@ -41,18 +43,30 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
         }
 
-        private IEmailService _emailService;
-        private IEmailTemplateHelper _emailTemplateHelper;
-        private IWebHostEnvironment _webHostEnvironment;
-        private readonly IServer _server;
+        private IEmailHelperService _emailTemplateHelper;
 
+        public IEmailHelperService EmailHelperServices
+        {
+            get
+            {
+                if (_emailTemplateHelper is null)
+                {
+                    _emailTemplateHelper = new EmailHelperService();
+                }
+                return _emailTemplateHelper;
+            }
+        }
+        
+        
+
+        private IEmailService _emailService;
         public IEmailService EmailServices
         {
             get
             {
                 if (_emailService is null)
                 {
-                    _emailService = new EmailService(_emailSettings, _emailTemplateHelper, _webHostEnvironment, _server);
+                    _emailService = new EmailService(_emailSettings, this, _webHostEnvironment, _server);
                 }
                 return _emailService;
             }
@@ -163,5 +177,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return _preOrderService;
             }
         }
+
+       
     }
 }

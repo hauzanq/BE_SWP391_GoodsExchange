@@ -10,7 +10,7 @@ using System.Net;
 
 namespace GoodsExchange.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/exchanges")]
     [ApiController]
     public class ExchangeController : ControllerBase
     {
