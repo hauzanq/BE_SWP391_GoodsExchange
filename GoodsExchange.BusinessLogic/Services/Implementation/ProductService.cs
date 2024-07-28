@@ -143,6 +143,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                         .Include(p => p.UserUpload)
                                         .Include(p => p.Category)
                                         .Where(p => p.UserUpload.IsActive == true)
+                                         .AsNoTracking()
                                         .AsQueryable();
 
 
@@ -198,12 +199,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 query = query.Where(p => p.IsApproved == true);
             }
-
-            if (role == SystemConstant.Roles.Moderator)
-            {
-                query = query.Where(p => p.IsApproved == false && p.IsReviewed == false);
-            }
-
             if (role == SystemConstant.Roles.Moderator)
             {
                 query = query.Where(p => p.IsApproved == false && p.IsReviewed == false);
@@ -224,13 +219,17 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     IsApproved = product.IsApproved,
                                     IsReviewed = product.IsReviewed,
                                     UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                                    UserUploadId = product.UserUpload.UserId,
                                     ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                                     UploadDate = product.UploadDate,
                                     ApprovedDate = product.ApprovedDate,
                                     CategoryName = product.Category.CategoryName
                                 })
                                 .ToListAsync();
-
+            foreach (var product in data)
+            {
+                product.AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(product.UserUploadId);
+            }
             var result = new PageResult<ProductListViewModel>()
             {
                 Items = data,
