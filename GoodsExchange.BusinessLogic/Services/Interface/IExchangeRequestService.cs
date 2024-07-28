@@ -11,6 +11,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<ExchangeRequestViewModel>> DenyExchangeAsync(Guid requestid);
         Task<List<ExchangeRequestViewModel>> GetSentExchangeRequestsAsync();
         Task<List<ExchangeRequestViewModel>> GetReceivedExchangeRequestsAsync();
+        Task<List<ExchangeRequestViewModel>> GetCancelledExchangeRequestsAsync();
         Task<bool> IsProductInExchangeProcessingAsync(Guid productId);
     }
 }

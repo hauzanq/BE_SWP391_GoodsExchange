@@ -18,5 +18,9 @@
         public Guid TargetProductId { get; set; }
         public string TargetProductName { get; set; }
         public string TargetProductImage { get; set; }
+
+        public string Status { get; set; }
+        public int SenderStatus { get; set; }
+        public int ReceiverStatus { get; set; }
     }
 }
