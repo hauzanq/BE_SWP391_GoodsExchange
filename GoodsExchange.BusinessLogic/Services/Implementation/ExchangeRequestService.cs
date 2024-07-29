@@ -280,13 +280,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<ExchangeRequestViewModel>("Deny exchange successfully.");
         }
 
-        public async Task<List<ExchangeRequestViewModel>> GetCancelledExchangeRequestsAsync()
+        public async Task<List<ExchangeRequestViewModel>> GetStatusExchangeRequestsAsync()
         {
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
             var result = await _context.ExchangeRequests
                 .Where(ex => ex.SenderId == user.UserId || ex.ReceiverId == user.UserId)
-                .Where(ex => ex.Status == SystemConstant.ExchangeRequestStatus.Cancelled)
                 .Include(ex => ex.CurrentProduct)
                 .Include(ex => ex.TargetProduct)
                 .Include(ex => ex.Sender)
