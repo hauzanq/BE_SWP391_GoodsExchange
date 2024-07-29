@@ -24,159 +24,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-
-
-        public async Task<ResponseModel<ExchangeRequestViewModel>> SendExchangeRequestAsync(CreateExchangeRequestModel request)
-        {
-            var currentProduct = await _serviceWrapper.ProductServices.GetProductAsync(request.CurrentProductId);
-            if (currentProduct == null)
-            {
-                throw new NotFoundException("The product does not exist.");
-            }
-
-            var targetProduct = await _serviceWrapper.ProductServices.GetProductAsync(request.TargetProductId);
-            if (targetProduct == null)
-            {
-                throw new NotFoundException("The product does not exist.");
-            }
-
-            if (_context.ExchangeRequests.Any(ex => ex.TargetProductId == request.TargetProductId))
-            {
-                throw new BadRequestException("The request to exchange this product have created.");
-            }
-
-            var sender = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-            var receiver = await _serviceWrapper.UserServices.GetUserByProductId(targetProduct.ProductId);
-
-            var exchange = new ExchangeRequest()
-            {
-                SenderId = sender.UserId,
-                SenderStatus = 1,
-                CurrentProductId = currentProduct.ProductId,
-                ReceiverId = receiver.UserId,
-                ReceiverStatus = 0,
-                TargetProductId = targetProduct.ProductId,
-                DateCreated = DateTime.Now,
-                Status = SystemConstant.ExchangeRequestStatus.Created
-            };
-
-            await _context.ExchangeRequests.AddAsync(exchange);
-            await _context.SaveChangesAsync();
-
-
-
-            var data = new ExchangeRequestViewModel()
-            {
-                ExchangeRequestId = exchange.ExchangeRequestId,
-
-                CurrentProductId = currentProduct.ProductId,
-                CurrentProductName = currentProduct.ProductName,
-                CurrentProductImage = currentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                TargetProductId = targetProduct.ProductId,
-                TargetProductName = targetProduct.ProductName,
-                TargetProductImage = targetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                ReceiverId = receiver.UserId,
-                ReceiverName = receiver.FirstName + " " + receiver.LastName,
-                ReceiverStatus = exchange.ReceiverStatus,
-
-                SenderId = sender.UserId,
-                SenderName = sender.FirstName + " " + sender.LastName,
-                SenderStatus = exchange.SenderStatus,
-
-                UserImage = sender.UserImageUrl,
-
-                Status = exchange.Status
-            };
-
-            await _serviceWrapper.EmailServices.SendMailForExchangeRequest(receiver.Email, data);
-
-            return new ResponseModel<ExchangeRequestViewModel>("The exchange request was created successfully.", data);
-        }
-
-        public async Task<List<ExchangeRequestViewModel>> GetReceivedExchangeRequestsAsync()
-        {
-            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-
-            var result = await _context.ExchangeRequests
-               .Where(ex => ex.ReceiverId == user.UserId)
-               .Include(ex => ex.CurrentProduct)
-               .Include(ex => ex.TargetProduct)
-               .Include(ex => ex.Sender)
-               .Include(ex => ex.Receiver)
-               .Select(ex => new ExchangeRequestViewModel
-               {
-                   ExchangeRequestId = ex.ExchangeRequestId,
-
-                   CurrentProductId = ex.TargetProduct.ProductId,
-                   CurrentProductName = ex.TargetProduct.ProductName,
-                   CurrentProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                   TargetProductId = ex.CurrentProduct.ProductId,
-                   TargetProductName = ex.CurrentProduct.ProductName,
-                   TargetProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                   ReceiverId = ex.Receiver.UserId,
-                   ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
-                   ReceiverStatus = ex.ReceiverStatus,
-
-                   SenderId = ex.Sender.UserId,
-                   SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
-                   SenderStatus = ex.SenderStatus,
-
-                   UserImage = ex.Sender.UserImageUrl,
-
-                   Status = ex.Status
-               })
-               .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<List<ExchangeRequestViewModel>> GetSentExchangeRequestsAsync()
-        {
-            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-
-            var result = await _context.ExchangeRequests
-               .Where(ex => ex.SenderId == user.UserId)
-               .Include(ex => ex.CurrentProduct)
-               .Include(ex => ex.TargetProduct)
-               .Include(ex => ex.Sender)
-               .Include(ex => ex.Receiver)
-               .Select(ex => new ExchangeRequestViewModel
-               {
-                   ExchangeRequestId = ex.ExchangeRequestId,
-
-                   CurrentProductId = ex.CurrentProduct.ProductId,
-                   CurrentProductName = ex.CurrentProduct.ProductName,
-                   CurrentProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                   TargetProductId = ex.TargetProduct.ProductId,
-                   TargetProductName = ex.TargetProduct.ProductName,
-                   TargetProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                   ReceiverId = ex.Receiver.UserId,
-                   ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
-                   ReceiverStatus = ex.ReceiverStatus,
-
-                   SenderId = ex.Sender.UserId,
-                   SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
-                   SenderStatus = ex.SenderStatus,
-
-                   UserImage = ex.Receiver.UserImageUrl,
-
-                   Status = ex.Status
-               })
-               .ToListAsync();
-
-            return result;
-        }
-
-        public async Task<bool> IsProductInExchangeProcessingAsync(Guid productId)
-        {
-            return await _context.ExchangeRequests.AnyAsync(ex => ex.TargetProductId == productId);
-        }
         private async Task<string> GetStatusOfExchangeRequest(ExchangeRequest request)
         {
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
@@ -233,6 +80,170 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return request.Status;
         }
+        public async Task<ResponseModel<ExchangeRequestViewModel>> SendExchangeRequestAsync(CreateExchangeRequestModel request)
+        {
+            var currentProduct = await _serviceWrapper.ProductServices.GetProductAsync(request.CurrentProductId);
+            if (currentProduct == null)
+            {
+                throw new NotFoundException("The product does not exist.");
+            }
+
+            var targetProduct = await _serviceWrapper.ProductServices.GetProductAsync(request.TargetProductId);
+            if (targetProduct == null)
+            {
+                throw new NotFoundException("The product does not exist.");
+            }
+
+            if (_context.ExchangeRequests.Any(ex => ex.TargetProductId == request.TargetProductId))
+            {
+                throw new BadRequestException("The request to exchange this product have created.");
+            }
+
+            var sender = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+            var receiver = await _serviceWrapper.UserServices.GetUserByProductId(targetProduct.ProductId);
+
+            var exchange = new ExchangeRequest()
+            {
+                SenderId = sender.UserId,
+                SenderStatus = 1,
+                CurrentProductId = currentProduct.ProductId,
+                ReceiverId = receiver.UserId,
+                ReceiverStatus = 0,
+                TargetProductId = targetProduct.ProductId,
+                DateCreated = DateTime.Now,
+                Status = SystemConstant.ExchangeRequestStatus.Created
+            };
+
+            await _context.ExchangeRequests.AddAsync(exchange);
+            await _context.SaveChangesAsync();
+
+
+
+            var data = new ExchangeRequestViewModel()
+            {
+                ExchangeRequestId = exchange.ExchangeRequestId,
+
+                CurrentProductId = currentProduct.ProductId,
+                CurrentProductName = currentProduct.ProductName,
+                CurrentProductImage = currentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                CurrentProductDescription  = currentProduct.Description,
+
+                TargetProductId = targetProduct.ProductId,
+                TargetProductName = targetProduct.ProductName,
+                TargetProductImage = targetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                TargetProductDescription = targetProduct.Description,
+
+                ReceiverId = receiver.UserId,
+                ReceiverName = receiver.FirstName + " " + receiver.LastName,
+                ReceiverStatus = exchange.ReceiverStatus,
+
+                SenderId = sender.UserId,
+                SenderName = sender.FirstName + " " + sender.LastName,
+                SenderStatus = exchange.SenderStatus,
+
+                UserImage = sender.UserImageUrl,
+
+                Status = exchange.Status,
+
+                DateCreated = exchange.DateCreated
+            };
+
+            await _serviceWrapper.EmailServices.SendMailForExchangeRequest(receiver.Email, data);
+
+            return new ResponseModel<ExchangeRequestViewModel>("The exchange request was created successfully.", data);
+        }
+
+        public async Task<List<ExchangeRequestViewModel>> GetReceivedExchangeRequestsAsync()
+        {
+            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
+            var result = await _context.ExchangeRequests
+               .Where(ex => ex.ReceiverId == user.UserId && ex.Status != SystemConstant.ExchangeRequestStatus.Cancelled)
+               .Include(ex => ex.CurrentProduct)
+               .Include(ex => ex.TargetProduct)
+               .Include(ex => ex.Sender)
+               .Include(ex => ex.Receiver)
+               .Select(ex => new ExchangeRequestViewModel
+               {
+                   ExchangeRequestId = ex.ExchangeRequestId,
+
+                   CurrentProductId = ex.TargetProduct.ProductId,
+                   CurrentProductName = ex.TargetProduct.ProductName,
+                   CurrentProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   CurrentProductDescription = ex.TargetProduct.Description,
+
+                   TargetProductId = ex.CurrentProduct.ProductId,
+                   TargetProductName = ex.CurrentProduct.ProductName,
+                   TargetProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   TargetProductDescription = ex.CurrentProduct.Description,
+
+                   ReceiverId = ex.Receiver.UserId,
+                   ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
+                   ReceiverStatus = ex.ReceiverStatus,
+
+                   SenderId = ex.Sender.UserId,
+                   SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
+                   SenderStatus = ex.SenderStatus,
+
+                   UserImage = ex.Sender.UserImageUrl,
+
+                   Status = ex.Status,
+
+                   DateCreated = ex.DateCreated
+               })
+               .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<List<ExchangeRequestViewModel>> GetSentExchangeRequestsAsync()
+        {
+            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
+            var result = await _context.ExchangeRequests
+               .Where(ex => ex.SenderId == user.UserId && ex.Status != SystemConstant.ExchangeRequestStatus.Cancelled)
+               .Include(ex => ex.CurrentProduct)
+               .Include(ex => ex.TargetProduct)
+               .Include(ex => ex.Sender)
+               .Include(ex => ex.Receiver)
+               .Select(ex => new ExchangeRequestViewModel
+               {
+                   ExchangeRequestId = ex.ExchangeRequestId,
+
+                   CurrentProductId = ex.CurrentProduct.ProductId,
+                   CurrentProductName = ex.CurrentProduct.ProductName,
+                   CurrentProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   CurrentProductDescription = ex.CurrentProduct.Description,
+
+                   TargetProductId = ex.TargetProduct.ProductId,
+                   TargetProductName = ex.TargetProduct.ProductName,
+                   TargetProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   TargetProductDescription = ex.TargetProduct.Description,
+
+                   ReceiverId = ex.Receiver.UserId,
+                   ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
+                   ReceiverStatus = ex.ReceiverStatus,
+
+                   SenderId = ex.Sender.UserId,
+                   SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
+                   SenderStatus = ex.SenderStatus,
+
+                   UserImage = ex.Receiver.UserImageUrl,
+
+                   Status = ex.Status,
+
+                   DateCreated = ex.DateCreated
+               })
+               .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<bool> IsProductInExchangeProcessingAsync(Guid productId)
+        {
+            return await _context.ExchangeRequests.AnyAsync(ex => ex.TargetProductId == productId);
+        }
+        
 
         public async Task<ResponseModel<ExchangeRequestViewModel>> ConfirmExchangeAsync(Guid requestid)
         {
@@ -278,45 +289,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             await _context.SaveChangesAsync();
 
             return new ResponseModel<ExchangeRequestViewModel>("Deny exchange successfully.");
-        }
-
-        public async Task<List<ExchangeRequestViewModel>> GetStatusExchangeRequestsAsync()
-        {
-            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-
-            var result = await _context.ExchangeRequests
-                .Where(ex => ex.SenderId == user.UserId || ex.ReceiverId == user.UserId)
-                .Include(ex => ex.CurrentProduct)
-                .Include(ex => ex.TargetProduct)
-                .Include(ex => ex.Sender)
-                .Include(ex => ex.Receiver)
-                .Select(ex => new ExchangeRequestViewModel
-                {
-                    ExchangeRequestId = ex.ExchangeRequestId,
-
-                    CurrentProductId = user.UserId == ex.SenderId ? ex.CurrentProduct.ProductId : ex.TargetProduct.ProductId,
-                    CurrentProductName = user.UserId == ex.SenderId ? ex.CurrentProduct.ProductName : ex.TargetProduct.ProductName,
-                    CurrentProductImage = user.UserId == ex.SenderId ? ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First() : ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                    TargetProductId = user.UserId == ex.SenderId ? ex.TargetProduct.ProductId : ex.CurrentProduct.ProductId,
-                    TargetProductName = user.UserId == ex.SenderId ? ex.TargetProduct.ProductName : ex.CurrentProduct.ProductName,
-                    TargetProductImage = user.UserId == ex.SenderId ? ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First() : ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-
-                    ReceiverId = ex.Receiver.UserId,
-                    ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
-                    ReceiverStatus = ex.ReceiverStatus,
-
-                    SenderId = ex.Sender.UserId,
-                    SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
-                    SenderStatus = ex.SenderStatus,
-
-                    UserImage = user.UserId == ex.SenderId ? ex.Receiver.UserImageUrl : ex.Sender.UserImageUrl,
-
-                    Status = ex.Status
-                })
-                .ToListAsync();
-
-            return result;
         }
 
     }
