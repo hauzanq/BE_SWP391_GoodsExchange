@@ -14,13 +14,17 @@
         public Guid CurrentProductId { get; set; }
         public string CurrentProductName { get; set; }
         public string CurrentProductImage { get; set; }
+        public string CurrentProductDescription { get; set; }
 
         public Guid TargetProductId { get; set; }
         public string TargetProductName { get; set; }
         public string TargetProductImage { get; set; }
+        public string TargetProductDescription { get; set; }
 
         public string Status { get; set; }
         public int SenderStatus { get; set; }
         public int ReceiverStatus { get; set; }
+
+        public DateTime DateCreated { get; set; }
     }
 }

@@ -55,17 +55,17 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             return new ResponseModel<bool>("Product denied successfully.");
         }
-        private async Task<List<ProductImage>> AddListImages(string sellerName, CreateProductRequestModel request)
+        private async Task<List<ProductImage>> AddListImages(string sellerName, List<IFormFile> request)
         {
             List<ProductImage> images = new List<ProductImage>();
-            foreach (var image in request.Images)
+            foreach (var image in request)
             {
                 var img = new ProductImage()
                 {
                     Caption = image.FileName,
                     DateCreated = DateTime.Now,
                     FileSize = image.Length,
-                    ImagePath = await _serviceWrapper.FirebaseStorageServices.UploadProductImage(sellerName, request.ProductName, image),
+                    ImagePath = await _serviceWrapper.FirebaseStorageServices.UploadProductImage(sellerName, image),
                 };
                 images.Add(img);
             }
@@ -73,15 +73,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
         public async Task<ResponseModel<ProductListViewModel>> CreateProductAsync(CreateProductRequestModel request)
         {
-            var seller = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
             var category = await _serviceWrapper.CategoryServices.GetCategoryAsync(request.CategoryId);
             if (category == null)
             {
                 throw new NotFoundException("Category does not exist.");
             }
-
-            var sellerFullName = await _serviceWrapper.UserServices.GetUserFullNameAsync(seller.UserId);
 
             var product = new Product()
             {
@@ -93,12 +91,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 IsApproved = false,
                 IsReviewed = false,
                 CategoryId = category.CategoryId,
-                ProductImages = await AddListImages(sellerFullName, request)
+                ProductImages = await AddListImages(user.UserName, request.Images)
             };
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
-
-            var user = await _serviceWrapper.UserServices.GetUserAsync(product.UserUploadId);
 
             var result = new ProductListViewModel()
             {
@@ -262,6 +258,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             product.ProductName = request.ProductName;
             product.Description = request.Description;
             product.CategoryId = request.CategoryId.Value;
+            product.ProductImages = await AddListImages(user.UserName, request.Images);
+
+            // Reset status as new product
+            product.IsReviewed = false;
+            product.IsApproved = false;
+            product.IsActive = false;
 
             await _context.SaveChangesAsync();
 
@@ -328,7 +330,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         }
         public async Task<Product> GetProductAsync(Guid id)
         {
-            var product = await _context.Products.Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.ProductId == id);
+            var product = await _context.Products.Include(p => p.ProductImages)
+                                                .Include(p => p.UserUpload)
+                                                .FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
                 throw new NotFoundException("Product does not exist.");
