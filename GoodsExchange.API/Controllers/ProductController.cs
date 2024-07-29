@@ -104,7 +104,7 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(ResponseModel<ProductListViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequestModel request)
+        public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductRequestModel request)
         {
             if (!ModelState.IsValid)
             {

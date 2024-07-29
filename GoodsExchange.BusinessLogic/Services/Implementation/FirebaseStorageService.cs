@@ -14,7 +14,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _configuration = configuration;
         }
 
-        public async Task<string> UploadProductImage(string sellerName, string productName, IFormFile image)
+        public async Task<string> UploadProductImage(string sellerName, IFormFile image)
         {
             string firebaseBucket = _configuration["Firebase:StorageBucket"];
 
@@ -22,7 +22,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             string filename = Guid.NewGuid().ToString() + "_" + image.FileName;
 
-            var task = firebaseStorage.Child("Products").Child(sellerName).Child(productName).Child(filename);
+            var task = firebaseStorage.Child("Products").Child(sellerName).Child(filename);
 
             var stream = image.OpenReadStream();
             await task.PutAsync(stream);
