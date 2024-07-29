@@ -21,13 +21,15 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             IHttpContextAccessor httpContextAccessor,
             IOptions<EmailSettings> emailSettings,
             IConfiguration configuration,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IServer server)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _emailSettings = emailSettings;
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
+            _server = server;
         }
 
         private ICategoryService _categoryService;
@@ -133,7 +135,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_userService is null)
                 {
-                    _userService = new UserService(_context, _httpContextAccessor, _configuration, this, _emailService);
+                    _userService = new UserService(_context, _httpContextAccessor, _configuration, this);
                 }
                 return _userService;
             }

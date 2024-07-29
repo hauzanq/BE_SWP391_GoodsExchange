@@ -11,5 +11,6 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<bool>> DenyReport(Guid id);
         Task<ResponseModel<PageResult<ReportViewModel>>> GetReports(PagingRequestModel paging, ReportsRequestModel request);
         Task<ResponseModel<ReportViewModel>> GetById(Guid id);
+        Task<int> CountReportsReceivedOfUserAsync(Guid userId);
     }
 }
