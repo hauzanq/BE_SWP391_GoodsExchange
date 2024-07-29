@@ -291,5 +291,47 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<ExchangeRequestViewModel>("Deny exchange successfully.");
         }
 
+        public async Task<List<ExchangeRequestViewModel>> GetStatusExchangeRequestsAsync()
+        {
+            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
+            var result = await _context.ExchangeRequests
+               .Where(ex => ex.SenderId == user.UserId || ex.ReceiverId == user.UserId)
+               .Include(ex => ex.CurrentProduct)
+               .Include(ex => ex.TargetProduct)
+               .Include(ex => ex.Sender)
+               .Include(ex => ex.Receiver)
+               .Select(ex => new ExchangeRequestViewModel
+               {
+                   ExchangeRequestId = ex.ExchangeRequestId,
+
+                   CurrentProductId = ex.CurrentProduct.ProductId,
+                   CurrentProductName = ex.CurrentProduct.ProductName,
+                   CurrentProductImage = ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   CurrentProductDescription = ex.CurrentProduct.Description,
+
+                   TargetProductId = ex.TargetProduct.ProductId,
+                   TargetProductName = ex.TargetProduct.ProductName,
+                   TargetProductImage = ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                   TargetProductDescription = ex.TargetProduct.Description,
+
+                   ReceiverId = ex.Receiver.UserId,
+                   ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
+                   ReceiverStatus = ex.ReceiverStatus,
+
+                   SenderId = ex.Sender.UserId,
+                   SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
+                   SenderStatus = ex.SenderStatus,
+
+                   UserImage = ex.Receiver.UserImageUrl,
+
+                   Status = ex.Status,
+
+                   DateCreated = ex.DateCreated
+               })
+               .ToListAsync();
+
+            return result;
+        }
     }
 }
