@@ -24,14 +24,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IServiceWrapper _serviceWrapper;
-        private readonly IEmailService _emailService;
-        public UserService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IServiceWrapper serviceWrapper, IEmailService emailService)
+        public UserService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IServiceWrapper serviceWrapper)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
             _serviceWrapper = serviceWrapper;
-            _emailService = emailService;
         }
         public async Task<User> GetUserAsync(Guid userId)
         {
@@ -194,8 +192,15 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 LastName = u.LastName,
                 Email = u.Email,
                 RoleName = u.Role.RoleName,
-                Status = u.IsActive
+                Status = u.IsActive,
+                
             }).ToListAsync();
+
+            foreach (var user in data)
+            {
+                user.AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(user.UserId);
+                user.NumberReports = await _serviceWrapper.ReportServices.CountReportsReceivedOfUserAsync(user.UserId);
+            }
 
             var result = new PageResult<AdminUserViewModel>()
             {
@@ -266,7 +271,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var token = GenerateEmailVerificationToken(user.Email);
 
-            await _emailService.SendEmailToRegisterAsync(user.Email, token);
+            await _serviceWrapper.EmailServices.SendEmailToRegisterAsync(user.Email, token);
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 

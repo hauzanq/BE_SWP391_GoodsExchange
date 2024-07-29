@@ -113,7 +113,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var query = _context.Reports.Where(r => r.IsActive == true)
                         .Include(r => r.Sender)
                         .Include(r => r.Receiver)
-                        
+
                         .Include(r => r.Product).AsQueryable();
 
             #region Filtering report
@@ -187,6 +187,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             };
 
             return new ResponseModel<ReportViewModel>("The report was retrieved successfully.", result);
+        }
+
+        public async Task<int> CountReportsReceivedOfUserAsync(Guid userId)
+        {
+            return await _context.Reports.Where(r => r.ReceiverId == userId && r.IsApprove == true).CountAsync();
         }
     }
 }
