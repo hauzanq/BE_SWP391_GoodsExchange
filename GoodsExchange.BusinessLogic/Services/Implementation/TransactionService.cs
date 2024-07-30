@@ -1,22 +1,23 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.Services.Interface;
+using GoodsExchange.BusinessLogic.ViewModels.ExchangeRequest;
 using GoodsExchange.BusinessLogic.ViewModels.Transaction;
 using GoodsExchange.Data.Context;
 using GoodsExchange.Data.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Net.NetworkInformation;
-using GoodsExchange.BusinessLogic.ViewModels.ExchangeRequest;
 
 namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
     public class TransactionService : ITransactionService
     {
         private readonly GoodsExchangeDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TransactionService(GoodsExchangeDbContext context)
+        public TransactionService(GoodsExchangeDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task CreateTransactionAsync(Guid preorderid)
@@ -33,41 +34,65 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<PageResult<TransactionViewModel>> GetTransactionsAsync(PagingRequestModel paging)
         {
-            var query = _context.Transactions.Include(t => t.ExchangeRequest).AsQueryable();
+            var userId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst("id").Value);
 
-            var data = query.Skip((paging.PageIndex - 1) * paging.PageSize).Take(paging.PageSize).Select(t => new TransactionViewModel()
-            {
-                TransactionId = t.TransactionId,
-                ExchangeRequest = new ExchangeRequestViewModel()
-                {
-                    ExchangeRequestId = t.ExchangeRequest.ExchangeRequestId,
+            var query = _context.Transactions
+                                .Include(t => t.ExchangeRequest)
+                                .ThenInclude(er => er.CurrentProduct)
+                                .ThenInclude(cp => cp.ProductImages)
+                                .Include(t => t.ExchangeRequest)
+                                .ThenInclude(er => er.TargetProduct)
+                                .ThenInclude(tp => tp.ProductImages)
+                                .Include(t => t.ExchangeRequest)
+                                .ThenInclude(er => er.Sender)
+                                .Include(t => t.ExchangeRequest)
+                                .ThenInclude(er => er.Receiver)
+                                .AsQueryable();
 
-                    CurrentProductId = t.ExchangeRequest.CurrentProduct.ProductId,
-                    CurrentProductName = t.ExchangeRequest.CurrentProduct.ProductName,
-                    CurrentProductImage = t.ExchangeRequest.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+            var data = await query.Skip((paging.PageIndex - 1) * paging.PageSize)
+                                  .Take(paging.PageSize)
+                                  .Select(t => new TransactionViewModel()
+                                  {
+                                      TransactionId = t.TransactionId,
+                                      ExchangeRequest = new ExchangeRequestViewModel()
+                                      {
+                                          ExchangeRequestId = t.ExchangeRequest.ExchangeRequestId,
 
-                    TargetProductId = t.ExchangeRequest.TargetProduct.ProductId,
-                    TargetProductName = t.ExchangeRequest.TargetProduct.ProductName,
-                    TargetProductImage = t.ExchangeRequest.TargetProduct.ProductImages.Select(pi => pi.ImagePath).First(),
+                                          // Determine current and target based on user role in the transaction
+                                          CurrentProductId = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.CurrentProduct.ProductId : t.ExchangeRequest.TargetProduct.ProductId,
+                                          CurrentProductName = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.CurrentProduct.ProductName : t.ExchangeRequest.TargetProduct.ProductName,
+                                          CurrentProductImage = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault() : t.ExchangeRequest.TargetProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault(),
+                                          CurrentProductDescription = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.CurrentProduct.Description : t.ExchangeRequest.TargetProduct.Description,
 
-                    ReceiverId = t.ExchangeRequest.Receiver.UserId,
-                    ReceiverName = t.ExchangeRequest.Receiver.FirstName + " " + t.ExchangeRequest.Receiver.LastName,
+                                          TargetProductId = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.TargetProduct.ProductId : t.ExchangeRequest.CurrentProduct.ProductId,
+                                          TargetProductName = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.TargetProduct.ProductName : t.ExchangeRequest.CurrentProduct.ProductName,
+                                          TargetProductImage = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.TargetProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault() : t.ExchangeRequest.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault(),
+                                          TargetProductDescription = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.TargetProduct.Description : t.ExchangeRequest.CurrentProduct.Description,
 
-                    SenderId = t.ExchangeRequest.Sender.UserId,
-                    SenderName = t.ExchangeRequest.Sender.FirstName + " " + t.ExchangeRequest.Sender.LastName,
+                                          // Determine user roles
+                                          ReceiverId = t.ExchangeRequest.ReceiverId,
+                                          ReceiverName = t.ExchangeRequest.Receiver.FirstName + " " + t.ExchangeRequest.Receiver.LastName,
+                                          ReceiverStatus = t.ExchangeRequest.ReceiverStatus,
 
-                    UserImage = t.ExchangeRequest.Receiver.UserImageUrl
-                }
+                                          SenderId = t.ExchangeRequest.SenderId,
+                                          SenderName = t.ExchangeRequest.Sender.FirstName + " " + t.ExchangeRequest.Sender.LastName,
+                                          SenderStatus = t.ExchangeRequest.SenderStatus,
 
-            }).ToListAsync();
+                                          // Determine user image
+                                          UserImage = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.Receiver.UserImageUrl : t.ExchangeRequest.Sender.UserImageUrl,
+
+                                          Status = t.ExchangeRequest.Status
+                                      }
+                                  })
+                                  .ToListAsync();
 
             var totalItems = await query.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalItems / paging.PageSize);
 
             return new PageResult<TransactionViewModel>()
             {
-                CurrentPage = totalPages,
-                Items = await data,
+                CurrentPage = paging.PageIndex,
+                Items = data,
                 TotalPage = totalPages,
             };
         }

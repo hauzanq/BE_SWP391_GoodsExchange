@@ -9,7 +9,7 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Report
         public string ReportReceived { get; set; }
         public string Reason { get; set; }
         public Guid ProductId { get; set; }
-        public List<ProductImage> ProductImages { get; set; }
+        public List<string> ProductImages { get; set; }
         public string ProductName { get; set; }
         public bool IsApprove { get; set; }
         public bool IsActive { get; set; }

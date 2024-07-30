@@ -161,7 +161,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_transactionService is null)
                 {
-                    _transactionService = new TransactionService(_context);
+                    _transactionService = new TransactionService(_context,_httpContextAccessor);
                 }
                 return _transactionService;
             }

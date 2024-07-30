@@ -34,7 +34,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _serviceWrapper.ReportServices.SendReport(request);
+            var result = await _serviceWrapper.ReportServices.SendReportAsync(request);
             return Ok(result);
         }
 
@@ -50,7 +50,7 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _serviceWrapper.ReportServices.GetReports(paging, request);
+            var result = await _serviceWrapper.ReportServices.GetReportsAsync(paging, request);
             return Ok(result);
         }
 
@@ -61,7 +61,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var result = await _serviceWrapper.ReportServices.GetById(id);
+            var result = await _serviceWrapper.ReportServices.GetReportByIdAsync(id);
             return Ok(result);
         }
 
@@ -72,7 +72,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ApproveReport(Guid id)
         {
-            var result = await _serviceWrapper.ReportServices.ApproveReport(id);
+            var result = await _serviceWrapper.ReportServices.ApproveReportAsync(id);
             return Ok(result);
         }
 
@@ -83,7 +83,7 @@ namespace GoodsExchange.API.Controllers
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DenyReport(Guid id)
         {
-            var result = await _serviceWrapper.ReportServices.DenyReport(id);
+            var result = await _serviceWrapper.ReportServices.DenyReportAsync(id);
             return Ok(result);
         }
     }
