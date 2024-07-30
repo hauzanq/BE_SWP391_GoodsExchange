@@ -138,8 +138,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var query = _context.Products.Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
                                         .Include(p => p.Category)
-                                        .Where(p => p.UserUpload.IsActive == true)
-                                         .AsNoTracking()
+                                        .Where(p => p.UserUpload.IsActive == true && p.IsActive == true)
                                         .AsQueryable();
 
 
@@ -193,7 +192,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (role == SystemConstant.Roles.Guest)
             {
-                query = query.Where(p => p.IsApproved == true);
+                query = query.Where(p => p.IsApproved == true && p.IsActive == true);
             }
             if (role == SystemConstant.Roles.Moderator)
             {
