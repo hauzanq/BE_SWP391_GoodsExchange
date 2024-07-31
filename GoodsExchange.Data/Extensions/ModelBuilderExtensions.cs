@@ -445,12 +445,9 @@ namespace GoodsExchange.Data.Extensions
                     ProductId = productId,
                     ProductName = productNames[nameIndex],
                     Description = descriptions[descriptionIndex],
-                    IsActive = true,
+                    Status = Enums.ProductStatus.AwaitingApproval,
                     UploadDate = DateTime.UtcNow,
                     UserUploadId = userUploadId,
-                    IsApproved = true,
-                    IsReviewed = true,
-                    ApprovedDate = DateTime.UtcNow,
                     CategoryId = categoryId
                 });
 

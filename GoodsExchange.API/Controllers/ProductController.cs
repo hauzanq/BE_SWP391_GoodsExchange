@@ -4,6 +4,7 @@ using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Product;
+using GoodsExchange.Data.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -46,7 +47,7 @@ namespace GoodsExchange.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _serviceWrapper.ProductServices.GetProducts(request, keyword, model,SystemConstant.Roles.Guest);
+            var result = await _serviceWrapper.ProductServices.GetProducts(request, keyword, model, SystemConstant.Roles.Guest);
             return Ok(result);
         }
 
@@ -62,6 +63,20 @@ namespace GoodsExchange.API.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _serviceWrapper.ProductServices.GetProductsForUserAsync(request);
+            return Ok(result);
+        }
+
+        [HttpPost("user/{id}")]
+        [Authorize(Roles = SystemConstant.Roles.User)]
+        [ProducesResponseType(typeof(PageResult<ProductListViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetProductsForUserProfileAsync([FromQuery] PagingRequestModel request, Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _serviceWrapper.ProductServices.GetProductsForUserProfileAsync(request, id);
             return Ok(result);
         }
 
@@ -90,16 +105,6 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = SystemConstant.Roles.User)]
-        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteProduct(Guid id)
-        {
-            var result = await _serviceWrapper.ProductServices.DeleteProductAsync(id);
-            return Ok(result);
-        }
-
         [HttpPut("update")]
         [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(ResponseModel<ProductListViewModel>), (int)HttpStatusCode.OK)]
@@ -118,29 +123,19 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateProductStatus(Guid id, bool status)
+        public async Task<IActionResult> UpdateProductStatus(Guid id, ProductStatus status)
         {
             var result = await _serviceWrapper.ProductServices.UpdateProductStatusAsync(id, status);
             return Ok(result);
         }
 
-        [HttpPatch("approve/{id}")]
-        [Authorize(Roles = SystemConstant.Roles.Moderator)]
+        [HttpDelete("{id}")]
+        [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> ApproveProduct(Guid id)
+        public async Task<IActionResult> DeleteProductAsync(Guid id)
         {
-            var result = await _serviceWrapper.ProductServices.ApproveProductAsync(id);
-            return Ok(result);
-        }
-
-        [HttpPatch("deny/{id}")]
-        [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DenyProduct(Guid id)
-        {
-            var result = await _serviceWrapper.ProductServices.DenyProductAsync(id);
+            var result = await _serviceWrapper.ProductServices.DeleteProductAsync(id);
             return Ok(result);
         }
     }

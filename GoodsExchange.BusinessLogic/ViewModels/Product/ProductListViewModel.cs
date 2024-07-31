@@ -6,14 +6,11 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Product
         public string ProductName { get; set; }
         public string Description { get; set; }
         public List<string> ProductImageUrl { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsApproved { get; set; }
-        public bool IsReviewed { get; set; }
+        public int Status { get; set; }
         public string UserUpload { get; set; }
         public Guid UserUploadId { get; set; }
         public float AverageNumberStars { get; set; }
         public DateTime UploadDate { get; set; }
-        public DateTime? ApprovedDate { get; set; }
         public string CategoryName { get; set; }
     }
 }

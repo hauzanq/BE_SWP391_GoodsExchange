@@ -6,6 +6,7 @@ using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Product;
 using GoodsExchange.Data.Context;
+using GoodsExchange.Data.Enums;
 using GoodsExchange.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -24,37 +25,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ResponseModel<bool>> ApproveProductAsync(Guid id)
-        {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-
-            if (product == null)
-            {
-                throw new NotFoundException("Product not found.");
-            }
-
-            product.IsApproved = true;
-            product.IsReviewed = true;
-            product.ApprovedDate = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-
-            return new ResponseModel<bool>("Product approved successfully.");
-        }
-        public async Task<ResponseModel<bool>> DenyProductAsync(Guid id)
-        {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-
-            if (product == null)
-            {
-                throw new NotFoundException("Product not found.");
-            }
-
-            product.IsReviewed = true;
-            await _context.SaveChangesAsync();
-
-            return new ResponseModel<bool>("Product denied successfully.");
-        }
         private async Task<List<ProductImage>> AddListImages(string sellerName, List<IFormFile> request)
         {
             List<ProductImage> images = new List<ProductImage>();
@@ -85,11 +55,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 ProductName = request.ProductName,
                 Description = request.Description,
-                IsActive = true,
                 UploadDate = DateTime.Now,
                 UserUploadId = Guid.Parse(_httpContextAccessor.GetCurrentUserId()),
-                IsApproved = false,
-                IsReviewed = false,
+                Status = Data.Enums.ProductStatus.AwaitingApproval,
                 CategoryId = category.CategoryId,
                 ProductImages = await AddListImages(user.UserName, request.Images)
             };
@@ -101,14 +69,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
-                IsActive = product.IsActive,
+                Status = (int)product.Status,
                 UserUpload = user.UserName,
-                IsApproved = product.IsApproved,
-                IsReviewed = product.IsReviewed,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UploadDate = product.UploadDate,
-                ApprovedDate = product.ApprovedDate,
-                CategoryName = (await _serviceWrapper.CategoryServices.GetById(request.CategoryId)).Data.CategoryName,
+                CategoryName = (await _serviceWrapper.CategoryServices.GetCategoryAsync(request.CategoryId)).CategoryName,
+                UserUploadId = user.UserId,
+                AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(user.UserId)
             };
 
             return new ResponseModel<ProductListViewModel>("The product was created successfully.", result);
@@ -128,8 +95,19 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new UnauthorizedException("You do not have permission to delete this product.");
             }
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            if (product.Status == ProductStatus.AreExchanging)
+            {
+                throw new BadRequestException("You cannot delete this product because it is in the process of being exchanged.");
+            }
+            if (product.Status == ProductStatus.ExchangeSuccessful)
+            {
+                throw new BadRequestException("You cannot delete this product because the exchange is complete.");
+            }
+            else
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
 
             return new ResponseModel<bool>("The product was deleted successfully.", true);
         }
@@ -138,7 +116,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var query = _context.Products.Include(p => p.ProductImages)
                                         .Include(p => p.UserUpload)
                                         .Include(p => p.Category)
-                                        .Where(p => p.UserUpload.IsActive == true && p.IsActive == true)
+                                        .Where(p => p.UserUpload.IsActive == true)
                                         .AsQueryable();
 
 
@@ -163,14 +141,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 query = query.Where(p => p.UploadDate <= model.EndUploadDate);
             }
-            if (model.StartApprovedDate != null)
-            {
-                query = query.Where(p => p.ApprovedDate >= model.StartApprovedDate);
-            }
-            if (model.EndApprovedDate != null)
-            {
-                query = query.Where(p => p.ApprovedDate <= model.EndApprovedDate);
-            }
             if (!string.IsNullOrEmpty(model.CategoryName))
             {
                 query = query.Where(p => p.Category.CategoryName.Contains(model.CategoryName));
@@ -192,11 +162,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (role == SystemConstant.Roles.Guest)
             {
-                query = query.Where(p => p.IsApproved == true && p.IsActive == true);
+                query = query.Where(p => p.Status == Data.Enums.ProductStatus.Approved);
             }
             if (role == SystemConstant.Roles.Moderator)
             {
-                query = query.Where(p => p.IsApproved == false && p.IsReviewed == false);
+                query = query.Where(p => p.Status == Data.Enums.ProductStatus.AwaitingApproval);
             }
 
             var number = await query.CountAsync();
@@ -210,14 +180,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                     ProductId = product.ProductId,
                                     ProductName = product.ProductName,
                                     Description = product.Description,
-                                    IsActive = product.IsActive,
-                                    IsApproved = product.IsApproved,
-                                    IsReviewed = product.IsReviewed,
+                                    Status = (int)product.Status,
                                     UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
                                     UserUploadId = product.UserUpload.UserId,
                                     ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                                     UploadDate = product.UploadDate,
-                                    ApprovedDate = product.ApprovedDate,
                                     CategoryName = product.Category.CategoryName
                                 })
                                 .ToListAsync();
@@ -249,7 +216,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new UnauthorizedException("You do not have permission to update this product.");
             }
 
-            var category = await _serviceWrapper.CategoryServices.GetById(request.CategoryId.Value);
+            var category = await _serviceWrapper.CategoryServices.GetCategoryAsync(request.CategoryId.Value);
             if (category == null)
             {
                 throw new NotFoundException("This category does not exist.");
@@ -260,10 +227,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             product.ProductImages = await AddListImages(user.UserName, request.Images);
 
             // Reset status as new product
-            product.IsReviewed = false;
-            product.IsApproved = false;
-            product.IsActive = false;
-
+            product.Status = Data.Enums.ProductStatus.AwaitingApproval;
             await _context.SaveChangesAsync();
 
             var result = new ProductListViewModel()
@@ -271,20 +235,19 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 Description = product.Description,
-                IsActive = product.IsActive,
-                IsReviewed = product.IsReviewed,
-                IsApproved = product.IsApproved,
+                Status = (int)product.Status,
                 UserUpload = user.UserName,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UploadDate = product.UploadDate,
-                ApprovedDate = product.ApprovedDate,
                 CategoryName = product.Category.CategoryName,
+                UserUploadId = user.UserId,
+                AverageNumberStars = await _serviceWrapper.RatingServices.CountAverageNumberStarsOfUser(user.UserId)
             };
 
             return new ResponseModel<ProductListViewModel>("The product was updated successfully.", result);
         }
 
-        public async Task<ResponseModel<bool>> UpdateProductStatusAsync(Guid id, bool status)
+        public async Task<ResponseModel<bool>> UpdateProductStatusAsync(Guid id, ProductStatus status)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null)
@@ -292,7 +255,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Product does not exist.");
             }
 
-            product.IsActive = status;
+            product.Status = status;
             await _context.SaveChangesAsync();
 
             return new ResponseModel<bool>("The product status was updated successfully.", true);
@@ -314,7 +277,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 ProductName = product.ProductName,
                 Description = product.Description,
-                ApprovedDate = product.ApprovedDate,
+                //ApprovedDate = product.ApprovedDate,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UserUploadId = product.UserUpload.UserId,
                 UserUpload = product.UserUpload.LastName + " " + product.UserUpload.FirstName,
@@ -345,43 +308,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return seller != null && seller.Products.Any(p => p.ProductId == productId);
         }
 
-        private async Task<string> GetProductStatusAsync(Guid productId)
-        {
-            var product = await _context.Products.FindAsync(productId);
-
-            if (product == null)
-            {
-                throw new NotFoundException("The product does not exist.");
-            }
-
-            if (await _serviceWrapper.TransactionService.IsProductInTransactionAsync(productId))
-            {
-                return SystemConstant.ProductStatus.ExchangeSuccessful;
-            }
-
-            if (await _serviceWrapper.ExchangeRequestService.IsProductInExchangeProcessingAsync(productId))
-            {
-                return SystemConstant.ProductStatus.AreExchanging;
-            }
-
-            if (!product.IsActive)
-            {
-                return SystemConstant.ProductStatus.Hidden;
-            }
-
-            if (product.IsApproved && product.ApprovedDate != DateTime.MinValue)
-            {
-                return SystemConstant.ProductStatus.Approved;
-            }
-
-            if (!product.IsApproved && product.ApprovedDate != DateTime.MinValue)
-            {
-                return SystemConstant.ProductStatus.Rejected;
-            }
-
-            return SystemConstant.ProductStatus.AwaitingApproval;
-        }
-
         public async Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserAsync(PagingRequestModel request)
         {
 
@@ -401,25 +327,17 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                               .Take(request.PageSize)
                               .ToListAsync();
 
-            var data = new List<UserProductListViewModel>();
-
-            foreach (var product in products)
+            var data = products.Select(product => new UserProductListViewModel()
             {
-                var status = await GetProductStatusAsync(product.ProductId);
-
-                data.Add(new UserProductListViewModel()
-                {
-                    ProductId = product.ProductId,
-                    ProductName = product.ProductName,
-                    Description = product.Description,
-                    Status = status,
-                    UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
-                    ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
-                    UploadDate = product.UploadDate,
-                    ApprovedDate = product.ApprovedDate,
-                    CategoryName = product.Category.CategoryName
-                });
-            }
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                Description = product.Description,
+                Status = product.Status.ToString(),
+                UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
+                UploadDate = product.UploadDate,
+                CategoryName = product.Category.CategoryName
+            }).ToList();
 
             var result = new PageResult<UserProductListViewModel>()
             {
@@ -428,11 +346,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CurrentPage = request.PageIndex
             };
             return new ResponseModel<PageResult<UserProductListViewModel>>(result);
-        }
-
-        public Task<ResponseModel<PageResult<UserProductListViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<ResponseModel<UserProductDetailViewModel>> GetUserProductDetailAsync(Guid id)
@@ -460,6 +373,49 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             };
 
             return new ResponseModel<UserProductDetailViewModel>("The product details were retrieved successfully.", result);
+        }
+
+        public async Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserProfileAsync(PagingRequestModel request, Guid id)
+        {
+            var user = await _serviceWrapper.UserServices.GetUserAsync(id);
+            if (user == null)
+            {
+                throw new NotFoundException("User does not exist.");
+            }
+
+            var query = _context.Products.Include(p => p.ProductImages)
+                                       .Include(p => p.UserUpload)
+                                       .Include(p => p.Category)
+                                       .Where(p => p.UserUploadId == id && p.Status == ProductStatus.Approved)
+                                       .AsQueryable();
+
+            var numbers = await query.CountAsync();
+            var pages = (int)Math.Ceiling((double)numbers / request.PageSize);
+
+            var products = await query.OrderByDescending(p => p.UploadDate)
+                              .Skip((request.PageIndex - 1) * request.PageSize)
+                              .Take(request.PageSize)
+                              .ToListAsync();
+
+            var data = products.Select(product => new UserProductListViewModel()
+            {
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                Description = product.Description,
+                Status = product.Status.ToString(),
+                UserUpload = product.UserUpload.FirstName + " " + product.UserUpload.LastName,
+                ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
+                UploadDate = product.UploadDate,
+                CategoryName = product.Category.CategoryName
+            }).ToList();
+
+            var result = new PageResult<UserProductListViewModel>()
+            {
+                Items = data,
+                TotalPage = pages,
+                CurrentPage = request.PageIndex
+            };
+            return new ResponseModel<PageResult<UserProductListViewModel>>(result);
         }
     }
 }

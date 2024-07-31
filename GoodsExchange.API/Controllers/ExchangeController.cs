@@ -76,11 +76,22 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet]
+        [Route("rejected-request-list")]
+        [Authorize(Roles = SystemConstant.Roles.User)]
+        [ProducesResponseType(typeof(ResponseModel<ExchangeRequestViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetRejectedExchangeRequestsAsync()
+        {
+            var result = await _service.ExchangeRequestService.GetRejectedExchangeRequestsAsync();
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("status-request-list")]
         [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(ResponseModel<ExchangeRequestViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetCancelledExchangeRequestsAsync()
+        public async Task<IActionResult> GetStatusExchangeRequestsAsync()
         {
             var result = await _service.ExchangeRequestService.GetStatusExchangeRequestsAsync();
             return Ok(result);

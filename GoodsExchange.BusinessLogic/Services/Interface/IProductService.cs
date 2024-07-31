@@ -1,6 +1,7 @@
 ﻿using GoodsExchange.BusinessLogic.Common;
 using GoodsExchange.BusinessLogic.RequestModels.Product;
 using GoodsExchange.BusinessLogic.ViewModels.Product;
+using GoodsExchange.Data.Enums;
 using GoodsExchange.Data.Models;
 
 namespace GoodsExchange.BusinessLogic.Services.Interface
@@ -14,10 +15,8 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<ProductDetailViewModel>> GetProductDetailAsync(Guid id);
         Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserAsync(PagingRequestModel request);
         Task<ResponseModel<UserProductDetailViewModel>> GetUserProductDetailAsync(Guid id);
-        Task<ResponseModel<PageResult<UserProductListViewModel>>> GetRejectedExchangeRequestsAsync(PagingRequestModel request);
-        Task<ResponseModel<bool>> UpdateProductStatusAsync(Guid id, bool status);
-        Task<ResponseModel<bool>> ApproveProductAsync(Guid id);
-        Task<ResponseModel<bool>> DenyProductAsync(Guid id);
+        Task<ResponseModel<PageResult<UserProductListViewModel>>> GetProductsForUserProfileAsync(PagingRequestModel request, Guid id);
+        Task<ResponseModel<bool>> UpdateProductStatusAsync(Guid id, ProductStatus status);
         Task<Product> GetProductAsync(Guid id);
         Task<bool> IsProductBelongToSellerAsync(Guid productId, Guid sellerId);
     }

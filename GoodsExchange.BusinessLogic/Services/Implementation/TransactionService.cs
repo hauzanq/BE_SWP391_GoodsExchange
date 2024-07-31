@@ -81,7 +81,9 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                                           // Determine user image
                                           UserImage = t.ExchangeRequest.SenderId == userId ? t.ExchangeRequest.Receiver.UserImageUrl : t.ExchangeRequest.Sender.UserImageUrl,
 
-                                          Status = t.ExchangeRequest.Status
+                                          Status = t.ExchangeRequest.Status,
+
+                                          DateCreated = t.ExchangeRequest.DateCreated,
                                       }
                                   })
                                   .ToListAsync();
