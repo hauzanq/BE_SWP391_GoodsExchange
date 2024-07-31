@@ -46,40 +46,26 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<bool>("The category was deleted successfully.", true);
         }
 
-        public async Task<ResponseModel<List<CategoryViewModel>>> GetCategories()
+        public async Task<ResponseModel<PageResult<CategoryViewModel>>> GetCategories(PagingRequestModel paging)
         {
             var categories = await _context.Categories.ToListAsync();
-            var result = categories.Select(c => new CategoryViewModel
+            var data = categories.Select(c => new CategoryViewModel
             {
                 CategoryId = c.CategoryId,
                 CategoryName = c.CategoryName,
 
             }).ToList();
-            return new ResponseModel<List<CategoryViewModel>>("Categories loaded successfully.", result);
-        }
 
-        public async Task<ResponseModel<CategoriesDetailViewModel>> GetById(Guid idTmp)
-        {
-            var category = await _context.Categories.FindAsync(idTmp);
-            if (category == null)
+            var number = data.Count();
+            var pages = (int)Math.Ceiling((double)number / paging.PageSize);
+
+            var result = new PageResult<CategoryViewModel>()
             {
-                throw new NotFoundException("Category does not exist.");
-            }
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.CategoryId == category.CategoryId);
-
-            var result = new CategoriesDetailViewModel()
-            {
-                CategoryId = category.CategoryId,
-                CategoryName = category.CategoryName,
-                ProductID = product.ProductId,
-                ProductName = product.ProductName,
-                //ProductImageUrl = product.ProductImageUrl,
-                Description = product.Description,
-                ApprovedDate = product.ApprovedDate,
-                UserUploadId = product.UserUploadId,
-
+                Items = data,
+                TotalPage = pages,
+                CurrentPage = paging.PageIndex
             };
-            return new ResponseModel<CategoriesDetailViewModel>("Category details loaded successfully.", result);
+            return new ResponseModel<PageResult<CategoryViewModel>>(result);
         }
 
         public async Task<Category> GetCategoryAsync(Guid id)

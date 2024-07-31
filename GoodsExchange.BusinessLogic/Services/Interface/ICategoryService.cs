@@ -10,8 +10,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<CategoryViewModel>> CreateCategory(CreateCategoryRequestModel categoryCreate);
         Task<ResponseModel<CategoryViewModel>> UpdateCategory(UpdateCategoryRequestModel categoryUpdate);
         Task<ResponseModel<bool>> DeleteCategory(Guid id);
-        Task<ResponseModel<List<CategoryViewModel>>> GetCategories();
-        Task<ResponseModel<CategoriesDetailViewModel>> GetById(Guid idTmp);
+        Task<ResponseModel<PageResult<CategoryViewModel>>> GetCategories(PagingRequestModel paging);
         Task<Category> GetCategoryAsync(Guid id);
     }
 }

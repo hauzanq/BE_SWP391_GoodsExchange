@@ -57,22 +57,22 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             if (request.SenderStatus == 1 && request.ReceiverStatus == 1)
             {
-                request.CurrentProduct.IsActive = false;
-                request.TargetProduct.IsActive = false;
+                await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.CurrentProductId, Data.Enums.ProductStatus.Hidden);
+                await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.TargetProductId, Data.Enums.ProductStatus.Hidden);
                 request.Status = SystemConstant.ExchangeRequestStatus.Approved;
             }
 
             if ((request.SenderStatus == 2 && request.ReceiverStatus == 1) || (request.SenderStatus == 1 && request.ReceiverStatus == 2))
             {
-                request.CurrentProduct.IsActive = false;
-                request.TargetProduct.IsActive = false;
+                await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.CurrentProductId, Data.Enums.ProductStatus.Hidden);
+                await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.TargetProductId, Data.Enums.ProductStatus.Hidden);
                 request.Status = SystemConstant.ExchangeRequestStatus.Approved;
             }
 
             if (request.SenderStatus == 2 && request.ReceiverStatus == 2)
             {
-                request.CurrentProduct.IsActive = false;
-                request.TargetProduct.IsActive = false;
+                await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.CurrentProductId, Data.Enums.ProductStatus.Hidden);
+                await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.TargetProductId, Data.Enums.ProductStatus.Hidden);
                 request.Status = SystemConstant.ExchangeRequestStatus.Complete;
             }
 
@@ -94,9 +94,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("The product does not exist.");
             }
 
-            if (_context.ExchangeRequests.Any(ex => ex.TargetProductId == request.TargetProductId))
+            // Make sure that not exist 2 request duplicated
+            if (_context.ExchangeRequests.Any(ex => ex.CurrentProductId == request.CurrentProductId && ex.TargetProductId == request.TargetProductId))
             {
-                throw new BadRequestException("The request to exchange this product have created.");
+                throw new BadRequestException("The request to exchange between two product have created.");
             }
 
             var sender = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
@@ -126,7 +127,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 CurrentProductId = currentProduct.ProductId,
                 CurrentProductName = currentProduct.ProductName,
                 CurrentProductImage = currentProduct.ProductImages.Select(pi => pi.ImagePath).First(),
-                CurrentProductDescription  = currentProduct.Description,
+                CurrentProductDescription = currentProduct.Description,
 
                 TargetProductId = targetProduct.ProductId,
                 TargetProductName = targetProduct.ProductName,
@@ -243,7 +244,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             return await _context.ExchangeRequests.AnyAsync(ex => ex.TargetProductId == productId);
         }
-        
+
 
         public async Task<ResponseModel<ExchangeRequestViewModel>> ConfirmExchangeAsync(Guid requestid)
         {
@@ -283,8 +284,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             request.Status = SystemConstant.ExchangeRequestStatus.Cancelled;
 
             // Enable product while deny exchange request
-            request.CurrentProduct.IsActive = true;
-            request.TargetProduct.IsActive = true;
+            await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.CurrentProductId, Data.Enums.ProductStatus.Approved);
+            await _serviceWrapper.ProductServices.UpdateProductStatusAsync(request.TargetProductId, Data.Enums.ProductStatus.Approved);
 
             await _context.SaveChangesAsync();
 
@@ -328,6 +329,50 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                    Status = ex.Status,
 
                    DateCreated = ex.DateCreated
+               })
+               .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<List<ExchangeRequestViewModel>> GetRejectedExchangeRequestsAsync()
+        {
+            var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
+
+            var result = await _context.ExchangeRequests
+               .Where(ex => ex.SenderId == user.UserId && ex.Status == SystemConstant.ExchangeRequestStatus.Cancelled)
+               .Include(ex => ex.CurrentProduct)
+               .Include(ex => ex.TargetProduct)
+               .Include(ex => ex.Sender)
+               .Include(ex => ex.Receiver)
+               .Select(ex => new ExchangeRequestViewModel
+               {
+                   ExchangeRequestId = ex.ExchangeRequestId,
+
+                   // Determine current and target based on user role in the transaction
+                   CurrentProductId = ex.SenderId == user.UserId ? ex.CurrentProduct.ProductId : ex.TargetProduct.ProductId,
+                   CurrentProductName = ex.SenderId == user.UserId ? ex.CurrentProduct.ProductName : ex.TargetProduct.ProductName,
+                   CurrentProductImage = ex.SenderId == user.UserId ? ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault() : ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault(),
+                   CurrentProductDescription = ex.SenderId == user.UserId ? ex.CurrentProduct.Description : ex.TargetProduct.Description,
+
+                   TargetProductId = ex.SenderId == user.UserId ? ex.TargetProduct.ProductId : ex.CurrentProduct.ProductId,
+                   TargetProductName = ex.SenderId == user.UserId ? ex.TargetProduct.ProductName : ex.CurrentProduct.ProductName,
+                   TargetProductImage = ex.SenderId == user.UserId ? ex.TargetProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault() : ex.CurrentProduct.ProductImages.Select(pi => pi.ImagePath).FirstOrDefault(),
+                   TargetProductDescription = ex.SenderId == user.UserId ? ex.TargetProduct.Description : ex.CurrentProduct.Description,
+
+                   // Determine user roles
+                   ReceiverId = ex.ReceiverId,
+                   ReceiverName = ex.Receiver.FirstName + " " + ex.Receiver.LastName,
+                   ReceiverStatus = ex.ReceiverStatus,
+
+                   SenderId = ex.SenderId,
+                   SenderName = ex.Sender.FirstName + " " + ex.Sender.LastName,
+                   SenderStatus = ex.SenderStatus,
+
+                   // Determine user image
+                   UserImage = ex.SenderId == user.UserId ? ex.Receiver.UserImageUrl : ex.Sender.UserImageUrl,
+
+                   Status = ex.Status
                })
                .ToListAsync();
 

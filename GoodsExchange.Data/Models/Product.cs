@@ -1,17 +1,16 @@
-﻿namespace GoodsExchange.Data.Models
+﻿using GoodsExchange.Data.Enums;
+
+namespace GoodsExchange.Data.Models
 {
     public class Product
     {
         public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
-        public bool IsActive { get; set; }
+        public ProductStatus Status { get; set; }
         public DateTime UploadDate { get; set; }
         public Guid UserUploadId { get; set; }
         public User UserUpload { get; set; }
-        public bool IsApproved { get; set; }
-        public DateTime ApprovedDate { get; set; }
-        public bool IsReviewed { get; set; }
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
         public Rating Rate { get; set; }

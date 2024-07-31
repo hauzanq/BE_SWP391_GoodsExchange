@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodsExchange.Data.Migrations
 {
     [DbContext(typeof(GoodsExchangeDbContext))]
-    [Migration("20240727120538_InitialDatabase")]
+    [Migration("20240731183118_InitialDatabase")]
     partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,9 +127,6 @@ namespace GoodsExchange.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ApprovedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
@@ -138,23 +135,13 @@ namespace GoodsExchange.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsReviewed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UploadDate")
                         .HasColumnType("datetime2");
@@ -173,327 +160,252 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("88ce4ef8-54b6-4384-a199-27f7349f4031"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8403),
+                            ProductId = new Guid("b1c34b49-2040-4fbc-b4ee-a6030b8e00f3"),
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            Description = "A high-quality microscope featuring LED illumination for clear and detailed observation of specimens.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Spiral Notebook",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8400),
-                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("769cd96a-d451-4b76-84cb-fc7c50c6712c"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8411),
-                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            Description = "A set of durable glass beakers with clear measurement markings for laboratory use.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Glass Beaker Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8411),
-                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("b02d36ec-5aa4-4c44-8e47-900a6ca578f3"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8414),
-                            CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
-                            Description = "A set of premium ink refills suitable for fountain pens, ensuring smooth and consistent writing.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Biology: Principles and Explorations",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8413),
-                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("4df59c01-5a6a-4c97-b8a2-f98f2e608e19"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8416),
-                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
-                            Description = "An introductory textbook designed to help students understand the basic principles of physics.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "High-Quality Ruler Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8416),
-                            UserUploadId = new Guid("4c99eef2-baca-4394-8d45-47e5f805e0f0")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("fe929c27-5166-4259-8610-be6d282e8813"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8421),
-                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            Description = "An introductory textbook designed to help students understand the basic principles of physics.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Digital Thermometer",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8420),
-                            UserUploadId = new Guid("09481859-e811-4584-b2dd-0a74c8adfaaf")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("b5b33943-d3ee-4262-9070-490f61a8c077"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8424),
-                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            Description = "A pack of colorful sticky notes for quick reminders, notes, and organizing your tasks.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Glass Beaker Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8424),
-                            UserUploadId = new Guid("d3bbeb03-d683-47cc-9ef0-0a2b36c2788a")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("c136f105-ce3e-4a7c-889d-f756ca62ea98"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8426),
-                            CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
-                            Description = "A set of premium ink refills suitable for fountain pens, ensuring smooth and consistent writing.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Coloring Pencil Pack",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8426),
-                            UserUploadId = new Guid("97108917-856a-42af-937b-7b0e2e735b20")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("b9897b12-1b11-43d9-8bdd-76fb6cf7318a"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8429),
-                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
-                            Description = "A set of durable glass beakers with clear measurement markings for laboratory use.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "High-Quality Ruler Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8428),
-                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("f3fe6a0a-b51b-4863-948a-d74973599283"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8432),
-                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            Description = "A digital thermometer with high precision for measuring temperatures in scientific experiments.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Mechanical Pencil Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8432),
-                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("41ccd1ce-b6b5-4b60-8cfe-95f284e68074"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8435),
-                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            Description = "An in-depth textbook exploring the history and achievements of ancient civilizations from around the world.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Elegant Fountain Pen",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8435),
-                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
-                        },
-                        new
-                        {
-                            ProductId = new Guid("f45f5eb1-6175-4a30-9c22-6674e80585e1"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8438),
-                            CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
                             Description = "A spacious and ergonomic backpack designed to carry all your school supplies comfortably.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Premium Ink Refills",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8437),
+                            ProductName = "Spiral Notebook",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6666),
+                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("0e18960a-1a99-4d16-8c78-830223a57946"),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
+                            Description = "A high-quality microscope featuring LED illumination for clear and detailed observation of specimens.",
+                            ProductName = "Mechanical Pencil Set",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6680),
+                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("7e8331d5-2ad5-45bf-96c0-fa8b3524560e"),
+                            CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
+                            Description = "A set of high-quality mechanical pencils with refillable lead, perfect for precise writing.",
+                            ProductName = "Assorted Sticky Notes",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6683),
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
-                            ProductId = new Guid("eac851f8-3e1d-4137-96fc-48f9ee393c65"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8440),
+                            ProductId = new Guid("7527f9de-ed04-427b-b0a7-ca0c1ab87f27"),
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
                             Description = "A spiral-bound notebook with a durable cover, ideal for taking notes and journaling.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Laboratory Measuring Cylinder",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8439),
+                            ProductName = "Physics for Beginners",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6686),
                             UserUploadId = new Guid("4c99eef2-baca-4394-8d45-47e5f805e0f0")
                         },
                         new
                         {
-                            ProductId = new Guid("123d7ea7-1a69-4db8-b006-4409df8e395a"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8443),
+                            ProductId = new Guid("340dc0a5-3a7d-4cdc-bfad-320401dd65ed"),
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            Description = "A set of premium ink refills suitable for fountain pens, ensuring smooth and consistent writing.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "High-Quality Ruler Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8443),
+                            Description = "A spiral-bound notebook with a durable cover, ideal for taking notes and journaling.",
+                            ProductName = "Laboratory Measuring Cylinder",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6691),
                             UserUploadId = new Guid("09481859-e811-4584-b2dd-0a74c8adfaaf")
                         },
                         new
                         {
-                            ProductId = new Guid("52767fa0-d6ca-4116-961a-c9bfbc57102d"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8445),
+                            ProductId = new Guid("83025556-ac61-447f-8e4a-f30e80a288b0"),
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            Description = "An in-depth textbook exploring the history and achievements of ancient civilizations from around the world.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Assorted Sticky Notes",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8445),
+                            Description = "A set of durable rulers made from high-quality materials, perfect for accurate measurements and drawings.",
+                            ProductName = "Premium Ink Refills",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6695),
                             UserUploadId = new Guid("d3bbeb03-d683-47cc-9ef0-0a2b36c2788a")
                         },
                         new
                         {
-                            ProductId = new Guid("3ffaed44-6b46-4179-9de3-cfaf12067512"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8463),
+                            ProductId = new Guid("63827fb5-e13f-4386-a254-c540f8261337"),
                             CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
-                            Description = "A spiral-bound notebook with a durable cover, ideal for taking notes and journaling.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Glass Beaker Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8463),
+                            Description = "A set of premium ink refills suitable for fountain pens, ensuring smooth and consistent writing.",
+                            ProductName = "Digital Thermometer",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6698),
                             UserUploadId = new Guid("97108917-856a-42af-937b-7b0e2e735b20")
                         },
                         new
                         {
-                            ProductId = new Guid("7a3061a2-3b1e-43cf-93bc-097d8b1523d5"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8465),
+                            ProductId = new Guid("76f13dae-939e-44c5-91f6-fce97dd22f9e"),
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
-                            Description = "A pack of colorful sticky notes for quick reminders, notes, and organizing your tasks.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "History of Ancient Civilizations",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8465),
+                            Description = "A set of high-quality mechanical pencils with refillable lead, perfect for precise writing.",
+                            ProductName = "Microscope with LED Illumination",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6701),
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
-                            ProductId = new Guid("382b8273-b6b8-4dc9-96d8-1c92b3a7780c"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8469),
+                            ProductId = new Guid("ff25d9a1-6694-4215-9ae7-6ae6695650ae"),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
+                            Description = "A spiral-bound notebook with a durable cover, ideal for taking notes and journaling.",
+                            ProductName = "Physics for Beginners",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6705),
+                            UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("285549ee-a02c-468f-87f8-941ddeed3386"),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
+                            Description = "A pack of vibrant coloring pencils for creative drawing and coloring activities.",
+                            ProductName = "Biology: Principles and Explorations",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6709),
+                            UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("84a19fb2-7912-41f4-b646-fb23b717d7b5"),
+                            CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
+                            Description = "A precision measuring cylinder designed for accurate measurement of liquids in laboratory settings.",
+                            ProductName = "Coloring Pencil Pack",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6711),
+                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("ed017538-cd55-419d-8661-c6996767386f"),
+                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
+                            Description = "A high-quality microscope featuring LED illumination for clear and detailed observation of specimens.",
+                            ProductName = "Elegant Fountain Pen",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6713),
+                            UserUploadId = new Guid("4c99eef2-baca-4394-8d45-47e5f805e0f0")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("1dd24a05-a6d5-471f-9cdf-cd83203a87e8"),
+                            CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
+                            Description = "An elegant fountain pen with a sleek design, ideal for professional writing and note-taking.",
+                            ProductName = "Premium Ink Refills",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6717),
+                            UserUploadId = new Guid("09481859-e811-4584-b2dd-0a74c8adfaaf")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("f8837775-a83c-4dc5-9dee-5eabdced85f5"),
+                            CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
+                            Description = "An elegant fountain pen with a sleek design, ideal for professional writing and note-taking.",
+                            ProductName = "Elegant Fountain Pen",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6719),
+                            UserUploadId = new Guid("d3bbeb03-d683-47cc-9ef0-0a2b36c2788a")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("32cfa938-c0ed-4c83-9425-d621c36f2d5c"),
+                            CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
+                            Description = "A set of durable rulers made from high-quality materials, perfect for accurate measurements and drawings.",
+                            ProductName = "Microscope with LED Illumination",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6737),
+                            UserUploadId = new Guid("97108917-856a-42af-937b-7b0e2e735b20")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("b2b06fa5-9926-4e89-a6d3-1f7732a9ecb1"),
+                            CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
+                            Description = "A set of high-quality mechanical pencils with refillable lead, perfect for precise writing.",
+                            ProductName = "History of Ancient Civilizations",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6739),
+                            UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("c3c59e74-e2b8-4758-a373-42277552d373"),
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
                             Description = "A comprehensive textbook covering fundamental algebraic concepts and problem-solving techniques.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Microscope with LED Illumination",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8469),
+                            ProductName = "Premium Ink Refills",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6743),
                             UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
                         },
                         new
                         {
-                            ProductId = new Guid("7afdb14c-6349-414a-a893-8e4983459f5f"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8472),
+                            ProductId = new Guid("45bcfb67-2869-411d-be9a-f649afa44482"),
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            Description = "A spiral-bound notebook with a durable cover, ideal for taking notes and journaling.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Assorted Sticky Notes",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8472),
+                            Description = "A spacious and ergonomic backpack designed to carry all your school supplies comfortably.",
+                            ProductName = "Introduction to Algebra",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6747),
                             UserUploadId = new Guid("d6446689-2743-460b-82c3-d25b21f87b13")
                         },
                         new
                         {
-                            ProductId = new Guid("9ad52309-8602-47ba-87b7-6873fedf95e3"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8474),
+                            ProductId = new Guid("c5d6a1fd-2414-42b6-9b70-5e1cd3f03e39"),
                             CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
-                            Description = "A set of durable rulers made from high-quality materials, perfect for accurate measurements and drawings.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
+                            Description = "A spacious and ergonomic backpack designed to carry all your school supplies comfortably.",
                             ProductName = "Spiral Notebook",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8474),
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6749),
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
-                            ProductId = new Guid("a7427fa4-862e-43ff-8213-180e4306f062"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8476),
+                            ProductId = new Guid("e666c628-e973-4fcc-a297-f978832ed133"),
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
-                            Description = "A set of durable glass beakers with clear measurement markings for laboratory use.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
+                            Description = "A spacious and ergonomic backpack designed to carry all your school supplies comfortably.",
                             ProductName = "Microscope with LED Illumination",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8476),
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6751),
                             UserUploadId = new Guid("4c99eef2-baca-4394-8d45-47e5f805e0f0")
                         },
                         new
                         {
-                            ProductId = new Guid("e2af08b7-0b3c-4bd7-84bd-df502861c540"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8480),
+                            ProductId = new Guid("01aad690-b271-486c-aae2-42993aeb18b9"),
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            Description = "An elegant fountain pen with a sleek design, ideal for professional writing and note-taking.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Elegant Fountain Pen",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8479),
+                            Description = "A set of durable rulers made from high-quality materials, perfect for accurate measurements and drawings.",
+                            ProductName = "Coloring Pencil Pack",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6755),
                             UserUploadId = new Guid("09481859-e811-4584-b2dd-0a74c8adfaaf")
                         },
                         new
                         {
-                            ProductId = new Guid("c400856a-60ce-491a-830d-1b44abe1f24a"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8486),
+                            ProductId = new Guid("35bb966d-c405-44f8-9831-c0b4c7e20c3e"),
                             CategoryId = new Guid("d7fde8ab-4995-4252-8c34-0d6a4077f1e3"),
-                            Description = "A digital thermometer with high precision for measuring temperatures in scientific experiments.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Spiral Notebook",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8485),
+                            Description = "A pack of colorful sticky notes for quick reminders, notes, and organizing your tasks.",
+                            ProductName = "Premium Ink Refills",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6758),
                             UserUploadId = new Guid("d3bbeb03-d683-47cc-9ef0-0a2b36c2788a")
                         },
                         new
                         {
-                            ProductId = new Guid("402d882e-cdb4-46a9-856c-2c9c41b5ca2c"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8488),
+                            ProductId = new Guid("ddd095c3-e3c6-43ca-bdac-48ad0c615576"),
                             CategoryId = new Guid("93838a5d-b3c7-4c47-ba22-f6e26755203f"),
-                            Description = "An elegant fountain pen with a sleek design, ideal for professional writing and note-taking.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Laboratory Measuring Cylinder",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8488),
+                            Description = "A set of durable glass beakers with clear measurement markings for laboratory use.",
+                            ProductName = "Student Backpack",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6763),
                             UserUploadId = new Guid("97108917-856a-42af-937b-7b0e2e735b20")
                         },
                         new
                         {
-                            ProductId = new Guid("6ed94cce-8110-4b46-8237-c372cdd0bf21"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8490),
+                            ProductId = new Guid("fd55975f-e3e1-41e9-9629-9a4f2086d065"),
                             CategoryId = new Guid("119e60e0-789a-47e2-a280-e0c1a9a7032f"),
-                            Description = "A pack of vibrant coloring pencils for creative drawing and coloring activities.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
-                            ProductName = "Microscope with LED Illumination",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8490),
+                            Description = "A set of durable glass beakers with clear measurement markings for laboratory use.",
+                            ProductName = "Physics for Beginners",
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6765),
                             UserUploadId = new Guid("82c47d9c-b386-4050-a42c-95a220639c54")
                         },
                         new
                         {
-                            ProductId = new Guid("7ec45539-79e4-4702-a74b-6f5d77c1bcfc"),
-                            ApprovedDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8494),
+                            ProductId = new Guid("7e6a2bdc-d4f8-4703-8d49-aa52b8244269"),
                             CategoryId = new Guid("765fa035-d385-4ae3-a86b-7e4bea643060"),
-                            Description = "A set of durable rulers made from high-quality materials, perfect for accurate measurements and drawings.",
-                            IsActive = true,
-                            IsApproved = true,
-                            IsReviewed = true,
+                            Description = "A set of premium ink refills suitable for fountain pens, ensuring smooth and consistent writing.",
                             ProductName = "Mechanical Pencil Set",
-                            UploadDate = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8493),
+                            Status = 0,
+                            UploadDate = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6770),
                             UserUploadId = new Guid("fda6e282-e429-4364-a445-136b570e2fde")
                         });
                 });
@@ -532,228 +444,228 @@ namespace GoodsExchange.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f235b67d-ac97-49e6-85e2-edfe7710cfb0"),
+                            Id = new Guid("04d029b6-f569-4b01-845a-b90c42894f9a"),
                             Caption = "Image for Spiral Notebook",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8409),
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6673),
                             FileSize = 1024L,
                             ImagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/23/1857e50467c5629.jpg",
-                            ProductId = new Guid("88ce4ef8-54b6-4384-a199-27f7349f4031")
+                            ProductId = new Guid("b1c34b49-2040-4fbc-b4ee-a6030b8e00f3")
                         },
                         new
                         {
-                            Id = new Guid("44be8ee1-47d3-4b62-976a-0d1a200ceb96"),
-                            Caption = "Image for Glass Beaker Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8412),
+                            Id = new Guid("da287161-4685-4b75-ad8a-5319a0804857"),
+                            Caption = "Image for Mechanical Pencil Set",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6682),
                             FileSize = 2048L,
                             ImagePath = "https://img.lovepik.com/element/40145/4924.png_860.png",
-                            ProductId = new Guid("769cd96a-d451-4b76-84cb-fc7c50c6712c")
+                            ProductId = new Guid("0e18960a-1a99-4d16-8c78-830223a57946")
                         },
                         new
                         {
-                            Id = new Guid("813a1df5-4b16-4836-aa50-dfab1f5efff5"),
-                            Caption = "Image for Biology: Principles and Explorations",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8415),
+                            Id = new Guid("90aab4c2-b489-4e4d-9bb5-bb58571a8923"),
+                            Caption = "Image for Assorted Sticky Notes",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6685),
                             FileSize = 3072L,
                             ImagePath = "https://img.lovepik.com/element/40154/8917.png_300.png",
-                            ProductId = new Guid("b02d36ec-5aa4-4c44-8e47-900a6ca578f3")
+                            ProductId = new Guid("7e8331d5-2ad5-45bf-96c0-fa8b3524560e")
                         },
                         new
                         {
-                            Id = new Guid("e5e831cb-7a86-4c8e-a249-fdde5d76d3e0"),
-                            Caption = "Image for High-Quality Ruler Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8419),
+                            Id = new Guid("72bad161-c5f0-4d20-94ee-2abf37fd6056"),
+                            Caption = "Image for Physics for Beginners",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6690),
                             FileSize = 4096L,
                             ImagePath = "https://img.lovepik.com/element/40148/8397.png_300.png",
-                            ProductId = new Guid("4df59c01-5a6a-4c97-b8a2-f98f2e608e19")
+                            ProductId = new Guid("7527f9de-ed04-427b-b0a7-ca0c1ab87f27")
                         },
                         new
                         {
-                            Id = new Guid("f76bae87-8ea6-4f6d-b1ae-0b54e83b0d5e"),
-                            Caption = "Image for Digital Thermometer",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8422),
+                            Id = new Guid("65155024-393b-4d81-a604-b5b4c79d3a23"),
+                            Caption = "Image for Laboratory Measuring Cylinder",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6694),
                             FileSize = 5120L,
                             ImagePath = "https://img.lovepik.com/original_origin_pic/18/08/09/ad4800dc49f64e450ae5f7d2c15bbd69.png_wh300.png",
-                            ProductId = new Guid("fe929c27-5166-4259-8610-be6d282e8813")
+                            ProductId = new Guid("340dc0a5-3a7d-4cdc-bfad-320401dd65ed")
                         },
                         new
                         {
-                            Id = new Guid("b9e2f682-778c-4e0f-9612-160c6123322d"),
-                            Caption = "Image for Glass Beaker Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8425),
+                            Id = new Guid("e2dbfd91-7fb5-4a70-ad0e-7e5a725ea0a9"),
+                            Caption = "Image for Premium Ink Refills",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6697),
                             FileSize = 6144L,
                             ImagePath = "https://img.lovepik.com/png/20231021/School-office-supplies-binding-machine-stapler-book-stationery_289576_wh300.png",
-                            ProductId = new Guid("b5b33943-d3ee-4262-9070-490f61a8c077")
+                            ProductId = new Guid("83025556-ac61-447f-8e4a-f30e80a288b0")
                         },
                         new
                         {
-                            Id = new Guid("f796c674-83bb-465f-9042-e3cebcb50848"),
-                            Caption = "Image for Coloring Pencil Pack",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8427),
+                            Id = new Guid("0f4ba951-97c2-4824-bb4b-c6c04f3b139c"),
+                            Caption = "Image for Digital Thermometer",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6700),
                             FileSize = 7168L,
                             ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-cute.jpg",
-                            ProductId = new Guid("c136f105-ce3e-4a7c-889d-f756ca62ea98")
+                            ProductId = new Guid("63827fb5-e13f-4386-a254-c540f8261337")
                         },
                         new
                         {
-                            Id = new Guid("6f88284d-c9fe-46e1-ab11-20a9a4f550b3"),
-                            Caption = "Image for High-Quality Ruler Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8431),
+                            Id = new Guid("25dbd596-4a3f-4041-bf48-85ef27994749"),
+                            Caption = "Image for Microscope with LED Illumination",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6704),
                             FileSize = 8192L,
                             ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-de-thuong.jpg",
-                            ProductId = new Guid("b9897b12-1b11-43d9-8bdd-76fb6cf7318a")
+                            ProductId = new Guid("76f13dae-939e-44c5-91f6-fce97dd22f9e")
                         },
                         new
                         {
-                            Id = new Guid("9c7b0f5a-b54c-4acf-85d4-646f8cda2e87"),
-                            Caption = "Image for Mechanical Pencil Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8434),
+                            Id = new Guid("359662e5-cdbd-409b-acd1-66ac3d188284"),
+                            Caption = "Image for Physics for Beginners",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6707),
                             FileSize = 9216L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQClbO9Pb9b1e1cm18mublklMG69UYXdPgGgbeNGPutxgObEWNt0gMTNXmOHZInEp8O1ro&usqp=CAU",
-                            ProductId = new Guid("f3fe6a0a-b51b-4863-948a-d74973599283")
+                            ProductId = new Guid("ff25d9a1-6694-4215-9ae7-6ae6695650ae")
                         },
                         new
                         {
-                            Id = new Guid("d3e1a158-6c4c-4d5c-a1ca-9a39523fc136"),
-                            Caption = "Image for Elegant Fountain Pen",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8436),
+                            Id = new Guid("f399f94c-d94e-4851-bd48-23ece9d58bd9"),
+                            Caption = "Image for Biology: Principles and Explorations",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6710),
                             FileSize = 10240L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxXUh1O9kqmHicXzEZYoksQl0zKVwNW3KRoI2N39oO3Yyw33D03xmltVXOqTtbTa3gAfU&usqp=CAU",
-                            ProductId = new Guid("41ccd1ce-b6b5-4b60-8cfe-95f284e68074")
+                            ProductId = new Guid("285549ee-a02c-468f-87f8-941ddeed3386")
                         },
                         new
                         {
-                            Id = new Guid("8c502d35-2a0f-44a2-8875-35dc2bbc2952"),
-                            Caption = "Image for Premium Ink Refills",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8439),
+                            Id = new Guid("9771e0a8-7cdc-416d-b436-28cfbb85631b"),
+                            Caption = "Image for Coloring Pencil Pack",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6712),
                             FileSize = 11264L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjY5xXwr880MJU4ZMkHoS4Kk9uBvJlVOocsyyr8c-SZIhpInnWpbdrTbxLSwIGRTqLtQE&usqp=CAU",
-                            ProductId = new Guid("f45f5eb1-6175-4a30-9c22-6674e80585e1")
+                            ProductId = new Guid("84a19fb2-7912-41f4-b646-fb23b717d7b5")
                         },
                         new
                         {
-                            Id = new Guid("abfcace1-cdd5-4818-9ae9-0c5fbdcab013"),
-                            Caption = "Image for Laboratory Measuring Cylinder",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8442),
+                            Id = new Guid("9d7da31b-9313-470e-90de-7f4e080d095d"),
+                            Caption = "Image for Elegant Fountain Pen",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6716),
                             FileSize = 12288L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTzAg7kp7XyYhhU7MlQDH_Or2jTxIPZuyl3j_hA01ywVLBmo5qSkIeTbDE4C7DaKdDlyI&usqp=CAU",
-                            ProductId = new Guid("eac851f8-3e1d-4137-96fc-48f9ee393c65")
+                            ProductId = new Guid("ed017538-cd55-419d-8661-c6996767386f")
                         },
                         new
                         {
-                            Id = new Guid("24f78a9c-851e-46e0-aa73-68b7d388af84"),
-                            Caption = "Image for High-Quality Ruler Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8444),
+                            Id = new Guid("fa173d77-fa12-4408-85e7-56f271d3ff46"),
+                            Caption = "Image for Premium Ink Refills",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6718),
                             FileSize = 13312L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo-afGGvOl-uAIciO_inSUbq8c2WrvHEA8zA&s",
-                            ProductId = new Guid("123d7ea7-1a69-4db8-b006-4409df8e395a")
+                            ProductId = new Guid("1dd24a05-a6d5-471f-9cdf-cd83203a87e8")
                         },
                         new
                         {
-                            Id = new Guid("34996122-9a02-499a-aa7c-9d25687bed50"),
-                            Caption = "Image for Assorted Sticky Notes",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8446),
+                            Id = new Guid("fd6bc68a-d66b-4594-8b04-81a29f95862b"),
+                            Caption = "Image for Elegant Fountain Pen",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6720),
                             FileSize = 14336L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNhUHteq_2myNyWXDG0-tdUmElcHC5ZufUbA&s",
-                            ProductId = new Guid("52767fa0-d6ca-4116-961a-c9bfbc57102d")
+                            ProductId = new Guid("f8837775-a83c-4dc5-9dee-5eabdced85f5")
                         },
                         new
                         {
-                            Id = new Guid("75cd11b9-0cd1-47c2-a9d0-02e0dcd2c932"),
-                            Caption = "Image for Glass Beaker Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8464),
+                            Id = new Guid("e9f30e3e-b7ff-4d44-bc08-afc11d7457b4"),
+                            Caption = "Image for Microscope with LED Illumination",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6738),
                             FileSize = 15360L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEabvTjiSCtzyqA2S0JmFbTYH53qBm-WjioQ&s",
-                            ProductId = new Guid("3ffaed44-6b46-4179-9de3-cfaf12067512")
+                            ProductId = new Guid("32cfa938-c0ed-4c83-9425-d621c36f2d5c")
                         },
                         new
                         {
-                            Id = new Guid("9c79166e-34bb-4cae-96d8-93e260c07d8e"),
+                            Id = new Guid("73db5777-91a6-4404-b8e4-9c22cd591c00"),
                             Caption = "Image for History of Ancient Civilizations",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8468),
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6742),
                             FileSize = 16384L,
                             ImagePath = "https://png.pngtree.com/png-vector/20190130/ourlarge/pngtree-simple-and-cute-school-supplies-stationery-suppliesstationerystaplerpenpencil-casecorrection-fluidrubber-png-image_674963.jpg",
-                            ProductId = new Guid("7a3061a2-3b1e-43cf-93bc-097d8b1523d5")
+                            ProductId = new Guid("b2b06fa5-9926-4e89-a6d3-1f7732a9ecb1")
                         },
                         new
                         {
-                            Id = new Guid("1f890c58-742d-4866-8a67-9a3f115b7e8f"),
-                            Caption = "Image for Microscope with LED Illumination",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8471),
+                            Id = new Guid("6eb5e0b0-9003-4dcb-a6ba-1b591648a6e1"),
+                            Caption = "Image for Premium Ink Refills",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6745),
                             FileSize = 17408L,
                             ImagePath = "https://png.pngtree.com/element_origin_min_pic/16/09/23/1857e50467c5629.jpg",
-                            ProductId = new Guid("382b8273-b6b8-4dc9-96d8-1c92b3a7780c")
+                            ProductId = new Guid("c3c59e74-e2b8-4758-a373-42277552d373")
                         },
                         new
                         {
-                            Id = new Guid("e0da6f80-a2c4-43f0-83b6-f2b4a8e2bd61"),
-                            Caption = "Image for Assorted Sticky Notes",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8473),
+                            Id = new Guid("76195e36-7bf5-4427-933d-269f2e1b2dae"),
+                            Caption = "Image for Introduction to Algebra",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6748),
                             FileSize = 18432L,
                             ImagePath = "https://img.lovepik.com/element/40145/4924.png_860.png",
-                            ProductId = new Guid("7afdb14c-6349-414a-a893-8e4983459f5f")
+                            ProductId = new Guid("45bcfb67-2869-411d-be9a-f649afa44482")
                         },
                         new
                         {
-                            Id = new Guid("339971d6-1ca5-4921-9809-e7dcc8b2a0fd"),
+                            Id = new Guid("2fd407a7-2d7d-4fa4-a4c8-a29393fe0a8b"),
                             Caption = "Image for Spiral Notebook",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8475),
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6750),
                             FileSize = 19456L,
                             ImagePath = "https://img.lovepik.com/element/40154/8917.png_300.png",
-                            ProductId = new Guid("9ad52309-8602-47ba-87b7-6873fedf95e3")
+                            ProductId = new Guid("c5d6a1fd-2414-42b6-9b70-5e1cd3f03e39")
                         },
                         new
                         {
-                            Id = new Guid("d688d069-ffde-4f8e-8e11-01d4f0023bcd"),
+                            Id = new Guid("0265c12f-1b62-4b58-8d42-aa88beeefa81"),
                             Caption = "Image for Microscope with LED Illumination",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8478),
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6754),
                             FileSize = 20480L,
                             ImagePath = "https://img.lovepik.com/element/40148/8397.png_300.png",
-                            ProductId = new Guid("a7427fa4-862e-43ff-8213-180e4306f062")
+                            ProductId = new Guid("e666c628-e973-4fcc-a297-f978832ed133")
                         },
                         new
                         {
-                            Id = new Guid("86af5310-27ab-4c5d-ab46-d9a43945ec13"),
-                            Caption = "Image for Elegant Fountain Pen",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8485),
+                            Id = new Guid("e8c14d25-a3e9-43ba-99d1-889cbddcbd07"),
+                            Caption = "Image for Coloring Pencil Pack",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6757),
                             FileSize = 21504L,
                             ImagePath = "https://img.lovepik.com/original_origin_pic/18/08/09/ad4800dc49f64e450ae5f7d2c15bbd69.png_wh300.png",
-                            ProductId = new Guid("e2af08b7-0b3c-4bd7-84bd-df502861c540")
+                            ProductId = new Guid("01aad690-b271-486c-aae2-42993aeb18b9")
                         },
                         new
                         {
-                            Id = new Guid("ac66efc5-801b-4feb-8f53-024ca254bf7c"),
-                            Caption = "Image for Spiral Notebook",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8487),
+                            Id = new Guid("471ceeab-6fd0-44a3-b323-e3a3522faa6d"),
+                            Caption = "Image for Premium Ink Refills",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6758),
                             FileSize = 22528L,
                             ImagePath = "https://img.lovepik.com/png/20231021/School-office-supplies-binding-machine-stapler-book-stationery_289576_wh300.png",
-                            ProductId = new Guid("c400856a-60ce-491a-830d-1b44abe1f24a")
+                            ProductId = new Guid("35bb966d-c405-44f8-9831-c0b4c7e20c3e")
                         },
                         new
                         {
-                            Id = new Guid("d1af3652-1549-4d2b-900f-71ceae098c8a"),
-                            Caption = "Image for Laboratory Measuring Cylinder",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8489),
+                            Id = new Guid("6fc8fc89-ba98-43a9-b962-7f2c1e16865e"),
+                            Caption = "Image for Student Backpack",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6764),
                             FileSize = 23552L,
                             ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-cute.jpg",
-                            ProductId = new Guid("402d882e-cdb4-46a9-856c-2c9c41b5ca2c")
+                            ProductId = new Guid("ddd095c3-e3c6-43ca-bdac-48ad0c615576")
                         },
                         new
                         {
-                            Id = new Guid("94d648a9-d02c-4770-bfe7-74e190863949"),
-                            Caption = "Image for Microscope with LED Illumination",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8492),
+                            Id = new Guid("166823dc-ae77-43b0-84ad-d24de9429abc"),
+                            Caption = "Image for Physics for Beginners",
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6769),
                             FileSize = 24576L,
                             ImagePath = "https://tomau.vn/wp-content/uploads/tranh-to-mau-do-dung-hoc-tap-de-thuong.jpg",
-                            ProductId = new Guid("6ed94cce-8110-4b46-8237-c372cdd0bf21")
+                            ProductId = new Guid("fd55975f-e3e1-41e9-9629-9a4f2086d065")
                         },
                         new
                         {
-                            Id = new Guid("abd1588e-a362-4a7f-9708-fd0502fa1e91"),
+                            Id = new Guid("343b0ad9-70ac-49c7-a1c6-1dbf325e6456"),
                             Caption = "Image for Mechanical Pencil Set",
-                            DateCreated = new DateTime(2024, 7, 27, 12, 5, 38, 688, DateTimeKind.Utc).AddTicks(8494),
+                            DateCreated = new DateTime(2024, 7, 31, 18, 31, 18, 69, DateTimeKind.Utc).AddTicks(6771),
                             FileSize = 25600L,
                             ImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQClbO9Pb9b1e1cm18mublklMG69UYXdPgGgbeNGPutxgObEWNt0gMTNXmOHZInEp8O1ro&usqp=CAU",
-                            ProductId = new Guid("7ec45539-79e4-4702-a74b-6f5d77c1bcfc")
+                            ProductId = new Guid("7e6a2bdc-d4f8-4703-8d49-aa52b8244269")
                         });
                 });
 
@@ -963,7 +875,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Minh",
                             IsActive = false,
                             LastName = "Khoa",
-                            Password = "$2a$11$4rhg0Bk0DhaWT9bvW.gjquz3vk/eDUmepgsgmTwZJ7W1hKNhpZR8S",
+                            Password = "$2a$11$XExaEJxD4misG.2WIL7VtuwOacqjJsio2SX4oK98FMXG9dvm3u7ia",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("e398cee3-6381-4a52-aaf5-20a2e9b54810"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -979,7 +891,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Pham",
                             IsActive = false,
                             LastName = "Thanh",
-                            Password = "$2a$11$B2r2B/CQ46yDqJbvnJsl7OcEWfMGWW1J4Gc22bnbwhcu7wKKrn2nC",
+                            Password = "$2a$11$Upaq5cTmycAJKkdk.2CFuu46Dt.COtBn0uqQuv0e10alqIXRfipp6",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -995,7 +907,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Phuong",
                             IsActive = false,
                             LastName = "Thao",
-                            Password = "$2a$11$Z4n/kFTYHzMAIibvUJ822OuzdWvq52vj68liY1JzTV58A.xfKoPr2",
+                            Password = "$2a$11$PGu3ZcH/NrlTILNH56zd4O0G8RaODo1tXLHUocUoaA5PYcexBJHfa",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1011,7 +923,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Quoc",
                             IsActive = false,
                             LastName = "Trieu",
-                            Password = "$2a$11$LU342DJ5CKi7HLFYQRmFPON4v216s1th6zEGTrNePmpjbfdmuwUoG",
+                            Password = "$2a$11$VrgO4TVhne0JKdG73mLzce6Ute.1iDl3Q0NKV5YXHhgXv9/IEFBlq",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1027,7 +939,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Hau",
                             IsActive = false,
                             LastName = "Giang",
-                            Password = "$2a$11$s4MzxAMfEiilgD.9IiK8wO70bsinuycKXpXl2D.DU2/jlZREVWqiy",
+                            Password = "$2a$11$dFB6HNKrVgIitxwQxegvaeTeI4Ixlf827D453dfvwBnE3ICdWWlDW",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1043,7 +955,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Minh",
                             IsActive = false,
                             LastName = "Phuoc",
-                            Password = "$2a$11$Lho0i/GyETa94iJIrU3KluQ5yJ/KuBjdhGvD7o6WNdvUNfa7k3yMq",
+                            Password = "$2a$11$I0/VjOAlE6as5gm5GiK5wenwR9Qt/x/uj2ggqQfr58T8vZlztRBGG",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1059,7 +971,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Hậu",
                             IsActive = false,
                             LastName = "Giang",
-                            Password = "$2a$11$qpnr2IVd3NJGc8vldUnIEOI7bKSYA5h2FqkK7tvmc4hbktnEoBRvm",
+                            Password = "$2a$11$7enLGkIVuejT8t6LgBFCceMATUm9AzsrEwB1BU8sX/B8YiExeLCbW",
                             PhoneNumber = "0123456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1075,7 +987,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Minh",
                             IsActive = false,
                             LastName = "Trần",
-                            Password = "$2a$11$rAk2XwQ0epsKDB9SasFmQOhd9BYCAxDjOa6jIfby3svUbtednvuj2",
+                            Password = "$2a$11$ufZSAr1x8TFGYv1aKzG76eiwBFtaaPkMbsljeDlA8V0kOtWCW3Ehm",
                             PhoneNumber = "0987654321",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1091,7 +1003,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Thảo",
                             IsActive = false,
                             LastName = "Nguyễn",
-                            Password = "$2a$11$eWqbYpgcOAlM/YyYUcsOx.sD9gHc3oYKwASUFQlG/kLBj5ip.Toby",
+                            Password = "$2a$11$DURfilXfa6lkUl118rhD4.P0U0UBg19XD.oS3HuLdDRX50Q1ci9Ta",
                             PhoneNumber = "0912345678",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1107,7 +1019,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Anh",
                             IsActive = false,
                             LastName = "Phạm",
-                            Password = "$2a$11$pgo0EiVb6m6q8pCTQXCir.lp2HX4JfRmzbBcH8d6StUsuDxssuEZe",
+                            Password = "$2a$11$3Ingj5v6rzRhmOvwmwFZouGlFqykSWhfXmtAEkaie79e8L0kgPQBC",
                             PhoneNumber = "0908765432",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1123,7 +1035,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Nam",
                             IsActive = false,
                             LastName = "Lê",
-                            Password = "$2a$11$FS1vzJhQdW.2Ur3cWmwsfeIutpcu2/iFMSBAGaHGRNzJRCSp66mgy",
+                            Password = "$2a$11$zD.wCseyt6QmnN4uRGiyiOPaOZ0JQZaqPCslpK.G6Ag/fbhpKZN0O",
                             PhoneNumber = "0901234567",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1139,7 +1051,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Lan",
                             IsActive = false,
                             LastName = "Hoàng",
-                            Password = "$2a$11$9UlO8vFcwyNpSeudxhzEZuoDxl4U84LheKvRxsqnNGuaGjJhsN6CS",
+                            Password = "$2a$11$m5LGI2jnmIeyu6L9vQaI1e/YL/i73hYcWWd.8bNf77zkmjB.Zzq2i",
                             PhoneNumber = "0934567890",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1155,7 +1067,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Tú",
                             IsActive = false,
                             LastName = "Đỗ",
-                            Password = "$2a$11$jk1eEcsEUAMPgxzmBJ67Jumu9eex1Dqv3Sahu/ExG3U8OeKGwMfOa",
+                            Password = "$2a$11$xQIBKi9fOMACCfFzvhkIhu8kq8iNx8ipPMbW3OofXlO1ulAI4cLLS",
                             PhoneNumber = "0981234567",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1171,7 +1083,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Quỳnh",
                             IsActive = false,
                             LastName = "Phan",
-                            Password = "$2a$11$94JUvcD5F7bEYSAwnAhKMONxWXkiHHB5Xf.p9JmrDebUObHnzvgWa",
+                            Password = "$2a$11$C7ha6RvWDGzd//6Y02/gCeUJVcFoEwFHSQTidAK4qceN9ZNsx60pW",
                             PhoneNumber = "0908761234",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1187,7 +1099,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Hương",
                             IsActive = false,
                             LastName = "Trịnh",
-                            Password = "$2a$11$rjQu11pGuBl1fn3cUF/khekPHi9XUIXSpTPL0xrJdQcAEQ9nNxHfG",
+                            Password = "$2a$11$J0Jh2mINub2LxdTKsRsV9.QG/HcP37BWBfYnMavYP7pk/wQnPSeRe",
                             PhoneNumber = "0937894561",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1203,7 +1115,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Khang",
                             IsActive = false,
                             LastName = "Võ",
-                            Password = "$2a$11$DJED2zeYxhi/PjXznbWwiuNJci2mSrjfuWyoW0QEearb7xn2Lu8di",
+                            Password = "$2a$11$GJmf1FIoVBld1pm0yYZN4.FSrmC9Fk46kjY4xklZdWQDrUySDHHIC",
                             PhoneNumber = "0923456789",
                             RoleId = new Guid("d81f428f-9572-47f1-a980-69de7a1e348b"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1219,7 +1131,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Nguyen",
                             IsActive = false,
                             LastName = "Van A",
-                            Password = "$2a$11$cka3EZij1YEnFT9WpC890uwvmUGmiZToaciZXPlOTY115YMSFKaUe",
+                            Password = "$2a$11$ekx3HoAu93fluPRwcdmdCuu38hnDOi9Vgo36nuLtYsVysIoNhyXa.",
                             PhoneNumber = "0902345678",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1235,7 +1147,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Le",
                             IsActive = false,
                             LastName = "Thi B",
-                            Password = "$2a$11$N/xEb45QUQwhHfG/u5mafO3AlIHWqcK5UbCzEn8OmMLp1hp3HrSiW",
+                            Password = "$2a$11$WKK0Bh82x6ytg5KNYfk.Tei/PyCtSCgxQUls1jC6Q4zrWoluKnqmS",
                             PhoneNumber = "0903456789",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1251,7 +1163,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Tran",
                             IsActive = false,
                             LastName = "Van C",
-                            Password = "$2a$11$eCq4AW.GtWd/817beRYHCebvXDjxqK4.qj2J95FJWhJiAaMxO4EFK",
+                            Password = "$2a$11$ns6ZH1TGeUSTpw8vDjes1uoSnpMIaxrh1ZU5E0FCF/fpSkxHapiVy",
                             PhoneNumber = "0904567890",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1267,7 +1179,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Pham",
                             IsActive = false,
                             LastName = "Thi D",
-                            Password = "$2a$11$tFD/Ob/5ZnrBh2Jqh4R22umC6Y47Zn7vwzSzxLGv.kjpCA/.XVTYm",
+                            Password = "$2a$11$2KbbxJeP1hLFrOAGm1DrfOgziV00N3ta0RiajqS4uG1zTA8xG0YCe",
                             PhoneNumber = "0905678901",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",
@@ -1283,7 +1195,7 @@ namespace GoodsExchange.Data.Migrations
                             FirstName = "Do",
                             IsActive = false,
                             LastName = "Van E",
-                            Password = "$2a$11$DDWtBJxUanwmmV/f5.UrzOMvygxPgvySTFWfGDqjIvihNg8mUPI.G",
+                            Password = "$2a$11$VCtVaDPI6X6eqcQTupplX.b7vzOJkSkqZO46udaNyHvLolQHnTYxO",
                             PhoneNumber = "0906789012",
                             RoleId = new Guid("3d446530-061e-4a88-ae6c-1b6a6190a693"),
                             UserImageUrl = "https://firebasestorage.googleapis.com/v0/b/fir-project-31c70.appspot.com/o/Images%2F1b789a16-21bb-43b2-8b45-c7ab29a98fe2_user_avatar_def.jfif?alt=media&token=df7abe8e-a87a-4894-a6b3-8a5d2775d7e1",

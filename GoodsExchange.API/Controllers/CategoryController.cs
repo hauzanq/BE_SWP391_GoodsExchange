@@ -40,26 +40,18 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ResponseModel<PageResult<CategoryViewModel>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<CategoryViewModel>> GetAll()
+        public async Task<ActionResult<CategoryViewModel>> GetAll(PagingRequestModel paging)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _serviceWrapper.CategoryServices.GetCategories();
+            var result = await _serviceWrapper.CategoryServices.GetCategories(paging);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ResponseModel<CategoryViewModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<CategoryViewModel>> GetById(Guid id)
-        {
-            var result = await _serviceWrapper.CategoryServices.GetById(id);
-            return Ok(result);
-        }
-
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
@@ -71,6 +63,7 @@ namespace GoodsExchange.API.Controllers
 
 
         [HttpPut]
+        [Route("{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(ResponseModel<CategoryViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
@@ -84,5 +77,4 @@ namespace GoodsExchange.API.Controllers
             return Ok(result);
         }
     }
-
 }
