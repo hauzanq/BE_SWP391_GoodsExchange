@@ -11,7 +11,6 @@ namespace GoodsExchange.BusinessLogic.ViewModels.Report
         public Guid ProductId { get; set; }
         public List<string> ProductImages { get; set; }
         public string ProductName { get; set; }
-        public bool IsApprove { get; set; }
-        public bool IsActive { get; set; }
+        public string Status { get; set; }
     }
 }

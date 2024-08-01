@@ -9,7 +9,7 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<int> CountNumberRatingOfUser(Guid id);
         Task<float> CountAverageNumberStarsOfUser(Guid id);
         Task<ResponseModel<RatingViewModel>> SendRating(CreateRatingRequestModel request);
-        Task<ResponseModel<PageResult<RatingViewModel>>> GetRatings(PagingRequestModel paging, RatingsRequestModel request);
+        Task<ResponseModel<PageResult<RatingViewModel>>> GetRatings(PagingRequestModel paging, RatingsRequestModel request, Guid? userid = null);
         Task<ResponseModel<RatingViewModel>> GetRatingById(Guid id);
     }
 }

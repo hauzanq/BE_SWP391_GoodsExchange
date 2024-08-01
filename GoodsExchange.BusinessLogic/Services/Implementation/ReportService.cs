@@ -5,6 +5,7 @@ using GoodsExchange.BusinessLogic.RequestModels.Report;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Report;
 using GoodsExchange.Data.Context;
+using GoodsExchange.Data.Enums;
 using GoodsExchange.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -24,24 +25,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             _serviceWrapper = serviceWrapper;
         }
 
-        public async Task<ResponseModel<bool>> ApproveReportAsync(Guid id)
-        {
-            var report = await _context.Reports.FindAsync(id);
-            var user = await _serviceWrapper.UserServices.GetUserByProductId(report.ProductId);
-            if (report == null)
-            {
-                throw new NotFoundException("Report does not exist");
-            }
-
-            report.IsApprove = true;
-            report.IsActive = false;
-
-            await _context.SaveChangesAsync();
-
-            return new ResponseModel<bool>("The report was approved successfully.", true);
-        }
-
-        public async Task<ResponseModel<bool>> DenyReportAsync(Guid id)
+        public async Task<ResponseModel<bool>> UpdateReportStatusAsync(Guid id, ReportStatus status)
         {
             var report = await _context.Reports.FindAsync(id);
             if (report == null)
@@ -49,12 +33,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 throw new NotFoundException("Report does not exist");
             }
 
-
-            report.IsActive = false;
+            report.Status = status;
 
             await _context.SaveChangesAsync();
 
-            return new ResponseModel<bool>("The report was denied successfully.", true);
+            return new ResponseModel<bool>($"The report status was update to {status.ToString()}.", true);
         }
         public async Task<ResponseModel<ReportViewModel>> SendReportAsync(CreateReportRequestModel request)
         {
@@ -79,8 +62,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 SenderId = user.UserId,
                 ReceiverId = receiver.UserId,
                 ProductId = request.ProductId,
-                IsApprove = false,
-                IsActive = true
+                Status = ReportStatus.AwaitingApproval
             };
 
             await _context.Reports.AddAsync(report);
@@ -98,15 +80,13 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductImages = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 ProductName = product.ProductName,
                 Reason = report.Reason,
-                IsApprove = report.IsApprove,
-                IsActive = report.IsActive
             };
             return new ResponseModel<ReportViewModel>("The report was submitted successfully.", result);
         }
 
         public async Task<ResponseModel<PageResult<ReportViewModel>>> GetReportsAsync(PagingRequestModel paging, ReportsRequestModel request)
         {
-            var query = _context.Reports.Where(r => r.IsActive == true)
+            var query = _context.Reports.Where(r => r.Status == ReportStatus.AwaitingApproval)
                         .Include(r => r.Sender)
                         .Include(r => r.Receiver)
                         .Include(r => r.Product).AsQueryable();
@@ -147,8 +127,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductName = report.Product.ProductName,
                 ReportId = report.ReportId,
                 Reason = report.Reason,
-                IsApprove = report.IsApprove,
-                IsActive = report.IsActive
+                Status = report.Status.ToString()
             }).ToListAsync();
 
 
@@ -180,8 +159,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ProductId = report.ProductId,
                 ProductName = report.Product.ProductName,
                 Reason = report.Reason,
-                IsApprove = report.IsApprove,
-                IsActive = report.IsActive
+                Status = report.Status.ToString()
             };
 
             return new ResponseModel<ReportViewModel>("The report was retrieved successfully.", result);
@@ -189,7 +167,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
         public async Task<int> CountReportsReceivedOfUserAsync(Guid userId)
         {
-            return await _context.Reports.Where(r => r.ReceiverId == userId && r.IsApprove == true).CountAsync();
+            return await _context.Reports.Where(r => r.ReceiverId == userId && r.Status == ReportStatus.Approved).CountAsync();
         }
     }
 }
