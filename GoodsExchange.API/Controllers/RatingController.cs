@@ -52,7 +52,7 @@ namespace GoodsExchange.API.Controllers
         [Authorize(Roles = SystemConstant.Roles.User)]
         [ProducesResponseType(typeof(PageResult<RatingViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetRatingsForUser([FromQuery] Guid userid, [FromQuery] PagingRequestModel paging, [FromQuery] RatingsRequestModel request)
+        public async Task<IActionResult> GetRatingsForUser(Guid userid, [FromQuery] PagingRequestModel paging, [FromQuery] RatingsRequestModel request)
         {
             if (!ModelState.IsValid)
             {
