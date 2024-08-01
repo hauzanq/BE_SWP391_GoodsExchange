@@ -32,11 +32,11 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             };
             return new ResponseModel<CategoryViewModel>("The category was created successfully.", result);
         }
-        
+
         public async Task<ResponseModel<bool>> DeleteCategory(Guid id)
         {
             var existedCategory = await _context.Categories.FindAsync(id);
-        
+
             if (existedCategory == null)
             {
                 throw new NotFoundException("Category does not exist.");
@@ -46,7 +46,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<bool>("The category was deleted successfully.", true);
         }
 
-        public async Task<ResponseModel<PageResult<CategoryViewModel>>> GetCategories(PagingRequestModel paging)
+        public async Task<ResponseModel<List<CategoryViewModel>>> GetCategories()
         {
             var categories = await _context.Categories.ToListAsync();
             var data = categories.Select(c => new CategoryViewModel
@@ -56,16 +56,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             }).ToList();
 
-            var number = data.Count();
-            var pages = (int)Math.Ceiling((double)number / paging.PageSize);
-
-            var result = new PageResult<CategoryViewModel>()
-            {
-                Items = data,
-                TotalPage = pages,
-                CurrentPage = paging.PageIndex
-            };
-            return new ResponseModel<PageResult<CategoryViewModel>>(result);
+            return new ResponseModel<List<CategoryViewModel>>(data);
         }
 
         public async Task<Category> GetCategoryAsync(Guid id)

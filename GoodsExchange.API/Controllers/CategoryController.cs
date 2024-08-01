@@ -40,13 +40,13 @@ namespace GoodsExchange.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ResponseModel<PageResult<CategoryViewModel>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<CategoryViewModel>> GetAll(PagingRequestModel paging)
+        public async Task<ActionResult<CategoryViewModel>> GetAll()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _serviceWrapper.CategoryServices.GetCategories(paging);
+            var result = await _serviceWrapper.CategoryServices.GetCategories();
             return Ok(result);
         }
 
