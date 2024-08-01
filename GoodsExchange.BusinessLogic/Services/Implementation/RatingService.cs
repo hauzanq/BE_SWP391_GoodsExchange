@@ -173,6 +173,16 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             };
             return new ResponseModel<RatingViewModel>("The rating was submitted successfully.", result);
         }
+
+        public async Task<bool> IsUserRatedOnProduct(Guid userid, Guid productid)
+        {
+            var result = _context.Ratings.Any(r => r.SenderId == userid && r.ProductId == productid);
+            if (result)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
 

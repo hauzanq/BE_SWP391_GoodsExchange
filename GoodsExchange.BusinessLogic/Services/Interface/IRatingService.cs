@@ -11,5 +11,6 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<RatingViewModel>> SendRating(CreateRatingRequestModel request);
         Task<ResponseModel<PageResult<RatingViewModel>>> GetRatings(PagingRequestModel paging, RatingsRequestModel request, Guid? userid = null);
         Task<ResponseModel<RatingViewModel>> GetRatingById(Guid id);
+        Task<bool> IsUserRatedOnProduct(Guid userid, Guid productid);
     }
 }

@@ -58,8 +58,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 return _emailTemplateHelper;
             }
         }
-        
-        
+
+
 
         private IEmailService _emailService;
         public IEmailService EmailServices
@@ -161,7 +161,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 if (_transactionService is null)
                 {
-                    _transactionService = new TransactionService(_context,_httpContextAccessor);
+                    _transactionService = new TransactionService(_context, _httpContextAccessor, this);
                 }
                 return _transactionService;
             }
@@ -180,6 +180,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             }
         }
 
-       
+
     }
 }

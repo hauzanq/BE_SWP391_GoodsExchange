@@ -12,5 +12,6 @@ namespace GoodsExchange.BusinessLogic.Services.Interface
         Task<ResponseModel<PageResult<ReportViewModel>>> GetReportsAsync(PagingRequestModel paging, ReportsRequestModel request);
         Task<ResponseModel<ReportViewModel>> GetReportByIdAsync(Guid id);
         Task<int> CountReportsReceivedOfUserAsync(Guid userId);
+        Task<bool> IsUserReportedOnProduct(Guid userid, Guid productid);
     }
 }
