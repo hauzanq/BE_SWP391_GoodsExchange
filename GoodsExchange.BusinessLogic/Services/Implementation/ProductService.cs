@@ -10,6 +10,7 @@ using GoodsExchange.Data.Enums;
 using GoodsExchange.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace GoodsExchange.BusinessLogic.Services.Implementation
 {
@@ -201,6 +202,12 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return new ResponseModel<PageResult<ProductListViewModel>>(result);
         }
 
+        private async Task DeleteImagesForProduct(Guid productid)
+        {
+            var images = await _context.ProductImages.Where(pi => pi.ProductId == productid).ToListAsync();
+            _context.ProductImages.RemoveRange(images);
+            await _context.SaveChangesAsync();
+        }
         public async Task<ResponseModel<ProductListViewModel>> UpdateProductAsync(UpdateProductRequestModel request)
         {
             var product = await _context.Products.Include(p => p.Category)
@@ -224,6 +231,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             product.ProductName = request.ProductName;
             product.Description = request.Description;
             product.CategoryId = request.CategoryId.Value;
+            await DeleteImagesForProduct(request.ProductId);
             product.ProductImages = await AddListImages(user.UserName, request.Images);
 
             // Reset status as new product
@@ -277,7 +285,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 ProductName = product.ProductName,
                 Description = product.Description,
-                //ApprovedDate = product.ApprovedDate,
                 ProductImageUrl = product.ProductImages.Select(pi => pi.ImagePath).ToList(),
                 UserUploadId = product.UserUpload.UserId,
                 UserUpload = product.UserUpload.LastName + " " + product.UserUpload.FirstName,
