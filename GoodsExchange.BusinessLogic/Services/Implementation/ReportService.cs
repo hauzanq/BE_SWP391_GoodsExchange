@@ -169,5 +169,15 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
         {
             return await _context.Reports.Where(r => r.ReceiverId == userId && r.Status == ReportStatus.Approved).CountAsync();
         }
+
+        public async Task<bool> IsUserReportedOnProduct(Guid userid, Guid productid)
+        {
+            var result = _context.Reports.Any(r => r.SenderId == userid && r.ProductId == productid);
+            if (result)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
