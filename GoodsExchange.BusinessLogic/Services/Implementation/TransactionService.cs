@@ -83,7 +83,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                                           Status = t.ExchangeRequest.Status,
 
-                                          DateCreated = t.ExchangeRequest.DateCreated,
+                                          StartTime = t.ExchangeRequest.StartTime,
+                                          EndTime = t.ExchangeRequest.EndTime
                                       }
                                   })
                                   .ToListAsync();

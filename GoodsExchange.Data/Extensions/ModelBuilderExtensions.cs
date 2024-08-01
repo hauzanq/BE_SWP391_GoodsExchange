@@ -445,7 +445,7 @@ namespace GoodsExchange.Data.Extensions
                     ProductId = productId,
                     ProductName = productNames[nameIndex],
                     Description = descriptions[descriptionIndex],
-                    Status = Enums.ProductStatus.AwaitingApproval,
+                    Status = Enums.ProductStatus.Approved,
                     UploadDate = DateTime.UtcNow,
                     UserUploadId = userUploadId,
                     CategoryId = categoryId

@@ -14,9 +14,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.Property(r => r.DateCreated).HasColumnType("datetime2");
 
-            builder.Property(r => r.IsApprove).IsRequired();
-
-            builder.Property(r => r.IsActive).IsRequired();
+            builder.Property(r => r.Status).IsRequired();
 
             builder.HasOne(u => u.Sender).WithMany(r => r.ReportsMade).HasForeignKey(u => u.SenderId).OnDelete(DeleteBehavior.NoAction);
 

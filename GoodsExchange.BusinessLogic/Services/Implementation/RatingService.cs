@@ -42,15 +42,18 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             return numberRatings;
         }
 
-        public async Task<ResponseModel<PageResult<RatingViewModel>>> GetRatings(PagingRequestModel paging, RatingsRequestModel request)
+        public async Task<ResponseModel<PageResult<RatingViewModel>>> GetRatings(PagingRequestModel paging, RatingsRequestModel request, Guid? userid = null)
         {
-            var seller = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
-
-            var query = _context.Ratings.Where(r => r.ReceiverId == seller.UserId)
+            var query = _context.Ratings
                             .Include(r => r.Sender)
                             .Include(r => r.Receiver)
                             .Include(r => r.Product)
                             .AsQueryable();
+
+            if (userid != null)
+            {
+                query = query.Where(r => r.ReceiverId == userid);
+            }
 
             #region Filter
             if (request.MinStars != null)
@@ -63,11 +66,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 query = query.Where(r => r.NumberStars <= request.MaxStars);
             }
 
-            if (!string.IsNullOrEmpty(request.FeedbackSearchTerm))
-            {
-                query = query.Where(r => r.Feedback.Contains(request.FeedbackSearchTerm));
-            }
-
             if (request.FromDate != null)
             {
                 query = query.Where(r => r.DateCreated >= request.FromDate);
@@ -77,23 +75,6 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             {
                 query = query.Where(r => r.DateCreated <= request.ToDate);
             }
-
-            if (request.SenderId != null)
-            {
-                if ((await _serviceWrapper.UserServices.GetUserAsync(request.SenderId.Value)) != null)
-                {
-                    query = query.Where(r => r.SenderId == request.SenderId);
-                }
-            }
-
-            if (request.ProductId != null)
-            {
-                if ((await _serviceWrapper.ProductServices.GetProductAsync(request.ProductId.Value)) != null)
-                {
-                    query = query.Where(r => r.ProductId == request.ProductId);
-                }
-            }
-
             #endregion
 
             var totalItems = await query.CountAsync();

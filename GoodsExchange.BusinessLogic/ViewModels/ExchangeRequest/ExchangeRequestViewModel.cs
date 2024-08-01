@@ -25,6 +25,7 @@
         public int SenderStatus { get; set; }
         public int ReceiverStatus { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }

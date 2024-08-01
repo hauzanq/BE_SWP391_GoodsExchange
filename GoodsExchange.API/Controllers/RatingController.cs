@@ -34,17 +34,31 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
-        [Authorize(Roles = SystemConstant.Roles.User)]
+        [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(PageResult<RatingViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetAll([FromQuery]PagingRequestModel paging, [FromQuery]RatingsRequestModel request)
+        public async Task<IActionResult> GetAll([FromQuery] PagingRequestModel paging, [FromQuery] RatingsRequestModel request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             var result = await _serviceWrapper.RatingServices.GetRatings(paging, request);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("user/{userid}")]
+        [Authorize(Roles = SystemConstant.Roles.User)]
+        [ProducesResponseType(typeof(PageResult<RatingViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetRatingsForUser([FromQuery] Guid userid, [FromQuery] PagingRequestModel paging, [FromQuery] RatingsRequestModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _serviceWrapper.RatingServices.GetRatings(paging, request, userid);
             return Ok(result);
         }
 

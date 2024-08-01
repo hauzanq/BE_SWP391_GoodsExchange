@@ -258,7 +258,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             product.Status = status;
             await _context.SaveChangesAsync();
 
-            return new ResponseModel<bool>("The product status was updated successfully.", true);
+            return new ResponseModel<bool>($"The product status was update to {status.ToString()}.", true);
         }
 
         public async Task<ResponseModel<ProductDetailViewModel>> GetProductDetailAsync(Guid id)

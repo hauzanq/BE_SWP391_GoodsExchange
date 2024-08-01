@@ -14,7 +14,7 @@ namespace GoodsExchange.Data.Configurations
 
             builder.HasMany(c => c.Products).WithOne(p => p.Category).HasForeignKey(p => p.CategoryId);
 
-            builder.Property(c => c.DateCreated).HasDefaultValueSql("GETUTCDATE()");
+            builder.Property(c => c.DateCreated).HasDefaultValueSql("GETUTCDATE()").HasColumnType("datetime2"); ;
         }
     }
 }

@@ -111,7 +111,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                 ReceiverId = receiver.UserId,
                 ReceiverStatus = 0,
                 TargetProductId = targetProduct.ProductId,
-                DateCreated = DateTime.Now,
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now.AddMinutes(10),
                 Status = SystemConstant.ExchangeRequestStatus.Created
             };
 
@@ -146,7 +147,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                 Status = exchange.Status,
 
-                DateCreated = exchange.DateCreated
+                StartTime = exchange.StartTime,
+                EndTime = exchange.EndTime
             };
 
             await _serviceWrapper.EmailServices.SendMailForExchangeRequest(receiver.Email, data);
@@ -159,7 +161,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
             var result = await _context.ExchangeRequests
-               .Where(ex => ex.ReceiverId == user.UserId && ex.Status != SystemConstant.ExchangeRequestStatus.Cancelled)
+               .Where(ex => ex.ReceiverId == user.UserId && ex.Status != SystemConstant.ExchangeRequestStatus.Cancelled && ex.Status != SystemConstant.ExchangeRequestStatus.Complete)
                .Include(ex => ex.CurrentProduct)
                .Include(ex => ex.TargetProduct)
                .Include(ex => ex.Sender)
@@ -190,7 +192,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                    Status = ex.Status,
 
-                   DateCreated = ex.DateCreated
+                   StartTime = ex.StartTime,
+                   EndTime = ex.EndTime
                })
                .ToListAsync();
 
@@ -202,7 +205,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
             var user = await _serviceWrapper.UserServices.GetUserAsync(Guid.Parse(_httpContextAccessor.GetCurrentUserId()));
 
             var result = await _context.ExchangeRequests
-               .Where(ex => ex.SenderId == user.UserId && ex.Status != SystemConstant.ExchangeRequestStatus.Cancelled)
+               .Where(ex => ex.SenderId == user.UserId && ex.Status != SystemConstant.ExchangeRequestStatus.Cancelled && ex.Status != SystemConstant.ExchangeRequestStatus.Complete)
                .Include(ex => ex.CurrentProduct)
                .Include(ex => ex.TargetProduct)
                .Include(ex => ex.Sender)
@@ -233,7 +236,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                    Status = ex.Status,
 
-                   DateCreated = ex.DateCreated
+                   StartTime = ex.StartTime,
+                   EndTime = ex.EndTime
                })
                .ToListAsync();
 
@@ -260,7 +264,7 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
             var status = await GetStatusOfExchangeRequest(request);
 
-            request.DateCreated = DateTime.Now;
+            request.StartTime = DateTime.Now;
 
             if (status == SystemConstant.ExchangeRequestStatus.Complete)
             {
@@ -328,7 +332,8 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
 
                    Status = ex.Status,
 
-                   DateCreated = ex.DateCreated
+                   StartTime = ex.StartTime,
+                   EndTime = ex.EndTime
                })
                .ToListAsync();
 
@@ -372,7 +377,10 @@ namespace GoodsExchange.BusinessLogic.Services.Implementation
                    // Determine user image
                    UserImage = ex.SenderId == user.UserId ? ex.Receiver.UserImageUrl : ex.Sender.UserImageUrl,
 
-                   Status = ex.Status
+                   Status = ex.Status,
+
+                   StartTime = ex.StartTime,
+                   EndTime = ex.EndTime
                })
                .ToListAsync();
 

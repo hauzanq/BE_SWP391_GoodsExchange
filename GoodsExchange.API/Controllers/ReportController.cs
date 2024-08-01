@@ -4,6 +4,7 @@ using GoodsExchange.BusinessLogic.Constants;
 using GoodsExchange.BusinessLogic.RequestModels.Report;
 using GoodsExchange.BusinessLogic.Services.Interface;
 using GoodsExchange.BusinessLogic.ViewModels.Report;
+using GoodsExchange.Data.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -66,24 +67,13 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch]
-        [Route("approve/{id}")]
+        [Route("status/{id}")]
         [Authorize(Roles = SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> ApproveReport(Guid id)
+        public async Task<IActionResult> UpdateReportStatus(Guid id, ReportStatus status)
         {
-            var result = await _serviceWrapper.ReportServices.ApproveReportAsync(id);
-            return Ok(result);
-        }
-
-        [HttpPatch]
-        [Route("deny/{id}")]
-        [Authorize(Roles = SystemConstant.Roles.Moderator)]
-        [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DenyReport(Guid id)
-        {
-            var result = await _serviceWrapper.ReportServices.DenyReportAsync(id);
+            var result = await _serviceWrapper.ReportServices.UpdateReportStatusAsync(id, status);
             return Ok(result);
         }
     }

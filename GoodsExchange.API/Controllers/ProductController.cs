@@ -120,7 +120,7 @@ namespace GoodsExchange.API.Controllers
         }
 
         [HttpPatch("status/{id}")]
-        [Authorize(Roles = SystemConstant.Roles.User)]
+        [Authorize(Roles = SystemConstant.Roles.User + "," + SystemConstant.Roles.Moderator)]
         [ProducesResponseType(typeof(ResponseModel<bool>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorDetails), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProductStatus(Guid id, ProductStatus status)
